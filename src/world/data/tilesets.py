@@ -22,15 +22,16 @@ def register(path: str) -> Surface:
     """
     abs_path = os.path.join(settings.assets_dir, path)
 
-    return Registries.TileSet.register(
-        RegistryUtil.createLoc(path), pygame.image.load(abs_path)
-    )
+    return Registries.TileSet.register(RegistryUtil.createLoc(path), pygame.image.load(abs_path))
 
 
-class TileSets:
+class Tilesets:
     """
     Tile set resources. These are the original images.
     """
 
     BasicPlants = register("tilesets/plants/basic_plants.png")
     FarmingPlants = register("tilesets/plants/farming_plants.png")
+    Grass = register("tilesets/ground/grass.png")
+    Hills = register("tilesets/ground/hills.png")
+    TilledDirt = register("tilesets/ground/tilled_dirt.png")

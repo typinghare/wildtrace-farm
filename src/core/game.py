@@ -4,11 +4,12 @@ Game module.
 
 import pygame
 
-from .settings import Settings
-from .context import Context
-from .event import EventManager
-from .display import Display
-from src.world import Tiles
+from src.core.settings import Settings
+from src.core.context import Context
+from src.core.event import EventManager
+from src.core.display import Display
+from src.core.event_types import EventTypes
+from src.world.data.registries import Registries
 
 
 class Game:
@@ -40,28 +41,32 @@ class Game:
         """
         pygame.init()
 
+        # Set the screen background color
         self.display.screen.fill("white")
+
+        # Load and register all event listeners
+        event_listener_ref_list = Registries.EventListener.get_ref_list()
+        for event_listener_ref in event_listener_ref_list:
+            event_listener = event_listener_ref.res
+            self.event_manager.register(event_listener)
 
     def start(self):
         clock = pygame.time.Clock()
 
-        self.display.grid[2][1].set_image(Tiles.WheatSeed)
-        self.display.grid[2][2].set_image(Tiles.WheatSeedling)
-        self.display.grid[2][3].set_image(Tiles.WheatVegetative)
-        self.display.grid[2][4].set_image(Tiles.WheatBudding)
-        self.display.grid[2][5].set_image(Tiles.WheatRipening)
-        self.display.grid[2][6].set_image(Tiles.WheatProduct)
+        # Post an on-start event
+        pygame.event.post(pygame.event.Event(EventTypes.ON_START))
+        self.trigger_events()
 
         while self.context.running:
             # Post a before-render event
-            pygame.event.post(pygame.event.Event(Events.BEFORE_RENDER))
+            pygame.event.post(pygame.event.Event(EventTypes.BEFORE_RENDER))
             self.trigger_events()
 
             # Render the display
             self.display.render()
 
             # Post an after-render event
-            pygame.event.post(pygame.event.Event(Events.AFTER_RENDER))
+            pygame.event.post(pygame.event.Event(EventTypes.AFTER_RENDER))
             self.trigger_events()
 
             # Clock ticking
@@ -84,17 +89,3 @@ class Game:
         event_manager.on(pygame.QUIT, lambda context: setattr(context, "running", False))
 
         return event_manager
-
-
-class Events:
-    """
-    Custom event enumeration.
-    """
-
-    BASE = pygame.USEREVENT
-
-    # Before-render event
-    BEFORE_RENDER = BASE + 1
-
-    # After-render event
-    AFTER_RENDER = BASE + 2

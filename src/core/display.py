@@ -1,5 +1,5 @@
 """Display module"""
-from typing import Tuple
+from typing import Tuple, List
 
 import pygame
 from pygame import Surface
@@ -19,9 +19,9 @@ class Display:
         self.scale_factor = scale_factor
 
         # The pygame screen object
-        self.screen = self.screen = pygame.display.set_mode(
-            (cell_size[0] * grid_size[0] * scale_factor, cell_size[1] * grid_size[1] * scale_factor)
-        )
+        width = cell_size[0] * grid_size[0] * scale_factor
+        height = cell_size[1] * grid_size[1] * scale_factor
+        self.screen = self.screen = pygame.display.set_mode((width, height))
 
         # The grid of cells
         self.grid = []
@@ -29,7 +29,7 @@ class Display:
             cell_row = []
             self.grid.append(cell_row)
             for col in range(grid_size[0]):
-                cell_row.append(Cell(row, col, self))
+                cell_row.append(Cell((row, col), self))
 
     def render(self):
         """
@@ -45,33 +45,45 @@ class Display:
 class Cell:
     """Grid cell."""
 
-    def __init__(self, row: int, col: int, display: Display):
-        # The row of this cell
-        self.row: int = row
-
-        # The column of this cell
-        self.col: int = col
+    def __init__(self, pos: Tuple[int, int], display: Display):
+        # The position (row, col) of this cell
+        self.pos = pos
 
         # The coordinate of this cell
         self.pos: Tuple[int, int] = (
-            display.cell_size[0] * col * display.scale_factor,
-            display.cell_size[1] * row * display.scale_factor,
+            display.cell_size[0] * pos[1] * display.scale_factor,
+            display.cell_size[1] * pos[0] * display.scale_factor,
         )
 
-        # The image this cell displays
-        self.image: Surface | None = None
+        # Surface stack
+        self.surface_stack: List[Surface] = []
 
-    def set_image(self, image: Surface | None):
+        # Whether this cell is updated
+        self.updated = False
+
+    def cover(self, surface: Surface):
         """
-        Sets the image.
-        :param image: The image to set.
+        Clears surface stack, and adds the given surface on the surface stack.
+        :param surface: The surface to add.
         """
-        self.image = image
+        self.surface_stack = [surface]
+        self.updated = True
+
+    def add(self, surface: Surface):
+        """
+        Adds a surface; appends the given surface to the surface stack.
+        :param surface: The surface to add.
+        """
+        self.surface_stack.append(surface)
+        self.updated = True
 
     def draw(self, display: Display):
         """
-        Draws the image on the display.
+        Draws the cell on the display.
         :param display: The display where the image to draw on.
         """
-        if self.image is not None:
-            display.screen.blit(self.image, self.pos)
+        if not self.updated:
+            return
+
+        for surface in self.surface_stack:
+            display.screen.blit(surface, self.pos)

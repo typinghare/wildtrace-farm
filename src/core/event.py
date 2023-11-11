@@ -49,6 +49,15 @@ class EventManager:
             for event_listener in event_listener_list:
                 event_listener.invoke(context)
 
+    def register(self, event_listener: EventListener):
+        """
+        Registers an event listener.
+        :param event_listener: The event listener to register.
+        """
+        event_type = event_listener.event_type
+        callback = event_listener.callback
+        self.on(event_type, callback)
+
     def on(self, event_type: int, callback: Callable[[Context], None]):
         """
         Listen for an event.
