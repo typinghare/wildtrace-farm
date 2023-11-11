@@ -26,7 +26,7 @@ class Registry:
         self.by_loc: Dict[ResLoc, Ref] = {}
 
         # A mapping of res and its location
-        self.by_res: Dict[object, ResLoc] = {}
+        # self.by_res: Dict[object, ResLoc] = {}
 
     def register(self, res_loc: ResLoc, res: object) -> object:
         """
@@ -44,7 +44,7 @@ class Registry:
         ref = Ref(res_key, res, len(self.by_id))
         self.by_id.append(ref)
         self.by_loc[res_loc] = ref
-        self.by_res[res] = res_loc
+        # self.by_res[res] = res_loc
 
         return res
 

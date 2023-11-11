@@ -31,7 +31,7 @@ class Tiles:
     Tile resources.
     """
 
-    # Grass
+    # Grass square
     GrassSquare0 = register("grass-square/0", Tilesets.Grass, (16, 48))
     GrassSquare1 = register("grass-square/1", Tilesets.Grass, (32, 48))
     GrassSquare2 = register("grass-square/2", Tilesets.Grass, (48, 48))
@@ -41,6 +41,12 @@ class Tiles:
     GrassSquare6 = register("grass-square/6", Tilesets.Grass, (16, 80))
     GrassSquare7 = register("grass-square/7", Tilesets.Grass, (32, 80))
     GrassSquare8 = register("grass-square/8", Tilesets.Grass, (48, 80))
+
+    # Water
+    Water0 = register("water/0", Tilesets.Water, (0, 0))
+    Water1 = register("water/1", Tilesets.Water, (16, 0))
+    Water2 = register("water/2", Tilesets.Water, (32, 0))
+    Water3 = register("water/3", Tilesets.Water, (48, 0))
 
     WheatSeed = register("wheat/seed", Tilesets.BasicPlants, (0, 0))
     WheatSeedling = register("wheat/seedling", Tilesets.BasicPlants, (16, 0))

@@ -4,6 +4,7 @@ Game module.
 
 import pygame
 
+from src.core.animation import AnimationManager
 from src.core.settings import Settings
 from src.core.context import Context
 from src.core.event import EventManager
@@ -19,20 +20,23 @@ class Game:
 
     def __init__(self):
         # Game settings
-        self.settings = Settings()
+        self.settings: Settings = Settings()
 
         # Game context; this context is throughout the entire game life cycle
-        self.context = Context(self)
+        self.context: Context = Context(self)
 
         # Initialize an event manager
-        self.event_manager = self._initEventManager()
+        self.event_manager: EventManager = self.initEventManager()
 
         # Main display
-        self.display = Display(
+        self.display: Display = Display(
             self.settings.display_cell_size,
             self.settings.display_grid_size,
             self.settings.display_scale_factor,
         )
+
+        # Animation manager
+        self.animation_manager: AnimationManager = AnimationManager(self.settings.fps)
 
     def init(self):
         """
@@ -70,7 +74,7 @@ class Game:
             self.trigger_events()
 
             # Clock ticking
-            clock.tick(self.settings.refresh_rate)
+            clock.tick(self.settings.fps)
 
     def trigger_events(self):
         """
@@ -79,13 +83,23 @@ class Game:
         for event in pygame.event.get():
             self.event_manager.trigger(event, self.context)
 
-    @staticmethod
-    def _initEventManager() -> EventManager:
+    # @staticmethod
+    def initEventManager(self) -> EventManager:
         """
         Initializes and returns a event manager.
         """
         event_manager = EventManager()
 
-        event_manager.on(pygame.QUIT, lambda context: setattr(context, "running", False))
+        # Quit the game
+        def quit_game():
+            self.context.running = False
+
+        event_manager.on(pygame.QUIT, quit_game)
+
+        # Update animation frame
+        def update_animation_frame():
+            self.animation_manager.update_frame()
+
+        event_manager.on(EventTypes.BEFORE_RENDER, update_animation_frame)
 
         return event_manager

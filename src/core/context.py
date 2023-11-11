@@ -2,9 +2,12 @@
 Game context module.
 """
 
-from typing import Dict
+from typing import Dict, TYPE_CHECKING
 
-from .settings import Settings
+from src.core.settings import Settings
+
+if TYPE_CHECKING:
+    from src.core.game import Game
 
 
 class Context:
@@ -12,9 +15,9 @@ class Context:
     Game Context.
     """
 
-    def __init__(self, game):
+    def __init__(self, game: "Game"):
         # Game
-        self.game = game
+        self.game: "Game" = game
 
         # Game settings
         self.settings: Settings = game.settings
@@ -27,7 +30,7 @@ class Context:
 
     def set(self, key: str, value: object):
         """
-        Set a value associated with a given key in the extra data store.
+        Sets a value associated with a given key in the extra data store.
         :param key: The key for the data.
         :param value: The value to be stored.
         :return: The value.
@@ -38,7 +41,7 @@ class Context:
 
     def get(self, key: str):
         """
-        Retrieve the value associated with a given key in the extra data store.
+        Retrieves the value associated with a given key in the extra data store.
         :param key: The key for the data.
         :return: The value associated with the given key; None if the key is not found.
         """

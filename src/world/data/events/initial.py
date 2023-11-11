@@ -1,9 +1,10 @@
 """
 Initialize functions.
 """
-
+from src.core.animation import Animation
 from src.core.context import Context
 from src.world.data.tiles import Tiles
+from src.world.data.frames import Frames
 
 
 def fill_screen_with_grass(context: Context):
@@ -13,28 +14,37 @@ def fill_screen_with_grass(context: Context):
     display = context.game.display
     (width, height) = display.grid_size
 
-    display.grid[0][0].add(Tiles.GrassSquare0)
-    display.grid[0][width - 1].add(Tiles.GrassSquare2)
-    display.grid[height - 1][0].add(Tiles.GrassSquare6)
-    display.grid[height - 1][width - 1].add(Tiles.GrassSquare8)
+    display.get_grid(0, 0).add(Tiles.GrassSquare0)
+    display.get_grid(0, width - 1).add(Tiles.GrassSquare2)
+    display.get_grid(height - 1, 0).add(Tiles.GrassSquare6)
+    display.get_grid(height - 1, width - 1).add(Tiles.GrassSquare8)
 
     # First row
-    for col in range(1, width - 1):
-        display.grid[0][col].add(Tiles.GrassSquare1)
+    for cell in display.get_iterator(0, (1, width - 1)):
+        cell.add(Tiles.GrassSquare1)
 
     # Last row
-    for col in range(1, width - 1):
-        display.grid[height - 1][col].add(Tiles.GrassSquare7)
+    for cell in display.get_iterator(height - 1, (1, width - 1)):
+        cell.add(Tiles.GrassSquare7)
 
     # First column
-    for row in range(1, height - 1):
-        display.grid[row][0].add(Tiles.GrassSquare3)
+    for cell in display.get_iterator((1, height - 1), 0):
+        cell.add(Tiles.GrassSquare3)
 
     # Last column
-    for row in range(1, height - 1):
-        display.grid[row][width - 1].add(Tiles.GrassSquare5)
+    for cell in display.get_iterator((1, height - 1), width - 1):
+        cell.add(Tiles.GrassSquare5)
 
     # Center
-    for row in range(1, height - 1):
-        for col in range(1, width - 1):
-            display.grid[row][col].add(Tiles.GrassSquare4)
+    for cell in display.get_iterator((1, height - 1), (1, width - 1)):
+        cell.add(Tiles.GrassSquare4)
+
+
+def init_water(context: Context):
+    display = context.game.display
+    animation_manager = context.game.animation_manager
+
+    for cell in display.get_iterator((5, 10), (5, 10)):
+        water_animation = animation_manager.register(Frames.Water, 2)
+        water_animation.resume()
+        cell.add(water_animation)

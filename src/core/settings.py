@@ -17,11 +17,12 @@ class Settings:
 
             self = cls._instance
 
-            # Assets directory
+            # Assets directory (absolute path)
             self.assets_dir = path.abspath(path.join(__file__, "../../../assets"))
 
-            # Refresh rate refers to the frequency at which a game updates the display
-            self.refresh_rate = 10
+            # Framerate refers to the number of times the entire screen is redrawn
+            # FPS = frame per second
+            self.fps = 10
 
             # [Display] cell size
             self.display_cell_size = (16, 16)

@@ -27,7 +27,7 @@ def register(path: str) -> Surface:
 
 class Tilesets:
     """
-    Tile set resources. These are the original images.
+    Tileset resources. These are the original images.
     """
 
     BasicPlants = register("tilesets/plants/basic_plants.png")
@@ -35,3 +35,4 @@ class Tilesets:
     Grass = register("tilesets/ground/grass.png")
     Hills = register("tilesets/ground/hills.png")
     TilledDirt = register("tilesets/ground/tilled_dirt.png")
+    Water = register("tilesets/ground/water.png")

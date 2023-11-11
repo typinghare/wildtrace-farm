@@ -2,6 +2,7 @@
 Event module.
 """
 from typing import Dict, List, Callable
+import inspect
 
 from pygame.event import Event
 
@@ -13,19 +14,23 @@ class EventListener:
     Game event listener.
     """
 
-    def __init__(self, event_type: int, callback: Callable[[Context], None]):
+    def __init__(self, event_type: int, callback: Callable[[Context], None] | Callable[[], None]):
         # The type of event to listen for
         self.event_type: int = event_type
 
         # The callback to fire when the event is triggered
-        self.callback: Callable[[Context], None] = callback
+        self.callback: Callable[[Context], None] | Callable[[], None] = callback
 
     def invoke(self, context: Context):
         """
         Invokes the callback function.
         :param context: The game context.
         """
-        self.callback(context)
+        num_args = len(inspect.signature(self.callback).parameters)
+        if num_args == 0:
+            self.callback()
+        elif num_args == 1:
+            self.callback(context)
 
 
 class EventManager:
