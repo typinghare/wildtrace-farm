@@ -1,5 +1,10 @@
+"""
+Initialize functions.
+"""
+
 from src.core.context import Context
 from src.world.data.tiles import Tiles
+
 
 def fill_screen_with_grass(context: Context):
     """
