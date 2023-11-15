@@ -1,150 +1,74 @@
-"""Display module"""
-from typing import Tuple, List
+"""
+Display module.
+"""
+from typing import List, Dict
 
 import pygame
 from pygame import Surface
 
-from src.core.animation import Animation
+
+class Layer:
+    """
+    A layer.
+    """
+
+    def __init__(self, name: str):
+        # The name of this layer
+        self.name = name
+
+    def render(self, screen: Surface):
+        """
+        Renders this layer on the screen.
+        :param screen The screen to render on.
+        """
+        pass
 
 
 class Display:
     """
-    Game display. The whole screen is evenly divided into a two-dimensional grid of cells.
+    Game display.
     """
 
-    def __init__(self, cell_size: Tuple[int, int], grid_size: Tuple[int, int], scale_factor: int):
-        # The size of each cell
-        self.cell_size = cell_size
+    def __init__(self):
+        # Screen
+        self.screen: Surface = pygame.display.set_mode((800, 600))
 
-        # The size of the grid
-        self.grid_size = grid_size
+        # Layer stack
+        self.layer_stack: List[Layer] = []
 
-        # The scale factor
-        self.scale_factor = scale_factor
+        # A map from layer names to layers
+        self._by_name: Dict[str, Layer] = {}
 
-        # The pygame screen object
-        width = cell_size[0] * grid_size[0] * scale_factor
-        height = cell_size[1] * grid_size[1] * scale_factor
-        self.screen = self.screen = pygame.display.set_mode((width, height))
+        self._init()
 
-        # The grid of cells
-        self.grid = []
-        for row in range(grid_size[1]):
-            cell_row = []
-            self.grid.append(cell_row)
-            for col in range(grid_size[0]):
-                cell_row.append(Cell((row, col), self))
+    def _init(self):
+        """
+        Initializes the builtin layers.
+        """
+        self.add_layer(Layer("water"))
+
+    def add_layer(self, layer: Layer):
+        """
+        Adds a layer to the layer stack.
+        :param layer: The layer to add.
+        """
+        self.layer_stack.append(layer)
+        self._by_name[layer.name] = layer
+
+    def get_layer(self, name: str) -> Layer:
+        """
+        Retrieves a layer by its name.
+        :param name: The name of the layer to retrieve.
+        :return: The layer.
+        """
+        return self._by_name[name]
 
     def render(self):
         """
-        Renders this display.
+        Renders the screen by drawing layers from bottom to top, ensuring that each subsequent
+        layer covers the previous ones.
         """
-        for row in self.grid:
-            for cell in row:
-                cell.draw(self)
+        for layer in self.layer_stack:
+            layer.render(self.screen)
 
         pygame.display.flip()
-
-    def get_grid(self, row: int, col: int):
-        """
-        Returns a grid at a given position (row, col).
-        """
-        return self.grid[row][col]
-
-    class Iterator:
-        """
-        Square iterator.
-        """
-
-        def __init__(
-            self, display: "Display", row_range: Tuple[int, int], col_range: Tuple[int, int]
-        ):
-            self.display = display
-            self.row_range = row_range
-            self.col_range = col_range
-            self.current: List[int, int] = [row_range[0], col_range[0]]
-
-        def __iter__(self):
-            return self
-
-        def __next__(self) -> "Cell":
-            (row, col) = self.current
-
-            if self.current[0] == self.row_range[1]:
-                # signals the end of iteration
-                raise StopIteration
-
-            self.current[1] += 1
-            if self.current[1] == self.col_range[1]:
-                # Go to the next row
-                self.current[0] += 1
-                self.current[1] = self.col_range[0]
-
-            return self.display.get_grid(row, col)
-
-    def get_iterator(self, row: Tuple[int, int] | int, col: Tuple[int, int] | int) -> Iterator:
-        """
-        Returns an interator.
-        :param row: A row or a range of rows.
-        :param col: A column or a range of columns.
-        """
-        row_range = (row, row + 1) if isinstance(row, int) else row
-        col_range = (col, col + 1) if isinstance(col, int) else col
-
-        return Display.Iterator(self, row_range, col_range)
-
-
-class Cell:
-    """
-    Grid cell.
-    """
-
-    def __init__(self, pos: Tuple[int, int], display: Display):
-        # The position (row, col) of this cell
-        self.pos = pos
-
-        # The coordinate of this cell
-        self.pos: Tuple[int, int] = (
-            display.cell_size[0] * pos[1] * display.scale_factor,
-            display.cell_size[1] * pos[0] * display.scale_factor,
-        )
-
-        # displayable stack
-        self.displayable_stack: List[Surface | Animation] = []
-
-        # Whether this cell is updated
-        self.updated = False
-
-    def clear(self):
-        """
-        Clears the displayable stack.
-        """
-        self.displayable_stack = []
-        self.updated = True
-
-    def add(self, displayable: Surface | Animation):
-        """
-        Adds a surface or animation; appends the given element to the stack.
-        :param displayable: The surface to add.
-        """
-        self.displayable_stack.append(displayable)
-        self.updated = True
-
-    def draw(self, display: Display):
-        """
-        Draws the cell on the display.
-        :param display: The display where the image to draw on.
-        """
-        if not self.updated:
-            return
-
-        has_animation = False
-        for displayable in self.displayable_stack:
-            if isinstance(displayable, Surface):
-                display.screen.blit(displayable, self.pos)
-            else:
-                has_animation = True
-                display.screen.blit(displayable.get_current_frame(), self.pos)
-
-        if not has_animation:
-            self.updated = False

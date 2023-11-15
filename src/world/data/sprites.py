@@ -3,7 +3,6 @@ from pygame import Surface
 
 from src.registry import RegistryUtil
 from src.core.settings import Settings
-from .tilesets import Tilesets
 from .registries import Registries
 from ..util import crop_image, scale_image
 

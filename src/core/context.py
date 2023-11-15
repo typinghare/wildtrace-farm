@@ -2,11 +2,11 @@
 Game context module.
 """
 
-from typing import Dict, TYPE_CHECKING
+from typing import Dict, TYPE_CHECKING, Any
 
-from src.core.settings import Settings
-
+# An approach to circumvent the circular import error
 if TYPE_CHECKING:
+    from src.core.settings import Settings
     from src.core.game import Game
 
 
@@ -19,14 +19,22 @@ class Context:
         # Game
         self.game: "Game" = game
 
-        # Game settings
-        self.settings: Settings = game.settings
+        # Delta time in milliseconds
+        # dt is short for delta time, which refers to the time of a single frame
+        self.dt: int = 0
 
-        # Whether the game is running
-        self.running: bool = True
+        # Event data
+        self.event_data: Dict[str, Any] | None = None
 
         # Extra context data store
-        self.data: Dict[str, object] = {}
+        self._data: Dict[str, object] = {}
+
+    @property
+    def settings(self) -> "Settings":
+        """
+        Returns the game settings.
+        """
+        return self.game.settings
 
     def set(self, key: str, value: object):
         """
@@ -35,7 +43,7 @@ class Context:
         :param value: The value to be stored.
         :return: The value.
         """
-        self.data[key] = value
+        self._data[key] = value
 
         return value
 
@@ -45,4 +53,4 @@ class Context:
         :param key: The key for the data.
         :return: The value associated with the given key; None if the key is not found.
         """
-        return self.data[key]
+        return self._data[key]

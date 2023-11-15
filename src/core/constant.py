@@ -1,5 +1,5 @@
 """
-Custom event types module.
+Core constants.
 """
 
 import pygame

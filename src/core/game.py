@@ -1,15 +1,13 @@
 """
 Game module.
 """
-
 import pygame
 
-from src.core.animation import AnimationManager
+from src.core.display import Display
+from src.core.event import EventManager
 from src.core.settings import Settings
 from src.core.context import Context
-from src.core.event import EventManager
-from src.core.display import Display
-from src.core.event_types import EventTypes
+from src.core.constant import EventTypes
 from src.world.data.registries import Registries
 
 
@@ -22,84 +20,47 @@ class Game:
         # Game settings
         self.settings: Settings = Settings()
 
-        # Game context; this context is throughout the entire game life cycle
+        # Game context
         self.context: Context = Context(self)
 
-        # Initialize an event manager
-        self.event_manager: EventManager = self.initEventManager()
+        # Game event manager
+        self.event_manager: EventManager = EventManager()
 
-        # Main display
-        self.display: Display = Display(
-            self.settings.display_cell_size,
-            self.settings.display_grid_size,
-            self.settings.display_scale_factor,
-        )
+        # Game display
+        self.display: Display = Display()
 
-        # Animation manager
-        self.animation_manager: AnimationManager = AnimationManager(self.settings.fps)
+        # Whether the game is running
+        self.running: bool = True
 
     def init(self):
         """
-        Initializes this game.
-        :return:
+        Initializes the game.
         """
+        # Pygame initialization
         pygame.init()
 
-        # Set the screen background color
-        self.display.screen.fill("white")
-
-        # Load and register all event listeners
-        event_listener_ref_list = Registries.EventListener.get_ref_list()
-        for event_listener_ref in event_listener_ref_list:
-            event_listener = event_listener_ref.res
+        # Register all events to event manager
+        for ref in Registries.EventListener.get_ref_list():
+            event_listener = ref.res
             self.event_manager.register(event_listener)
 
-    def start(self):
+        # Triggers on-start events
+        self.event_manager.trigger(EventManager.create_event(EventTypes.ON_START), self.context)
+
+        # white
+        self.display.screen.fill("white")
+
+    def run(self):
+        """
+        Starts the game loop. The game loop will never stop until users quit this game.
+        """
         clock = pygame.time.Clock()
-
-        # Post an on-start event
-        pygame.event.post(pygame.event.Event(EventTypes.ON_START))
-        self.trigger_events()
-
-        while self.context.running:
-            # Post a before-render event
-            pygame.event.post(pygame.event.Event(EventTypes.BEFORE_RENDER))
-            self.trigger_events()
-
-            # Render the display
+        while self.running:
+            EventManager.post(EventTypes.BEFORE_RENDER)
+            self.event_manager.trigger_all(self.context)
             self.display.render()
+            self.event_manager.trigger(
+                EventManager.create_event(EventTypes.AFTER_RENDER), self.context
+            )
 
-            # Post an after-render event
-            pygame.event.post(pygame.event.Event(EventTypes.AFTER_RENDER))
-            self.trigger_events()
-
-            # Clock ticking
-            clock.tick(self.settings.fps)
-
-    def trigger_events(self):
-        """
-        Gets all events from the event queue, and trigger the events one by one.
-        """
-        for event in pygame.event.get():
-            self.event_manager.trigger(event, self.context)
-
-    # @staticmethod
-    def initEventManager(self) -> EventManager:
-        """
-        Initializes and returns a event manager.
-        """
-        event_manager = EventManager()
-
-        # Quit the game
-        def quit_game():
-            self.context.running = False
-
-        event_manager.on(pygame.QUIT, quit_game)
-
-        # Update animation frame
-        def update_animation_frame():
-            self.animation_manager.update_frame()
-
-        event_manager.on(EventTypes.BEFORE_RENDER, update_animation_frame)
-
-        return event_manager
+            self.context.dt = round(clock.tick(self.settings.fps))
