@@ -36,7 +36,7 @@ class Context:
         """
         return self.game.settings
 
-    def set(self, key: str, value: object):
+    def set(self, key: str, value: Any) -> Any:
         """
         Sets a value associated with a given key in the extra data store.
         :param key: The key for the data.
@@ -47,7 +47,7 @@ class Context:
 
         return value
 
-    def get(self, key: str):
+    def get(self, key: str) -> Any:
         """
         Retrieves the value associated with a given key in the extra data store.
         :param key: The key for the data.

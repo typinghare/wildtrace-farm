@@ -1,7 +1,6 @@
 """
 Event module.
 """
-import sys
 from typing import Callable, Dict, List
 import inspect
 

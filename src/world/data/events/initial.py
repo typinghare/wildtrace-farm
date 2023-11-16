@@ -1,15 +1,34 @@
 """
 Initialize functions.
 """
+from pygame import Vector2
+
 from src.core.context import Context
+from src.core.display import Layer, GridLayer
 from src.world.data.tiles import Tiles
-from src.world.data.frames import Frames
+from src.world.data.sprites import Sprites
+from src.world.character import Character
+
+
+def init_character(context: Context):
+    # Initialize character layer
+    display = context.game.display
+    character_layer: Layer = display.get_layer("character")
+    center = display.center
+    character_layer.blit(Sprites.CharacterDownIdle2, Vector2(center[0] - 48, center[1] - 48))
+
+    character: Character = context.set("character", Character())
 
 
 def fill_screen_with_grass(context: Context):
     """
     Fills the whole screen with grass tiles.
     """
+    display = context.game.display
+
+    ground_layer: GridLayer = display.get_layer("ground")
+    ground_layer.get_cell((0, 0)).set_surface(Tiles.Water0)
+
     # display = context.game.display
     # (width, height) = display.grid_size
     #

@@ -10,7 +10,7 @@ from src.core.context import Context
 from src.core.event import EventListener
 from src.core.constant import EventTypes
 from src.world.data.registries import Registries
-from src.world.data.events.initial import fill_screen_with_grass, init_water
+from src.world.data.events.initial import init_character, fill_screen_with_grass, init_water
 from src.world.data.events.window import quit_game
 
 
@@ -34,6 +34,10 @@ class EventListeners:
     Event listener resources.
     """
 
+    # On quit
     QuitGame = register(pygame.QUIT, quit_game)
+
+    # On start
+    InitCharacter = register(EventTypes.ON_START, init_character)
     FillScreenWithGrass = register(EventTypes.ON_START, fill_screen_with_grass)
     InitWater = register(EventTypes.ON_START, init_water)

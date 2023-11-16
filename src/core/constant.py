@@ -10,9 +10,10 @@ class EventTypes:
     Custom event types.
     """
 
+    # The smallest integer for user custom events
     BASE = pygame.USEREVENT
 
-    # on-start event
+    # On-start event
     ON_START = BASE + 1
 
     # Before-render event

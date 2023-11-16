@@ -4,7 +4,7 @@ Settings module.
 
 import os
 
-import pygame.math
+from src.core import Size
 
 
 class Settings:
@@ -25,7 +25,7 @@ class Settings:
             self.fps = 60
 
             # [Display] cell size; how many pixels does a cell contain
-            self.display_cell_size = pygame.math.Vector2(16, 16)
+            self.display_cell_size = Size(16, 16)
 
             # [Display] scale factor
             self.display_scale_factor = 2

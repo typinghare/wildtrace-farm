@@ -36,3 +36,5 @@ class Tilesets:
     Hills = register("tilesets/ground/hills.png")
     TilledDirt = register("tilesets/ground/tilled_dirt.png")
     Water = register("tilesets/ground/water.png")
+
+    CharacterSpriteSheet = register("tilesets/character/sprite_sheet.png")
