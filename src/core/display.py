@@ -32,7 +32,7 @@ class Layer:
         Renders this layer.
         """
 
-    def blit(self, surface: Surface, offset: Vector2 = Vector2(0, 0)) -> None:
+    def blit(self, surface: Surface, offset: Tuple[float, float]) -> None:
         """
         Blits a surface on this layer.
         """
@@ -118,6 +118,7 @@ class GridLayer(Layer):
         """
         Renders this grid layer.
         """
+        # self.surface.fill("green")
         for row in range(self.grid_size.height):
             for col in range(self.grid_size.width):
                 cell = self.get_cell((row, col))
@@ -126,11 +127,11 @@ class GridLayer(Layer):
 
                 # Redraw the cell on the layer surface
                 pos = (
-                    col * self.grid_size.width * self.cell_size.width,
-                    row * self.grid_size.height * self.cell_size.height,
+                    col * self.cell_size.width,
+                    row * self.cell_size.height,
                 )
-                rect = (pos[0], pos[1], self.cell_size.height, self.cell_size.width)
-                self.surface.blit(cell.get_surface(), pos, rect)
+                surface = cell.get_surface()
+                self.surface.blit(surface, pos)
 
 
 class Display:
@@ -147,8 +148,6 @@ class Display:
 
         # A map from layer names to layers
         self._by_name: Dict[str, Layer.__subclasses__] = {}
-
-        self._init()
 
     def _init(self):
         """

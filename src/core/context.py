@@ -24,7 +24,7 @@ class Context:
         self.dt: int = 0
 
         # Event data
-        self.event_data: Dict[str, Any] | None = None
+        self.event_data: Dict[str, Any] = {}
 
         # Extra context data store
         self._data: Dict[str, object] = {}

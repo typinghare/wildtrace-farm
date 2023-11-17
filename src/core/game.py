@@ -5,6 +5,7 @@ import pygame
 
 from src.core.display import Display
 from src.core.event import EventManager
+from src.core.loop import LoopManager
 from src.core.settings import Settings
 from src.core.context import Context
 from src.core.constant import EventTypes
@@ -28,6 +29,9 @@ class Game:
 
         # Game display
         self.display: Display = Display()
+
+        # Game loop manager
+        self.loop_manager: LoopManager = LoopManager()
 
         # Whether the game is running
         self.running: bool = True

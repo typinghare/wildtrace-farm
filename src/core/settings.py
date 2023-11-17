@@ -30,4 +30,10 @@ class Settings:
             # [Display] scale factor
             self.display_scale_factor = 2
 
+            # [Character] fps
+            self.character_fps = 8
+
+            # [Character] size
+            self.character_size = Size(96, 96)
+
         return cls._instance
