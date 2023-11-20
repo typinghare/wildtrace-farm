@@ -30,11 +30,15 @@ class Tilesets:
     Tileset resources. These are the original images.
     """
 
+    # Plants
     BasicPlants = register("tilesets/plants/basic_plants.png")
-    FarmingPlants = register("tilesets/plants/farming_plants.png")
+    Plants = register("tilesets/plants/plants.png")
+    PlantsItem = register("tilesets/plants/plants_item.png")
+
+    # Ground
     Grass = register("tilesets/ground/grass.png")
-    Hills = register("tilesets/ground/hills.png")
-    TilledDirt = register("tilesets/ground/tilled_dirt.png")
+    # Hills = register("tilesets/ground/hills.png")
+    # TilledDirt = register("tilesets/ground/tilled_dirt.png")
     Water = register("tilesets/ground/water.png")
 
     CharacterSpriteSheet = register("tilesets/character/sprite_sheet.png")

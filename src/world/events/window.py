@@ -1,8 +1,16 @@
 """
 Window events.
 """
+import pygame.display
 
 from src.core.context import Context
+
+
+def set_caption(context: Context) -> None:
+    """
+    Sets the window caption
+    """
+    pygame.display.set_caption(context.settings.display_window_caption)
 
 
 def quit_game(context: Context) -> None:

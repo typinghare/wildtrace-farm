@@ -48,6 +48,7 @@ class Tiles:
     Water2 = register("water/2", Tilesets.Water, (32, 0))
     Water3 = register("water/3", Tilesets.Water, (48, 0))
 
+    # Wheat
     WheatSeed = register("wheat/seed", Tilesets.BasicPlants, (0, 0))
     WheatSeedling = register("wheat/seedling", Tilesets.BasicPlants, (16, 0))
     WheatVegetative = register("wheat/vegetative", Tilesets.BasicPlants, (32, 0))
@@ -55,6 +56,7 @@ class Tiles:
     WheatRipening = register("wheat/ripening", Tilesets.BasicPlants, (64, 0))
     WheatProduct = register("wheat/product", Tilesets.BasicPlants, (80, 0))
 
+    # Beet
     BeetSeed = register("beet/seed", Tilesets.BasicPlants, (0, 16))
     BeetSeedling = register("beat/seedling", Tilesets.BasicPlants, (16, 16))
     BeetVegetative = register("beat/vegetative", Tilesets.BasicPlants, (32, 16))

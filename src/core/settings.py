@@ -24,8 +24,14 @@ class Settings:
             # Frame per second
             self.fps = 60
 
+            # [Display] Window caption
+            self.display_window_caption = "Wildtrace Farm"
+
+            # [Display] grid size
+            self.display_grid_size = Size(40, 30)
+
             # [Display] cell size; how many pixels does a cell contain
-            self.display_cell_size = Size(16, 16)
+            self.display_cell_size = Size(32, 32)
 
             # [Display] scale factor
             self.display_scale_factor = 2
