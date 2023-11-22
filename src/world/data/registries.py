@@ -1,5 +1,5 @@
 """
-Registries module.
+Registries resource module.
 """
 
 from src.registry import RegistryUtil
@@ -14,4 +14,6 @@ class Registries:
     Tile = RegistryUtil.createRegistry("tile")
     Sprite = RegistryUtil.createRegistry("sprite")
     EventListener = RegistryUtil.createRegistry("event-listener")
-    FrameSequence = RegistryUtil.createRegistry("frame-sequences")
+    Frames = RegistryUtil.createRegistry("frames")
+    Renderer = RegistryUtil.createRegistry("renderer")
+    Map = RegistryUtil.createRegistry("map")

@@ -4,7 +4,7 @@ Settings module.
 
 import os
 
-from src.core import Size
+from src.core.common import Size
 
 
 class Settings:
@@ -27,8 +27,8 @@ class Settings:
             # [Display] Window caption
             self.display_window_caption = "Wildtrace Farm"
 
-            # [Display] grid size
-            self.display_grid_size = Size(40, 30)
+            # [Display] Window size
+            self.display_window_size = Size(1200, 800)
 
             # [Display] cell size; how many pixels does a cell contain
             self.display_cell_size = Size(32, 32)
@@ -36,8 +36,8 @@ class Settings:
             # [Display] scale factor
             self.display_scale_factor = 2
 
-            # [Character] fps
-            self.character_fps = 8
+            # [Character] animation fps
+            self.character_animation_fps = 8
 
             # [Character] size
             self.character_size = Size(96, 96)

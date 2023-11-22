@@ -1,5 +1,5 @@
 """
-Tile set resources.
+Tile set resource module.
 """
 
 import os
@@ -37,8 +37,13 @@ class Tilesets:
 
     # Ground
     Grass = register("tilesets/ground/grass.png")
-    # Hills = register("tilesets/ground/hills.png")
-    # TilledDirt = register("tilesets/ground/tilled_dirt.png")
+    Hills = register("tilesets/ground/grass_hill.png")
+    TilledDirt = register("tilesets/ground/tilled_dirt.png")
     Water = register("tilesets/ground/water.png")
 
+    # Building
+    Furniture = register("tilesets/building/furniture.png")
+    WoodenHouse = register("tilesets/building/wooden_house.png")
+
+    # Character
     CharacterSpriteSheet = register("tilesets/character/sprite_sheet.png")

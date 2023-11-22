@@ -10,6 +10,8 @@ class Debug:
     Debug tool.
     """
 
+    INSTANCE: "Debug" = None
+
     def __init__(self, context: Context):
         # Game context
         self.context: Context = context
@@ -24,7 +26,7 @@ class Debug:
         """
         display = self.context.game.display
         debug_layer: Layer = display.get_layer("debug")
-        text = self.font.render(message, True, (0, 0, 0))
+        text = self.font.render(message.__repr__(), True, (0, 0, 0))
 
         debug_layer.clear()
-        debug_layer.blit(text, (8, 8))
+        debug_layer.blit(text, Vector2(8, 8))

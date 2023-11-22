@@ -11,7 +11,8 @@ def init_character(context: Context):
     """
     Initializes character.
     """
-    character: Character = context.set("character", Character(context))
+    character: Character = Character(context)
+    context["character"] = character
     character.init_animation()
 
 
@@ -32,8 +33,8 @@ def character_key_down(context: Context):
     """
     Player presses key down when they control the character.
     """
-    key = context.event_data["key"]
-    character: Character = context.get("character")
+    key = context.event_data.get("key")
+    character: Character = context["character"]
 
     direction = map_key_to_direction(key)
     if direction is not None:
@@ -44,8 +45,8 @@ def character_key_up(context: Context):
     """
     Player presses key up when they control the character.
     """
-    key = context.event_data["key"]
-    character: Character = context.get("character")
+    key = context.event_data.get("key")
+    character: Character = context["character"]
 
     direction = map_key_to_direction(key)
     if direction is not None:

@@ -4,10 +4,12 @@ Game context module.
 
 from typing import Dict, TYPE_CHECKING, Any
 
-# An approach to circumvent the circular import error
 if TYPE_CHECKING:
     from src.core.settings import Settings
     from src.core.game import Game
+    from src.core.display import Display
+    from src.core.event import EventManager
+    from src.core.loop import LoopManager
 
 
 class Context:
@@ -20,7 +22,7 @@ class Context:
         self.game: "Game" = game
 
         # Delta time in milliseconds
-        # dt is short for delta time, which refers to the time of a single frame
+        # (dt is short for delta time, which refers to the time of a single frame)
         self.dt: int = 0
 
         # Event data
@@ -36,7 +38,36 @@ class Context:
         """
         return self.game.settings
 
-    def set(self, key: str, value: Any) -> Any:
+    @property
+    def event_manager(self) -> "EventManager":
+        """
+        Returns the event manager.
+        """
+        return self.game.event_manager
+
+    @property
+    def display(self) -> "Display":
+        """
+        Returns the game display.
+        """
+        return self.game.display
+
+    @property
+    def loop_manager(self) -> "LoopManager":
+        """
+        Returns the event manager.
+        """
+        return self.game.loop_manager
+
+    def __getitem__(self, key) -> Any:
+        """
+        Retrieves the value associated with a given key in the extra data store.
+        :param key: The key for the data.
+        :return: The value associated with the given key; None if the key is not found.
+        """
+        return self._data[key]
+
+    def __setitem__(self, key: str, value: Any) -> None:
         """
         Sets a value associated with a given key in the extra data store.
         :param key: The key for the data.
@@ -45,12 +76,16 @@ class Context:
         """
         self._data[key] = value
 
-        return value
+    def __delitem__(self, key: str) -> None:
+        """
+        Deletes a key in the extra data store.
+        :param key: The key for the data to delete.
+        """
+        del self._data[key]
 
-    def get(self, key: str) -> Any:
+    def __contains__(self, key: str) -> bool:
         """
-        Retrieves the value associated with a given key in the extra data store.
-        :param key: The key for the data.
-        :return: The value associated with the given key; None if the key is not found.
+        Checks whether a key is in the extra data store.
+        :param key: The key to check.
         """
-        return self._data[key]
+        return key in self._data

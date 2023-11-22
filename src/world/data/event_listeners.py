@@ -1,5 +1,5 @@
 """
-Event listener source module.
+Event listener resource module.
 """
 from typing import Callable, cast
 

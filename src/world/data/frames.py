@@ -1,23 +1,25 @@
 """
-Frame sequence source modules.
+Frame sequence resource modules.
 """
 from typing import List
 from pygame import Surface
 
+from src.core.common import ListWrapper
 from src.registry import RegistryUtil
 from src.world.data.registries import Registries
 from src.world.data.tiles import Tiles
 from src.world.data.sprites import Sprites
 
 
-def register(path: str, frames: List[Surface]) -> List[Surface]:
+def register(path: str, frames: List[Surface]) -> ListWrapper:
     """
     Register a frame sequence.
     :param path: The path of the frame sequence.
     :param frames: A sequence of surfaces.
     :return: The animation.
     """
-    return Registries.FrameSequence.register(RegistryUtil.createRegistry(path), frames)
+    res = ListWrapper(frames)
+    return Registries.Frames.register(RegistryUtil.createRegistry(path), res)
 
 
 class Frames:

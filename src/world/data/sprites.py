@@ -1,3 +1,7 @@
+"""
+Sprite resource module.
+"""
+
 from typing import Tuple
 from pygame import Surface
 
@@ -28,7 +32,7 @@ def register(
 
 class Sprites:
     """
-    Sprite resources.
+    Sprite image resources.
     """
 
     CharacterIdleUp0 = register("character/idle/up/0", Tilesets.CharacterSpriteSheet, (48 * 0, 48))

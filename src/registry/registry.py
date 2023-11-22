@@ -1,7 +1,7 @@
 """
 Registry module.
 """
-from typing import Dict, List
+from typing import Dict, List, Any
 
 from .res import ResLoc, ResKey
 from .ref import Ref
@@ -26,9 +26,9 @@ class Registry:
         self.by_loc: Dict[ResLoc, Ref] = {}
 
         # A mapping of res and its location
-        # self.by_res: Dict[object, ResLoc] = {}
+        self.by_res: Dict[Any, ResLoc] = {}
 
-    def register(self, res_loc: ResLoc, res: object) -> object:
+    def register(self, res_loc: ResLoc, res: Any) -> Any:
         """
         Registers a resource.
         :param res_loc: The location of the resource.
@@ -44,7 +44,7 @@ class Registry:
         ref = Ref(res_key, res, len(self.by_id))
         self.by_id.append(ref)
         self.by_loc[res_loc] = ref
-        # self.by_res[res] = res_loc
+        self.by_res[res] = res_loc
 
         return res
 
@@ -104,5 +104,5 @@ class ResNotRegisteredException(Exception):
     Resource not registered exception.
     """
 
-    def __init__(self, res: object):
+    def __init__(self, res: Any):
         super(f"Resource not registered: [ {res} ]")

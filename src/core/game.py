@@ -28,7 +28,7 @@ class Game:
         self.event_manager: EventManager = EventManager()
 
         # Game display
-        self.display: Display = Display()
+        self.display: Display = Display(self.settings.display_window_size)
 
         # Game loop manager
         self.loop_manager: LoopManager = LoopManager()
@@ -42,6 +42,9 @@ class Game:
         """
         # Pygame initialization
         pygame.init()
+
+        # Window
+        pygame.display.set_caption(self.settings.display_window_caption)
 
         # Register all events to event manager
         for ref in Registries.EventListener.get_ref_list():

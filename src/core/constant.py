@@ -21,3 +21,14 @@ class EventTypes:
 
     # After-render event
     AFTER_RENDER = BASE + 3
+
+
+class Direction:
+    """
+    Direction enumeration.
+    """
+
+    UP = 0
+    RIGHT = 1
+    DOWN = 2
+    LEFT = 3

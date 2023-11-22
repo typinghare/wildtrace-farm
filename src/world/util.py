@@ -18,6 +18,7 @@ def crop_image(
     :return: The image being cropped.
     """
     rect = pygame.Rect(pos[0], pos[1], size[0], size[1])
+
     return image.subsurface(rect)
 
 
