@@ -34,7 +34,7 @@ Behind the scenes, the code that powers Wildtrace Farm is not just functional bu
 Regarding coding, I have meticulously organized the code into distinct sections, each thoughtfully accompanied by its dedicated documentation:
 
 * [Game Resource Management](./docs/resource-management.md)
-* [Game Lifecycle](./docs/game-lifecyle.md)
+* [Game Lifecycle](./docs/game-core.md)
 
 ### Reference
 

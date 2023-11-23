@@ -3,6 +3,7 @@ Character related events.
 """
 import pygame
 
+from src.core.constant import Direction
 from src.core.context import Context
 from src.world.character import Character
 
@@ -18,13 +19,13 @@ def init_character(context: Context):
 
 def map_key_to_direction(key: int) -> int | None:
     if key == pygame.K_w:
-        return Character.Direction.UP
+        return Direction.UP
     if key == pygame.K_d:
-        return Character.Direction.RIGHT
+        return Direction.RIGHT
     if key == pygame.K_s:
-        return Character.Direction.DOWN
+        return Direction.DOWN
     if key == pygame.K_a:
-        return Character.Direction.LEFT
+        return Direction.LEFT
 
     return None
 
@@ -51,3 +52,11 @@ def character_key_up(context: Context):
     direction = map_key_to_direction(key)
     if direction is not None:
         character.stop(direction)
+
+
+def update_character(context: Context):
+    """
+    Updates character's position.
+    """
+    character: Character = context["character"]
+    character.update()

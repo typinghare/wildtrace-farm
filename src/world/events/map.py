@@ -1,18 +1,34 @@
 """
 Map crafting events.
 """
-from typing import List
+from pygame import Vector2
 
-from pygame import Surface, Rect
-
-from src.core.common import CoordinateSet
 from src.core.context import Context
-from src.core.display import GridLayer
-from src.world.data.frames import Frames
-from src.world.renderer import HouseRenderer
+from src.world.camera import Camera
+from src.world.map import MapController
 
 
-def init_water(context: Context) -> None:
+def update_map(context: Context) -> None:
     """
-    Initializes water.
+    Updates the map.
     """
+
+    map_controller: MapController = context["map_controller"]
+    camera: Camera = context["camera"]
+
+    # If the map is less than the screen, align it to center
+    screen_size = camera.screen_size
+    map_size = camera.map_size
+    rect = camera.get_screen_rect()
+    offset = Vector2(screen_size.width - map_size.width, screen_size.height - map_size.height)
+    if offset.x > 0:
+        offset.x //= 2
+    if offset.y > 0:
+        offset.y //= 2
+
+    if offset.x < 0:
+        offset.x = rect.x
+    if offset.y < 0:
+        offset.y = rect.y
+
+    map_controller.set_offset(offset)

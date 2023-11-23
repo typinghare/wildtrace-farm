@@ -8,6 +8,7 @@ from pygame import Vector2, Surface
 from src.core.constant import Direction
 from src.core.context import Context
 from src.core.display import Layer
+from src.world.camera import Camera
 from src.world.data.frames import Frames
 
 
@@ -92,3 +93,13 @@ class Character:
 
         if self.velocity.magnitude() == 0:
             self.current_frames = self.frames_list[direction]
+
+    def update(self) -> None:
+        """
+        Updates this character.
+        """
+        dt = self.context.dt
+        camera: Camera = self.context["camera"]
+
+        displacement = Vector2(-self.velocity.x * dt * 0.1, -self.velocity.y * dt * 0.1)
+        camera.move(displacement)

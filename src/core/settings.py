@@ -30,6 +30,9 @@ class Settings:
             # [Display] Window size
             self.display_window_size = Size(1200, 800)
 
+            # [Display] Default display background
+            self.background = "#333333"
+
             # [Display] cell size; how many pixels does a cell contain
             self.display_cell_size = Size(32, 32)
 

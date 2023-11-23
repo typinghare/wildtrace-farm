@@ -4,7 +4,7 @@ Display module.
 from typing import List, Dict, Tuple
 
 import pygame
-from pygame import Surface, Vector2
+from pygame import Surface, Vector2, Rect
 
 from src.core.common import Size, Grid
 
@@ -21,7 +21,7 @@ class Layer:
         # The surface of this layer; by default, the surface is transparent
         self.surface: Surface = Surface(size.toTuple(), pygame.SRCALPHA)
 
-        # The offset to take when displaying this layer to the screen
+        # The offset when this layer is displayed on the screen
         self.offset: Vector2 = Vector2(0, 0)
 
     def render(self) -> None:
@@ -44,12 +44,14 @@ class Layer:
         """
         self.surface = Surface(self.size.toTuple(), flag)
 
-    def display(self, screen: Surface) -> None:
+    def display(self, screen: Surface, rect: Rect | None = None) -> None:
         """
         Blits the surface on the screen.
         :param screen: The screen to blit.
+        :param rect: The rectangle area to display on the screen.
         """
-        screen.blit(self.surface, self.offset)
+        self.render()
+        screen.blit(self.surface, self.offset, rect)
 
 
 class GridLayer(Layer):
@@ -70,8 +72,7 @@ class GridLayer(Layer):
             self.surface: Surface | None = None
 
     def __init__(self, grid_size: Size, cell_size: Size):
-        size = Size(grid_size.width * cell_size.width, grid_size.height * cell_size.height)
-        super().__init__(size)
+        super().__init__(grid_size * cell_size)
 
         # Grid size
         self.grid_size: Size = grid_size
@@ -126,9 +127,7 @@ class GridLayer(Layer):
 
     def _render_indices(self, indices: List[int]):
         """
-
-        :param indices:
-        :return:
+        Renders cells of given indices.
         """
         for index in indices:
             cell: GridLayer.Cell = self.grid[index]
@@ -156,17 +155,23 @@ class Display:
     Game display.
     """
 
-    def __init__(self, window_size: Size):
+    def __init__(self, window_size: Size, background: str):
         # Screen
         self.screen: Surface = pygame.display.set_mode(window_size.toTuple())
 
+        # default background
+        self.background = background
+
+        # Static layer
+        self.static_layer: Layer = Layer(window_size)
+
         # Layer stack
-        self.layer_stack: List[Layer.__subclasses__] = []
+        self.layer_stack: List[Layer] = []
 
         # A map from layer names to layers
-        self._by_name: Dict[str, Layer.__subclasses__] = {}
+        self._by_name: Dict[str, Layer] = {}
 
-    def unshift_layer(self, name: str, layer: Layer.__subclasses__):
+    def unshift_layer(self, name: str, layer: Layer):
         """
         Unshifts a layer to the layer stack.
         :param name: The name of the layer to add.
@@ -175,7 +180,7 @@ class Display:
         self.layer_stack.insert(0, layer)
         self._by_name[name] = layer
 
-    def append_layer(self, name: str, layer: Layer.__subclasses__):
+    def append_layer(self, name: str, layer: Layer):
         """
         Adds a layer to the layer stack.
         :param name: The name of the layer to add.
@@ -204,9 +209,14 @@ class Display:
         Renders the screen by drawing layers from bottom to top, ensuring that each subsequent
         layer covers the previous ones.
         """
-        self.screen.fill("black")
+        self.screen.fill(self.background)
+
         for layer in self.layer_stack:
-            layer.render()
             layer.display(self.screen)
 
+    @staticmethod
+    def flip() -> None:
+        """
+        Flips the display.
+        """
         pygame.display.flip()

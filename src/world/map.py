@@ -3,15 +3,12 @@ Map module
 """
 from typing import Dict, List
 
-from pygame import Surface, Rect
+from pygame import Vector2
 
 from src.core.common import Size
 from src.core.settings import Settings
-from src.core.common import CoordinateSet
 from src.core.context import Context
 from src.core.display import GridLayer
-from src.world.data.frames import Frames
-from src.world.renderer import HouseRenderer
 
 settings = Settings()
 
@@ -40,6 +37,12 @@ class Map:
         :param name: The name of the layer.
         """
         return self._layers[name]
+
+    def all_layers(self) -> List[GridLayer]:
+        """
+        Returns all layers.
+        """
+        return list(self._layers.values())
 
     def clone(self) -> "Map":
         """
@@ -71,10 +74,10 @@ class MapController:
 
     def __init__(self, _map: Map.__subclasses__(), context: Context):
         # The map to control
-        self.map = _map
+        self.map: Map = _map
 
         # The context
-        self.context = context
+        self.context: Context = context
 
         # display
         display = self.context.display
@@ -90,46 +93,10 @@ class MapController:
         """
         self.map.load(context)
 
-
-class HouseMap(Map):
-    """
-    House map.
-    """
-
-    def __init__(self):
-        super().__init__(Size(60, 30))
-        self._init()
-
-    def _init(self):
-        super()._init()
-        furniture_top_layer: GridLayer = self.get_layer("furniture_top")
-        house_renderer = HouseRenderer()
-        house_renderer.render(furniture_top_layer, CoordinateSet.from_rect(Rect(10, 5, 20, 10)))
-
-    def load(self, context: Context) -> None:
-        pass
-
-
-class FarmMap(Map):
-    """
-    Farm.
-    """
-
-    def __init__(self):
-        super().__init__(Size(60, 30))
-        self._init()
-
-    def load(self, context: Context) -> None:
-        display = context.game.display
-        ground_layer: GridLayer = display.get_layer("ground")
-
-        # Animation
-        frames: List[Surface] = Frames.Water.list
-
-        def update_water(index: int):
-            for row in range(0, ground_layer.grid_size.height):
-                for col in range(0, ground_layer.grid_size.width):
-                    ground_layer.update_cell((col, row), frames[index])
-
-        update_water(0)
-        context.game.loop_manager.register(2, len(frames), update_water)
+    def set_offset(self, offset: Vector2) -> None:
+        """
+        Sets the offset
+        :param offset:
+        """
+        for layer in self.map.all_layers():
+            layer.offset = offset

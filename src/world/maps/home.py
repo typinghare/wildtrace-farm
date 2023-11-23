@@ -1,14 +1,30 @@
-from src.core.common import Size
+"""
+House map module.
+"""
+
+from pygame import Rect
+
+from src.core.common import Size, CoordinateSet
+from src.core.context import Context
+from src.core.display import GridLayer
 from src.world.map import Map
+from src.world.renderer import HouseRenderer
 
 
-class Home(Map):
+class HomeMap(Map):
     """
-    Home background.
+    House map.
     """
 
     def __init__(self):
-        super().__init__(Size(5, 5))
+        super().__init__(Size(20, 10))
+        self._init()
 
-    def _init_wall(self):
-        ground_layer = self.get_layer("ground")
+    def _init(self):
+        super()._init()
+        furniture_top_layer: GridLayer = self.get_layer("furniture_top")
+        house_renderer = HouseRenderer()
+        house_renderer.render(furniture_top_layer, CoordinateSet.from_rect(Rect(0, 0, 20, 10)))
+
+    def load(self, context: Context) -> None:
+        pass

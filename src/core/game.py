@@ -28,7 +28,7 @@ class Game:
         self.event_manager: EventManager = EventManager()
 
         # Game display
-        self.display: Display = Display(self.settings.display_window_size)
+        self.display: Display = Display(self.settings.display_window_size, self.settings.background)
 
         # Game loop manager
         self.loop_manager: LoopManager = LoopManager()
@@ -65,9 +65,11 @@ class Game:
         while self.running:
             EventManager.post(EventTypes.BEFORE_RENDER)
             self.event_manager.trigger_all(self.context)
+
             self.display.render()
-            self.event_manager.trigger(
-                EventManager.create_event(EventTypes.AFTER_RENDER), self.context
-            )
+            self.display.flip()
+
+            after_render_event = EventManager.create_event(EventTypes.AFTER_RENDER)
+            self.event_manager.trigger(after_render_event, self.context)
 
             self.context.dt = round(clock.tick(self.settings.fps))

@@ -3,7 +3,7 @@ Common module.
 """
 from typing import Tuple, List, Any
 
-from pygame import Rect
+from pygame import Rect, Vector2
 
 
 class Size:
@@ -34,6 +34,14 @@ class Size:
         Converts this size to a tuple.
         """
         return self._width, self._height
+
+    def __mul__(self, other: "Size"):
+        """
+        Multiplies two sizes.
+        :param other: The other size to multiply.
+        :return: A new size.
+        """
+        return Size(self._width * other._width, self._height * other._height)
 
 
 class ListWrapper:
