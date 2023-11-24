@@ -24,7 +24,7 @@ def register(path: str, frames: List[Surface]) -> ListWrapper:
 
 class Frames:
     """
-    Animation fame resources.
+    Animation frame resources.
     """
 
     # Character

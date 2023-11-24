@@ -3,7 +3,7 @@ Common module.
 """
 from typing import Tuple, List, Any
 
-from pygame import Rect, Vector2
+from pygame import Rect
 
 
 class Size:
@@ -45,6 +45,10 @@ class Size:
 
 
 class ListWrapper:
+    """
+    List wrapper. (In python, lists cannot be hashed)
+    """
+
     def __init__(self, list_to_wrap: List[Any]):
         self.list = list_to_wrap
 

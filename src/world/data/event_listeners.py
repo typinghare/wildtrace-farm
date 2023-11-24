@@ -24,8 +24,8 @@ from src.world.events.map import update_map
 def register(event_type: int, callback: Callable[[Context | None], None]) -> EventListener:
     """
     Registers an event listener.
-    :param event_type:
-    :param callback:
+    :param event_type: The type of event to listen for.
+    :param callback: The callback function to be called when the event is triggered.
     :return: The event listener.
     """
     loc = RegistryUtil.createLoc(callback.__name__)

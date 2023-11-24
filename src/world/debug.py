@@ -1,3 +1,5 @@
+import os
+
 import pygame.font
 from pygame import Vector2
 
@@ -17,7 +19,8 @@ class Debug:
         self.context: Context = context
 
         # Debug font
-        self.font = pygame.font.Font(None, 16)
+        font_path = os.path.join(os.path.join(context.settings.assets_dir, "fonts/Menlo.ttc"))
+        self.font = pygame.font.Font(font_path, 16)
 
     def print(self, message: str) -> None:
         """
@@ -26,7 +29,7 @@ class Debug:
         """
         display = self.context.game.display
         debug_layer: Layer = display.get_layer("debug")
-        text = self.font.render(message.__repr__(), True, (0, 0, 0))
+        text = self.font.render(message.__repr__(), True, (0xFF,) * 3)
 
         debug_layer.clear()
-        debug_layer.blit(text, Vector2(8, 8))
+        debug_layer.blit(text, Vector2(16, 16))

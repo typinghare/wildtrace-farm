@@ -40,7 +40,6 @@ class Camera:
         if self.screen_size.width < self.map_size.width:
             pos[0] = min(max(self.offset.x, 0), self.map_size.width - self.screen_size.width)
         else:
-            # Return the screen
             pos[0] = 0
 
         # y

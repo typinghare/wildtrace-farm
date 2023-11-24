@@ -22,7 +22,7 @@ class Character:
         self.context: Context = context
 
         # Animation frames list
-        self.frames_list: list[List[Surface]] = [
+        self.frames_list: List[List[Surface]] = [
             Frames.CharacterIdleUp.list,
             Frames.CharacterIdleRight.list,
             Frames.CharacterIdleDown.list,
@@ -33,14 +33,17 @@ class Character:
             Frames.CharacterMoveLeft.list,
         ]
 
+        # Current frames
+        self.current_frames: List[Surface] = self.frames_list[Direction.DOWN]
+
+        # A list to stores the key-pressing status of each direction
+        self.key_status = [False] * 4
+
+        # A list to stores the movement status of each direction
+        self.movement_status = [False] * 4
+
         # Current facing direction
         self.facing: int = Direction.DOWN
-
-        # Current frames
-        self.current_frames: List[Surface] = self.frames_list[self.facing]
-
-        # velocity vector
-        self.velocity: Vector2 = Vector2(0, 0)
 
     def init_animation(self) -> None:
         display = self.context.game.display
@@ -65,41 +68,82 @@ class Character:
         Starts the displacement on a specified direction.
         :param direction: The specified direction.
         """
-        self.facing = direction
-        self.current_frames = self.frames_list[direction + 4]
+        self.key_status[direction] = True
+        opposite = Direction.opposite_of(direction)
+        if not self.key_status[opposite]:
+            self.facing = direction
+            self.movement_status[direction] = True
 
-        if direction == Direction.UP:
-            self.velocity.y -= 1
-        elif direction == Direction.RIGHT:
-            self.velocity.x += 1
-        elif direction == Direction.DOWN:
-            self.velocity.y += 1
-        elif direction == Direction.LEFT:
-            self.velocity.x -= 1
+        self._update_after_key_status_change()
 
     def stop(self, direction: int) -> None:
         """
         Stops the displacement on a specified direction.
         :param direction: The specified direction.
         """
-        if direction == Direction.UP:
-            self.velocity.y += 1
-        elif direction == Direction.RIGHT:
-            self.velocity.x -= 1
-        elif direction == Direction.DOWN:
-            self.velocity.y -= 1
-        elif direction == Direction.LEFT:
-            self.velocity.x += 1
+        self.key_status[direction] = False
+        self.movement_status[direction] = False
+        opposite = Direction.opposite_of(direction)
+        if self.key_status[opposite]:
+            # Begin to move towards the opposite direction
+            self.facing = opposite
+            self.movement_status[opposite] = True
 
-        if self.velocity.magnitude() == 0:
-            self.current_frames = self.frames_list[direction]
+        self._update_after_key_status_change()
+
+    def _update_after_key_status_change(self) -> None:
+        """
+        Updates after key status changes.
+        """
+        # Check if it is idle
+        is_idle = True
+        direction_count = 0
+        for direction in range(0, 4):
+            if self.movement_status[direction]:
+                is_idle = False
+                direction_count += 1
+
+        # correct facing if direction count is 1
+        if direction_count == 1:
+            curr_direction = Direction.UP
+            for direction in range(1, 4):
+                if self.movement_status[direction]:
+                    curr_direction = direction
+                    break
+            self.facing = curr_direction
+
+        if is_idle:
+            self.current_frames = self.frames_list[self.facing]
+        else:
+            self.current_frames = self.frames_list[self.facing + 4]
+
+    def get_unit_velocity(self) -> Vector2:
+        """
+        Returns the velocity unit vector.
+        """
+        x, y = 0, 0
+        if self.movement_status[Direction.UP]:
+            y -= 1
+        elif self.movement_status[Direction.DOWN]:
+            y += 1
+        if self.movement_status[Direction.RIGHT]:
+            x += 1
+        elif self.movement_status[Direction.LEFT]:
+            x -= 1
+
+        velocity = Vector2(x, y)
+        if velocity.magnitude() > 0:
+            velocity = velocity.normalize()
+
+        return velocity
 
     def update(self) -> None:
         """
         Updates this character.
         """
         dt = self.context.dt
-        camera: Camera = self.context["camera"]
+        velocity = self.get_unit_velocity()
+        displacement = Vector2(velocity.x * dt * 0.2, velocity.y * dt * 0.2)
 
-        displacement = Vector2(-self.velocity.x * dt * 0.1, -self.velocity.y * dt * 0.1)
+        camera: Camera = self.context["camera"]
         camera.move(displacement)

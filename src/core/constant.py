@@ -32,3 +32,7 @@ class Direction:
     RIGHT: int = 1
     DOWN: int = 2
     LEFT: int = 3
+
+    @staticmethod
+    def opposite_of(direction: int):
+        return (direction + 2) % 4

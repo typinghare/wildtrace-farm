@@ -20,7 +20,7 @@ def register(path: str, _map: Map.__subclasses__()) -> Map.__subclasses__():
 
 class Maps:
     """
-    Maps.
+    Map resources.
     """
 
     Home: HomeMap = register("house", HomeMap())

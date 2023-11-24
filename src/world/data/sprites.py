@@ -18,7 +18,7 @@ def register(
     path: str, tile_set: Surface, pos: Tuple[int, int], size: Tuple[int, int] = (48, 48)
 ) -> Surface:
     """
-    Registers a sprite.
+    Registers a sprite image.
     :param path: The path of the sprite resource.
     :param tile_set: The tile set to crop from.
     :param pos: The position of the tile in the given tile set.

@@ -37,3 +37,7 @@ def init_debug(context: Context) -> None:
     Initializes the debug tool.
     """
     context["debug"] = Debug.INSTANCE = Debug(context)
+
+    # debug layer
+    display = context.display
+    display.append_layer("debug", Layer(display.size))

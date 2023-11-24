@@ -1,7 +1,7 @@
 """
 Display module.
 """
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 
 import pygame
 from pygame import Surface, Vector2, Rect
@@ -24,6 +24,8 @@ class Layer:
         # The offset when this layer is displayed on the screen
         self.offset: Vector2 = Vector2(0, 0)
 
+        self.rect: Optional[Rect] = None
+
     def render(self) -> None:
         """
         Renders this layer.
@@ -44,14 +46,13 @@ class Layer:
         """
         self.surface = Surface(self.size.toTuple(), flag)
 
-    def display(self, screen: Surface, rect: Rect | None = None) -> None:
+    def display(self, screen: Surface) -> None:
         """
         Blits the surface on the screen.
         :param screen: The screen to blit.
-        :param rect: The rectangle area to display on the screen.
         """
         self.render()
-        screen.blit(self.surface, self.offset, rect)
+        screen.blit(self.surface, self.offset, self.rect)
 
 
 class GridLayer(Layer):
@@ -156,6 +157,9 @@ class Display:
     """
 
     def __init__(self, window_size: Size, background: str):
+        # Size
+        self.size = window_size
+
         # Screen
         self.screen: Surface = pygame.display.set_mode(window_size.toTuple())
 

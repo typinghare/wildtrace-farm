@@ -1,9 +1,9 @@
 """
 Map module
 """
-from typing import Dict, List
+from typing import Dict, List, Optional
 
-from pygame import Vector2
+from pygame import Vector2, Rect
 
 from src.core.common import Size
 from src.core.settings import Settings
@@ -95,8 +95,14 @@ class MapController:
 
     def set_offset(self, offset: Vector2) -> None:
         """
-        Sets the offset
-        :param offset:
+        Sets the offset for all layers.
         """
         for layer in self.map.all_layers():
             layer.offset = offset
+
+    def set_rect(self, rect: Optional[Rect]) -> None:
+        """
+        Sets the rectangle for all layers.
+        """
+        for layer in self.map.all_layers():
+            layer.rect = rect
