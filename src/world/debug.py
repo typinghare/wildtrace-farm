@@ -19,9 +19,12 @@ class Debug:
         # Game context
         self.context: Context = context
 
+        # Font size
+        self._font_size: int = 16
+
         # Debug font
         font_path = os.path.join(os.path.join(context.settings.assets_dir, "fonts/Menlo.ttc"))
-        self.font = pygame.font.Font(font_path, 16)
+        self.font = pygame.font.Font(font_path, self._font_size)
 
     def print(self, message: Any) -> None:
         """
@@ -38,5 +41,6 @@ class Debug:
         debug_layer: Layer = display.get_layer("debug")
 
         debug_layer.clear()
-        # debug_layer.blit(self.font.render(text, True, (0xFF,) * 3), Vector2(16, 16))
-        debug_layer.blit(self.font.render(text, True, (0xFF,) * 3))
+        debug_layer.blit(
+            self.font.render(text, True, (0xFF,) * 3), Vector2(self._font_size, self._font_size)
+        )

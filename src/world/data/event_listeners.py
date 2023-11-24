@@ -11,6 +11,7 @@ from src.core.event import EventListener
 from src.core.constant import EventTypes
 from src.world.data.registries import Registries
 from src.world.events.debug import init_debug
+from src.world.events.layer import init_layer
 from src.world.events.window import quit_game, update_loops
 from src.world.events.character import (
     init_character,
@@ -45,8 +46,9 @@ class EventListeners:
     QuitGame = register(pygame.QUIT, quit_game)
 
     # On start
-    InitLayer = register(EventTypes.ON_START, init_map)
+    InitLayer = register(EventTypes.ON_START, init_layer)
     InitDebug = register(EventTypes.ON_START, init_debug)
+    InitMap = register(EventTypes.ON_START, init_map)
     InitCharacter = register(EventTypes.ON_START, init_character)
 
     # Before render

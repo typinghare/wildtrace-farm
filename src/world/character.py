@@ -150,20 +150,31 @@ class Character:
         velocity = self.get_unit_velocity()
         displacement = Vector2(velocity.x * dt * 0.2, velocity.y * dt * 0.2)
 
+        # Check collision
         camera: Camera = self.context["camera"]
         camera.move(displacement)
-
-        # Update character layer
         virtual_center: Tuple[int, int] = camera.get_virtual_center()
+
+        # collision
         map_controller: MapController = self.context["map_controller"]
-        character_offset = Vector2(
+        map_offset = map_controller.offset
+        character_coordinate = (virtual_center[0] - map_offset.x, virtual_center[1] - map_offset.y)
+
+        self._update_character_layer()
+
+    def _update_character_layer(self) -> None:
+        """
+        Updates character layer.
+        """
+
+        camera: Camera = self.context["camera"]
+        virtual_center: Tuple[int, int] = camera.get_virtual_center()
+        character_layer: GridLayer = self.context.display.get_layer("character")
+        map_controller: MapController = self.context["map_controller"]
+        map_offset = map_controller.offset
+        character_layer.offset = Vector2(
             virtual_center[0] - self.size.width // 2,
             virtual_center[1] - self.size.height // 2,
         )
-        character_layer: GridLayer = self.context.display.get_layer("character")
-        character_layer.offset = character_offset
 
-        # collision
-        map_offset = map_controller.offset
-        character_coordinate = (virtual_center[0] - map_offset.x, virtual_center[1] - map_offset.y)
-        self.context["debug"].print(character_coordinate)
+        self.context["debug"].print(character_layer.offset)

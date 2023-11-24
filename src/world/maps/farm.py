@@ -20,7 +20,6 @@ class FarmMap(Map):
 
     def __init__(self):
         super().__init__(Size(60, 30))
-        self._init()
 
     def load(self, context: Context) -> None:
         display = context.game.display

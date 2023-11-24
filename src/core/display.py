@@ -53,7 +53,7 @@ class Layer:
         :param screen: The screen to blit.
         """
         self.render()
-        screen.blit(self.surface, self.offset, self.rect)
+        screen.blit(self.surface, self.offset)
 
 
 class GridLayer(Layer):
@@ -185,7 +185,7 @@ class Display:
         self.layer_stack.insert(0, layer)
         self._by_name[name] = layer
 
-    def append_layer(self, name: str, layer: Layer):
+    def append_layer(self, name: str, layer: Layer) -> None:
         """
         Adds a layer to the layer stack.
         :param name: The name of the layer to add.
@@ -193,6 +193,20 @@ class Display:
         """
         self.layer_stack.append(layer)
         self._by_name[name] = layer
+
+    def set_layer(self, name: str, layer: Layer) -> None:
+        """
+        Sets a layer.
+        :param name: The name of the layer.
+        :param layer: The layer to set.
+        """
+        original_layer = self._by_name[name]
+        self._by_name[name] = layer
+
+        for i in range(len(self.layer_stack)):
+            if original_layer == self.layer_stack[i]:
+                self.layer_stack[i] = layer
+                break
 
     def get_layer(self, name: str) -> Layer.__subclasses__:
         """

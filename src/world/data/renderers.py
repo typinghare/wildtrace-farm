@@ -21,5 +21,5 @@ class Renderers:
     Renderer resources.
     """
 
-    House: HouseRenderer = register("house", GrassRenderer())
+    House: HouseRenderer = register("house", HouseRenderer())
     Grass: GrassRenderer = register("grass", GrassRenderer())

@@ -113,6 +113,7 @@ class GrassRenderer(Renderer):
             Tiles.GrassSquare5,
             Tiles.GrassSquare6,
             Tiles.GrassSquare7,
+            Tiles.GrassSquare8,
             Tiles.GrassSquare9,
             Tiles.GrassSquare10,
             Tiles.GrassSquare11,

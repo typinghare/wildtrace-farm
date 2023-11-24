@@ -5,7 +5,6 @@ from pygame import Vector2
 
 from src.core.common import Size
 from src.core.context import Context
-from src.core.display import GridLayer, Layer
 from src.world.camera import Camera
 from src.world.data.maps import Maps
 from src.world.map import MapController
@@ -15,16 +14,13 @@ def init_map(context: Context) -> None:
     """
     Initializes map.
     """
-    # initialize character layer
-    screen_size = context.display.size
-    context.display.unshift_layer("character", Layer(screen_size))
-
     # Map controller
     context["map_controller"] = map_controller = MapController(Maps.Home, context)
     map_controller.load(context)
     map_controller.refresh_block_grid()
 
     # Camera
+    screen_size = context.display.size
     map_size = map_controller.map.size
     cell_size = context.settings.display_cell_size
     context["camera"] = Camera(

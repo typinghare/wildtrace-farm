@@ -12,8 +12,7 @@ def init_character(context: Context):
     """
     Initializes character.
     """
-    character: Character = Character(context)
-    context["character"] = character
+    character = context["character"] = Character(context)
     character.init_animation()
 
 

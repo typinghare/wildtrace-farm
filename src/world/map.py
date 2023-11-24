@@ -21,17 +21,16 @@ class Map:
     """
 
     def __init__(self, size: Size):
-        # The size of the map
+        # The size (grid size) of the map
         self.size = size
 
         # The layers
-        self._layers: Dict[str, GridLayer] = {}
-
-    def _init(self):
-        self._layers["ground"] = GridLayer(self.size, settings.display_cell_size)
-        self._layers["floor"] = GridLayer(self.size, settings.display_cell_size)
-        self._layers["furniture_bottom"] = GridLayer(self.size, settings.display_cell_size)
-        self._layers["furniture_top"] = GridLayer(self.size, settings.display_cell_size)
+        self._layers: Dict[str, GridLayer] = {
+            "ground": GridLayer(self.size, settings.display_cell_size),
+            "floor": GridLayer(self.size, settings.display_cell_size),
+            "furniture_bottom": GridLayer(self.size, settings.display_cell_size),
+            "furniture_top": GridLayer(self.size, settings.display_cell_size),
+        }
 
     def get_layer(self, name: str) -> GridLayer:
         """
@@ -83,10 +82,10 @@ class MapController:
 
         # display
         display = self.context.display
-        display.unshift_layer("furniture_top", self.map.get_layer("furniture_top"))
-        display.unshift_layer("furniture_bottom", self.map.get_layer("furniture_bottom"))
-        display.unshift_layer("floor", self.map.get_layer("floor"))
-        display.unshift_layer("ground", self.map.get_layer("ground"))
+        display.set_layer("furniture_top", self.map.get_layer("furniture_top"))
+        display.set_layer("furniture_bottom", self.map.get_layer("furniture_bottom"))
+        display.set_layer("floor", self.map.get_layer("floor"))
+        display.set_layer("ground", self.map.get_layer("ground"))
 
         # Block grid; cells are booleans; a cell is marked as true if it is a collision object
         self.block_grid: Grid = Grid(self.map.size, False)

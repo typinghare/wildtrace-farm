@@ -11,7 +11,7 @@ from .tilesets import Tilesets
 from .registries import Registries
 from ..util import crop_image, scale_image
 
-scale_factor = Settings().display_scale_factor
+scale_factor = Settings().display_tile_sf
 
 
 def register(
