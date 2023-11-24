@@ -60,6 +60,19 @@ class Registry:
 
         return ref
 
+    def get_ref_by_res(self, res: Any) -> Ref:
+        """
+        Retrieves the reference of a resource.
+        :param res: A resource
+        :return: The reference of the given resource.
+        """
+        res_loc = self.by_res.get(res)
+
+        if res_loc is None:
+            raise ResNotRegisteredException(res)
+
+        return self.get_ref(res_loc)
+
     def get_by_loc(self, res_loc: ResLoc) -> object:
         """
         Returns the location of a resource.
@@ -87,7 +100,7 @@ class ResKeyConflictException(Exception):
     """
 
     def __init__(self, res_key: ResKey):
-        super(f"Fail to register resource due to key conflict: [ {res_key} ]")
+        super().__init__(f"Fail to register resource due to key conflict: [ {res_key} ]")
 
 
 class ResNotFoundException(Exception):
@@ -96,7 +109,7 @@ class ResNotFoundException(Exception):
     """
 
     def __init__(self, res_loc: ResLoc):
-        super(f"Resource not found at location: [ {res_loc} ]")
+        super().__init__(f"Resource not found at location: [ {res_loc} ]")
 
 
 class ResNotRegisteredException(Exception):
@@ -105,4 +118,4 @@ class ResNotRegisteredException(Exception):
     """
 
     def __init__(self, res: Any):
-        super(f"Resource not registered: [ {res} ]")
+        super().__init__(f"Resource not registered: [{res}]")

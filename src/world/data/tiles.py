@@ -27,7 +27,7 @@ def register(
     """
     image = scale_image(crop_image(tile_set, pos, size), scale_factor)
 
-    return Registries.TileSet.register(RegistryUtil.createLoc(path), image)
+    return Registries.Tile.register(RegistryUtil.createLoc(path), image)
 
 
 class TileTags:
@@ -132,9 +132,19 @@ class Tiles:
     BeetRipening = register("beat/ripening", Tilesets.BasicPlants, (64, 16))
     BeetProduct = register("beat/product", Tilesets.BasicPlants, (80, 16))
 
-    def __init__(self):
-        # Collision object tag
-        collision_objects = [Tiles.TableBig, Tiles.TableSmall]
-        for collision_object in collision_objects:
-            ref = Registries.Tile.get_ref(collision_object)
-            ref.bind_tag(TileTags.COLLISION_OBJECT)
+
+# Collision object tag
+collision_objects = [
+    Tiles.WoodenHouse6,
+    Tiles.WoodenHouse14,
+    Tiles.WoodenHouse12,
+    Tiles.WoodenHouse7,
+    Tiles.WoodenHouse13,
+    Tiles.WoodenHouse3,
+    Tiles.WoodenHouse11,
+    Tiles.WoodenHouse9,
+]
+
+for collision_object in collision_objects:
+    ref = Registries.Tile.get_ref_by_res(collision_object)
+    ref.bind_tag(TileTags.COLLISION_OBJECT)

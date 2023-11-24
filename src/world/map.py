@@ -5,10 +5,12 @@ from typing import Dict, List, Optional
 
 from pygame import Vector2, Rect
 
-from src.core.common import Size
+from src.core.common import Size, Grid
 from src.core.settings import Settings
 from src.core.context import Context
 from src.core.display import GridLayer
+from src.world.data.registries import Registries
+from src.world.data.tiles import TileTags
 
 settings = Settings()
 
@@ -24,6 +26,9 @@ class Map:
 
         # The layers
         self._layers: Dict[str, GridLayer] = {}
+
+        # Block grid; cells are booleans; a cell is marked as true if it is a collision object
+        self.block_grid: Grid = Grid(self.size, False)
 
     def _init(self):
         self._layers["ground"] = GridLayer(self.size, settings.display_cell_size)
@@ -43,6 +48,27 @@ class Map:
         Returns all layers.
         """
         return list(self._layers.values())
+
+    def refresh_block_grid(self) -> None:
+        """
+        Refreshes the block grid.
+        """
+        for layer in self._layers.values():
+            self.refresh_block_grid_of_layer(layer)
+
+    def refresh_block_grid_of_layer(self, layer):
+        """
+        Refreshes block grid of a certain layer.
+        """
+        iterator = layer.grid.get_iterator((0, self.size.height), (0, self.size.width))
+        for cell in iterator:
+            surface = cell.surface
+            if surface is None:
+                continue
+
+            ref = Registries.Tile.get_ref_by_res(surface)
+            if ref.contain_tag(TileTags.COLLISION_OBJECT):
+                self.block_grid.set(cell.coordinate, True)
 
     def clone(self) -> "Map":
         """

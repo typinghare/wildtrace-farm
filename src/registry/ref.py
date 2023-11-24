@@ -21,6 +21,7 @@ class Ref:
     Resource Reference.
     """
 
+    # To save memory
     _EmptyTagSet = set()
 
     def __init__(self, res_key: ResKey, res: object, _id: int):
@@ -40,6 +41,9 @@ class Ref:
         Binds a tag to this reference.
         :param tag: The tag to bind.
         """
+        if self._tag_set == Ref._EmptyTagSet:
+            self._tag_set = set()
+
         self._tag_set.add(tag)
 
     def contain_tag(self, tag: Tag) -> bool:

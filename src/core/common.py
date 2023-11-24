@@ -58,12 +58,16 @@ class Grid:
     General grid.
     """
 
-    def __init__(self, size: Size):
+    def __init__(self, size: Size, cell: Any = None):
         # The size of this grid
         self.size = size
 
         # Cells
         self._cells: List[Any] = [None] * size.width * size.height
+
+        # Fill
+        if cell is not None:
+            self.fill(cell)
 
     def get_index(self, coordinate: Tuple[int, int]) -> Any:
         """
@@ -88,6 +92,14 @@ class Grid:
         """
         self._cells[self.get_index(coordinate)] = cell
 
+    def fill(self, cell: Any) -> None:
+        """
+        Fills all cells with a given value.
+        :param cell: The value of fill.
+        """
+        for i in range(0, len(self._cells)):
+            self._cells[i] = cell
+
     def __getitem__(self, index: int) -> Any:
         """
         Retrieves a cell of a specified index.
@@ -108,6 +120,44 @@ class Grid:
         Returns the size of cells.
         """
         return len(self._cells)
+
+    def get_iterator(
+        self, row_range: Tuple[int, int], col_range: Tuple[int, int]
+    ) -> "Grid.Iterator":
+        """
+        Returns an iterator.
+        :param row_range: The range of row.
+        :param col_range: The range of column.
+        """
+        return self.Iterator(self, row_range, col_range)
+
+    class Iterator:
+        """
+        Grid iterator.
+        """
+
+        def __init__(self, grid: "Grid", row_range: Tuple[int, int], col_range: Tuple[int, int]):
+            self.grid = grid
+            self.row_start, self.row_end = row_range
+            self.col_start, self.col_end = col_range
+            self.current_row = self.row_start
+            self.current_col = self.col_start
+
+        def __iter__(self):
+            return self
+
+        def __next__(self):
+            if self.current_row >= self.row_end:
+                raise StopIteration
+
+            cell = self.grid.get((self.current_col, self.current_row))
+            self.current_col += 1
+
+            if self.current_col >= self.col_end:
+                self.current_col = self.col_start
+                self.current_row += 1
+
+            return cell
 
 
 class CoordinateSet:
