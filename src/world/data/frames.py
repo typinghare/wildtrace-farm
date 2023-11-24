@@ -134,3 +134,8 @@ class Frames:
     )
 
     Water = register("water", [Tiles.Water0, Tiles.Water1, Tiles.Water2, Tiles.Water3])
+
+    # Building
+    Door = register(
+        "door", [Tiles.Door0, Tiles.Door1, Tiles.Door2, Tiles.Door3, Tiles.Door4, Tiles.Door5]
+    )

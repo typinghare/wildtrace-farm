@@ -44,6 +44,7 @@ class Tilesets:
     # Building
     Furniture = register("tilesets/building/furniture.png")
     WoodenHouse = register("tilesets/building/wooden_house.png")
+    Door = register("tilesets/building/door.png")
 
     # Character
     CharacterSpriteSheet = register("tilesets/character/sprite_sheet.png")

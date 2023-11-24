@@ -22,7 +22,7 @@ class Settings:
             self.assets_dir = os.path.abspath(os.path.join(__file__, "../../../assets"))
 
             # Frame per second
-            self.fps = 60
+            self.fps = 30
 
             # [Display] Window caption
             self.display_window_caption = "Wildtrace Farm"

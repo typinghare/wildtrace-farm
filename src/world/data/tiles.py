@@ -116,6 +116,14 @@ class Tiles:
     WoodenHouse11 = register("wooden_house/11", Tilesets.WoodenHouse, (16, 48))
     WoodenHouse9 = register("wooden_house/9", Tilesets.WoodenHouse, (32, 48))
 
+    # Doors
+    Door0 = register("door/0", Tilesets.Door, (0, 0))
+    Door1 = register("door/1", Tilesets.Door, (16, 0))
+    Door2 = register("door/2", Tilesets.Door, (32, 0))
+    Door3 = register("door/3", Tilesets.Door, (48, 0))
+    Door4 = register("door/4", Tilesets.Door, (64, 0))
+    Door5 = register("door/5", Tilesets.Door, (80, 0))
+
     # Wheat
     WheatSeed = register("wheat/seed", Tilesets.BasicPlants, (0, 0))
     WheatSeedling = register("wheat/seedling", Tilesets.BasicPlants, (16, 0))
@@ -143,6 +151,12 @@ collision_objects = [
     Tiles.WoodenHouse3,
     Tiles.WoodenHouse11,
     Tiles.WoodenHouse9,
+    Tiles.Door0,
+    Tiles.Door1,
+    Tiles.Door2,
+    Tiles.Door3,
+    Tiles.Door4,
+    Tiles.Door5,
 ]
 
 for collision_object in collision_objects:
