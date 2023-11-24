@@ -10,7 +10,7 @@ from src.core.context import Context
 from src.core.event import EventListener
 from src.core.constant import EventTypes
 from src.world.data.registries import Registries
-from src.world.events.init import init_map, init_debug
+from src.world.events.debug import init_debug
 from src.world.events.window import quit_game, update_loops
 from src.world.events.character import (
     init_character,
@@ -18,7 +18,7 @@ from src.world.events.character import (
     character_key_down,
     update_character,
 )
-from src.world.events.map import update_map
+from src.world.events.map import init_map, update_map
 
 
 def register(event_type: int, callback: Callable[[Context | None], None]) -> EventListener:

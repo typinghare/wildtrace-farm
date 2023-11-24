@@ -20,7 +20,11 @@ class Camera:
         # The size of the map
         self.map_size: Size = map_size
 
-        # Offset
+        # Offset of the virtual screen relative to the map
+        # If either component of the offset is not zero, the screen cannot accommodate the whole
+        # screen, and thus some part of the map is cut off
+        # On the contrary, if the screen can accommodate the whole map, the offset should always
+        # be (0, 0)
         self.offset: Vector2 = Vector2(0, 0)
 
     def move(self, displacement: Vector2) -> None:

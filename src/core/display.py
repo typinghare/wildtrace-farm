@@ -24,6 +24,7 @@ class Layer:
         # The offset when this layer is displayed on the screen
         self.offset: Vector2 = Vector2(0, 0)
 
+        # Rectangle to crop
         self.rect: Optional[Rect] = None
 
     def render(self) -> None:
@@ -94,7 +95,7 @@ class GridLayer(Layer):
 
     def get_cell(self, coordinate: Tuple[int, int]) -> "GridLayer.Cell":
         """
-        Retrieves a cell at the specified position.
+        Retrieves a cell at a specified position.
         :param coordinate The coordinate of the cell.
         :return: The cell located at the specified position in the grid.
         """
@@ -102,7 +103,7 @@ class GridLayer(Layer):
 
     def update_cell(self, coordinate: Tuple[int, int], surface: Surface | None) -> None:
         """
-        Updates a cell at the specified position.
+        Updates a cell at a specified position.
         :return: The cell located at the specified position in the grid.
         """
         index: int = self.grid.get_index(coordinate)

@@ -1,4 +1,5 @@
 import os
+from typing import Any
 
 import pygame.font
 from pygame import Vector2
@@ -22,14 +23,20 @@ class Debug:
         font_path = os.path.join(os.path.join(context.settings.assets_dir, "fonts/Menlo.ttc"))
         self.font = pygame.font.Font(font_path, 16)
 
-    def print(self, message: str) -> None:
+    def print(self, message: Any) -> None:
         """
         Prints a message on the screen.
         :param message: Message to print on the screen.
         """
+        text = message.__repr__()
+        if isinstance(text, tuple):
+            text = f"tuple({message[0]}, {message[1]})"
+        elif isinstance(text, Vector2):
+            text = f"Vector2({message.x}, {message.y})"
+
         display = self.context.game.display
         debug_layer: Layer = display.get_layer("debug")
-        text = self.font.render(message.__repr__(), True, (0xFF,) * 3)
 
         debug_layer.clear()
-        debug_layer.blit(text, Vector2(16, 16))
+        # debug_layer.blit(self.font.render(text, True, (0xFF,) * 3), Vector2(16, 16))
+        debug_layer.blit(self.font.render(text, True, (0xFF,) * 3))

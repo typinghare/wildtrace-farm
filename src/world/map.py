@@ -27,9 +27,6 @@ class Map:
         # The layers
         self._layers: Dict[str, GridLayer] = {}
 
-        # Block grid; cells are booleans; a cell is marked as true if it is a collision object
-        self.block_grid: Grid = Grid(self.size, False)
-
     def _init(self):
         self._layers["ground"] = GridLayer(self.size, settings.display_cell_size)
         self._layers["floor"] = GridLayer(self.size, settings.display_cell_size)
@@ -48,27 +45,6 @@ class Map:
         Returns all layers.
         """
         return list(self._layers.values())
-
-    def refresh_block_grid(self) -> None:
-        """
-        Refreshes the block grid.
-        """
-        for layer in self._layers.values():
-            self.refresh_block_grid_of_layer(layer)
-
-    def refresh_block_grid_of_layer(self, layer):
-        """
-        Refreshes block grid of a certain layer.
-        """
-        iterator = layer.grid.get_iterator((0, self.size.height), (0, self.size.width))
-        for cell in iterator:
-            surface = cell.surface
-            if surface is None:
-                continue
-
-            ref = Registries.Tile.get_ref_by_res(surface)
-            if ref.contain_tag(TileTags.COLLISION_OBJECT):
-                self.block_grid.set(cell.coordinate, True)
 
     def clone(self) -> "Map":
         """
@@ -112,6 +88,12 @@ class MapController:
         display.unshift_layer("floor", self.map.get_layer("floor"))
         display.unshift_layer("ground", self.map.get_layer("ground"))
 
+        # Block grid; cells are booleans; a cell is marked as true if it is a collision object
+        self.block_grid: Grid = Grid(self.map.size, False)
+
+        # Offset for all layers
+        self.offset: Vector2 = Vector2(0, 0)
+
     def load(self, context: Context) -> None:
         """
         Loads the map.
@@ -123,6 +105,7 @@ class MapController:
         """
         Sets the offset for all layers.
         """
+        self.offset = offset
         for layer in self.map.all_layers():
             layer.offset = offset
 
@@ -132,3 +115,25 @@ class MapController:
         """
         for layer in self.map.all_layers():
             layer.rect = rect
+
+    def refresh_block_grid(self) -> None:
+        """
+        Refreshes the block grid.
+        """
+        for layer in self.map.all_layers():
+            self.refresh_block_grid_of_layer(layer)
+
+    def refresh_block_grid_of_layer(self, layer):
+        """
+        Refreshes block grid of a certain layer.
+        """
+        size = self.map.size
+        iterator = layer.grid.get_iterator((0, size.height), (0, size.width))
+        for cell in iterator:
+            surface = cell.surface
+            if surface is None:
+                continue
+
+            ref = Registries.Tile.get_ref_by_res(surface)
+            if ref.contain_tag(TileTags.COLLISION_OBJECT):
+                self.block_grid.set(cell.coordinate, True)

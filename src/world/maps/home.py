@@ -17,16 +17,15 @@ class HomeMap(Map):
     """
 
     def __init__(self):
-        super().__init__(Size(8, 10))
+        super().__init__(Size(10, 8))
         self._init()
 
     def _init(self):
         super()._init()
         furniture_top_layer: GridLayer = self.get_layer("furniture_top")
         house_renderer = HouseRenderer()
-        house_renderer.render(furniture_top_layer, CoordinateSet.from_rect(Rect(0, 0, 8, 10)))
-
-        self.refresh_block_grid()
+        wall_rect = CoordinateSet.from_rect(Rect(0, 0, self.size.width, self.size.height))
+        house_renderer.render(furniture_top_layer, wall_rect)
 
     def load(self, context: Context) -> None:
         pass

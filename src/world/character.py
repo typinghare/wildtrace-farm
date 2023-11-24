@@ -1,15 +1,17 @@
 """
 Character module.
 """
-from typing import List
+from typing import List, Tuple
 
 from pygame import Vector2, Surface
 
+from src.core.common import Size
 from src.core.constant import Direction
 from src.core.context import Context
-from src.core.display import Layer
+from src.core.display import Layer, GridLayer
 from src.world.camera import Camera
 from src.world.data.frames import Frames
+from src.world.map import MapController
 
 
 class Character:
@@ -20,6 +22,9 @@ class Character:
     def __init__(self, context: Context):
         # Game context
         self.context: Context = context
+
+        # Character size
+        self.size: Size = context.settings.character_size
 
         # Animation frames list
         self.frames_list: List[List[Surface]] = [
@@ -147,3 +152,18 @@ class Character:
 
         camera: Camera = self.context["camera"]
         camera.move(displacement)
+
+        # Update character layer
+        virtual_center: Tuple[int, int] = camera.get_virtual_center()
+        map_controller: MapController = self.context["map_controller"]
+        character_offset = Vector2(
+            virtual_center[0] - self.size.width // 2,
+            virtual_center[1] - self.size.height // 2,
+        )
+        character_layer: GridLayer = self.context.display.get_layer("character")
+        character_layer.offset = character_offset
+
+        # collision
+        map_offset = map_controller.offset
+        character_coordinate = (virtual_center[0] - map_offset.x, virtual_center[1] - map_offset.y)
+        self.context["debug"].print(character_coordinate)

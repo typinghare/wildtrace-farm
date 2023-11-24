@@ -28,7 +28,7 @@ class Settings:
             self.display_window_caption = "Wildtrace Farm"
 
             # [Display] Window size
-            self.display_window_size = Size(1200, 800)
+            self.display_window_size = Size(1280, 800)
 
             # [Display] Default display background
             self.background = "#333333"
