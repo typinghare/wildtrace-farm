@@ -136,6 +136,10 @@ class Tiles:
     ChestFront3 = register("chest/front/3", Tilesets.Chest, (176, 16), (16, 16), 3)
     ChestFront4 = register("chest/front/4", Tilesets.Chest, (224, 16), (16, 16), 3)
 
+    # Tools
+    ToolWaterCan = register("tool/water_can", Tilesets.ToolMaterial, (0, 0))
+    ToolHoe = register("tool/hoe", Tilesets.ToolMaterial, (32, 0))
+
     # Wheat
     WheatSeed = register("wheat/seed", Tilesets.BasicPlants, (0, 0))
     WheatSeedling = register("wheat/seedling", Tilesets.BasicPlants, (16, 0))

@@ -20,6 +20,7 @@ from src.world.events.character import (
     update_character,
 )
 from src.world.events.map import init_map, update_map
+from src.world.events.tool import init_tool, update_tool, tool_key_up
 
 
 def register(event_type: int, callback: Callable[[Context | None], None]) -> EventListener:
@@ -50,13 +51,18 @@ class EventListeners:
     InitDebug = register(EventTypes.ON_START, init_debug)
     InitMap = register(EventTypes.ON_START, init_map)
     InitCharacter = register(EventTypes.ON_START, init_character)
+    InitTool = register(EventTypes.ON_START, init_tool)
 
     # Before render
     UpdateDebug = register(EventTypes.BEFORE_RENDER, update_debug)
     UpdateLoops = register(EventTypes.BEFORE_RENDER, update_loops)
     UpdateMap = register(EventTypes.BEFORE_RENDER, update_map)
     UpdateCharacter = register(EventTypes.BEFORE_RENDER, update_character)
+    UpdateTool = register(EventTypes.BEFORE_RENDER, update_tool)
 
-    # Character movements
+    # Key down
     CharacterKeyDown = register(pygame.KEYDOWN, character_key_down)
+
+    # Key up
     CharacterKeyUp = register(pygame.KEYUP, character_key_up)
+    ToolKeyUp = register(pygame.KEYUP, tool_key_up)

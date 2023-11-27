@@ -28,7 +28,7 @@ class Settings:
             self.display_window_caption = "Wildtrace Farm"
 
             # [Display] Window size
-            self.display_window_size = Size(1280, 800)
+            self.display_window_size = Size(1200, 720)
 
             # [Display] Default display background
             self.background = "#333333"
@@ -40,6 +40,8 @@ class Settings:
             self.display_character_scale_factor = 2
 
             # [Display] cell size; how many pixels does a cell contain
+            # Cell size: Size(48, 48)
+            # Grid size: Size(25, 15)
             self.display_cell_size = Size(
                 16 * self.display_tile_scale_factor, 16 * self.display_tile_scale_factor
             )

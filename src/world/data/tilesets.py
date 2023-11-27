@@ -47,5 +47,8 @@ class Tilesets:
     Door = register("tilesets/building/door.png")
     Chest = register("tilesets/building/chest.png")
 
+    # Item
+    ToolMaterial = register("tilesets/item/tool_material.png")
+
     # Character
     CharacterSpriteSheet = register("tilesets/character/sprite_sheet.png")

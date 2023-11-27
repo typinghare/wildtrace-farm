@@ -15,7 +15,8 @@ def init_map(context: Context) -> None:
     Initializes map.
     """
     # Map controller
-    context["map_controller"] = map_controller = MapController(Maps.Home, context)
+    default_map = Maps.Home
+    context["map_controller"] = map_controller = MapController(default_map, context)
     map_controller.load(context)
     map_controller.refresh_block_grid()
 
