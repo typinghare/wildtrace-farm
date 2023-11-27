@@ -11,6 +11,7 @@ from src.core.context import Context
 from src.core.display import Layer, GridLayer
 from src.world.camera import Camera
 from src.world.data.frames import Frames
+from src.world.debug import Debug
 from src.world.map import MapController
 
 
@@ -150,15 +151,22 @@ class Character:
         velocity = self.get_unit_velocity()
         displacement = Vector2(velocity.x * dt * 0.2, velocity.y * dt * 0.2)
 
-        # Check collision
+        # Camera moves
         camera: Camera = self.context["camera"]
         camera.move(displacement)
-        virtual_center: Tuple[int, int] = camera.get_virtual_center()
 
-        # collision
+        # Check collision
+        virtual_center: Tuple[int, int] = camera.get_virtual_center()
         map_controller: MapController = self.context["map_controller"]
         map_offset = map_controller.offset
-        character_coordinate = (virtual_center[0] - map_offset.x, virtual_center[1] - map_offset.y)
+        character_center = (virtual_center[0] - map_offset.x, virtual_center[1] - map_offset.y)
+
+        # Find which cell the character center is in
+        cell_size = self.context.settings.display_cell_size
+        row: int = character_center[0] // cell_size.width
+        col: int = character_center[1] // cell_size.height
+        coordinate = (row, col)
+        Debug.INSTANCE.get_module("character_center").print(coordinate)
 
         self._update_character_layer()
 
@@ -166,15 +174,10 @@ class Character:
         """
         Updates character layer.
         """
-
         camera: Camera = self.context["camera"]
         virtual_center: Tuple[int, int] = camera.get_virtual_center()
         character_layer: GridLayer = self.context.display.get_layer("character")
-        map_controller: MapController = self.context["map_controller"]
-        map_offset = map_controller.offset
         character_layer.offset = Vector2(
             virtual_center[0] - self.size.width // 2,
             virtual_center[1] - self.size.height // 2,
         )
-
-        self.context["debug"].print(character_layer.offset)

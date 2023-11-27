@@ -61,7 +61,7 @@ class LoopManager:
         Registers a loop.
         :param fps: Frame per second, or count per second.
         :param count_per_period: Number of counts per period.
-        :param callback: Callback function to be triggered.
+        :param callback: Callback function to be called.
         :return: The loop registered.
         """
         loop = Loop(fps, count_per_period, callback)
