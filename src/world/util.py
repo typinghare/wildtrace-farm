@@ -18,13 +18,7 @@ def crop_image(
     :return: The image being cropped.
     """
     rect = pygame.Rect(pos[0], pos[1], size[0], size[1])
-    a = image.get_alpha()
-    cropped_image = image.subsurface(rect)
-
-    # Set alpha channel for the cropped image
-    cropped_image.set_alpha(255)
-
-    return cropped_image
+    return image.subsurface(rect)
 
 
 def scale_image(image: pygame.Surface, scale_factor: int) -> pygame.Surface:
@@ -35,8 +29,4 @@ def scale_image(image: pygame.Surface, scale_factor: int) -> pygame.Surface:
     :return: A new Pygame surface representing the scaled image.
     """
     new_size = (image.get_width() * scale_factor, image.get_height() * scale_factor)
-
-    image = pygame.transform.scale(image, new_size)
-    image.set_alpha(255)
-
-    return image
+    return pygame.transform.scale(image, new_size)

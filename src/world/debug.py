@@ -16,19 +16,12 @@ class Debug:
     INSTANCE: "Debug" = None
 
     class Module:
-        def __init__(self, context: Context, name: str):
-            # Game context
-            self.context: Context = context
-
+        def __init__(self, name: str):
             # Module name
-            self.name = name
+            self.name: str = name
 
-            # Font size
-            self._font_size: int = 16
-
-            # Debug font
-            font_path = os.path.join(os.path.join(context.settings.assets_dir, "fonts/Menlo.ttc"))
-            self.font = pygame.font.Font(font_path, self._font_size)
+            # Text buffer
+            self.text: str = ""
 
         def print(self, message: Any, description: str = "") -> None:
             """
@@ -45,13 +38,7 @@ class Debug:
             if description:
                 text = description + ": " + text
 
-            text = f"[{self.name}] {text}"
-
-            debug_layer: Layer = self.context.display.get_layer("debug")
-            debug_layer.clear()
-            debug_layer.blit(
-                self.font.render(text, True, (0xFF,) * 3), Vector2(self._font_size, self._font_size)
-            )
+            self.text = f"[{self.name}] {text}"
 
     def __init__(self, context: Context):
         # Game context
@@ -60,16 +47,34 @@ class Debug:
         # Modules
         self._by_name: Dict[str, Debug.Module] = {}
 
-    def get_module(self, name: str) -> "Debug.Module":
+        # Font size
+        self._font_size: int = 16
+
+        # Debug font
+        font_path = os.path.join(os.path.join(context.settings.assets_dir, "fonts/Menlo.ttc"))
+        self.font = pygame.font.Font(font_path, self._font_size)
+
+    def print_all(self):
+        debug_layer: Layer = self.context.display.get_layer("debug")
+        debug_layer.clear()
+
+        for i, module in enumerate(self._by_name.values()):
+            offset = Vector2(self._font_size, self._font_size * (i + 1))
+            text_surface = self.font.render(module.text, True, (0xFF,) * 3)
+            debug_layer.blit(text_surface, offset)
+
+    @staticmethod
+    def get_module(name: str) -> "Debug.Module":
         """
         Returns a debug module.
         :param name: The name of the module.
         """
+        self = Debug.INSTANCE
 
         if name in self._by_name:
             return self._by_name[name]
 
-        module = Debug.Module(self.context, name)
+        module = Debug.Module(name)
         self._by_name[name] = module
 
         return module

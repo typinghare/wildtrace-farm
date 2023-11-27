@@ -10,7 +10,7 @@ from src.core.context import Context
 from src.core.event import EventListener
 from src.core.constant import EventTypes
 from src.world.data.registries import Registries
-from src.world.events.debug import init_debug
+from src.world.events.debug import init_debug, update_debug
 from src.world.events.layer import init_layer
 from src.world.events.window import quit_game, update_loops
 from src.world.events.character import (
@@ -52,6 +52,7 @@ class EventListeners:
     InitCharacter = register(EventTypes.ON_START, init_character)
 
     # Before render
+    UpdateDebug = register(EventTypes.BEFORE_RENDER, update_debug)
     UpdateLoops = register(EventTypes.BEFORE_RENDER, update_loops)
     UpdateMap = register(EventTypes.BEFORE_RENDER, update_map)
     UpdateCharacter = register(EventTypes.BEFORE_RENDER, update_character)

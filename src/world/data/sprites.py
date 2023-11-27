@@ -11,8 +11,8 @@ from src.world.data.registries import Registries
 from src.world.data.tiles import Tilesets
 from ..util import crop_image, scale_image
 
-tile_sf: int = Settings().display_tile_sf
-character_sf: int = Settings().display_character_sf
+tile_sf: int = Settings().display_tile_scale_factor
+character_sf: int = Settings().display_character_scale_factor
 
 
 def register(

@@ -15,3 +15,11 @@ def init_debug(context: Context) -> None:
     # debug layer
     display = context.display
     display.append_layer("debug", Layer(display.size))
+
+
+def update_debug(context: Context) -> None:
+    """
+    Updates debug.
+    """
+    debug: Debug = context["debug"]
+    debug.print_all()

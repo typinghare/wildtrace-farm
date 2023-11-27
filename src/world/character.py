@@ -3,7 +3,7 @@ Character module.
 """
 from typing import List, Tuple
 
-from pygame import Vector2, Surface
+from pygame import Vector2, Surface, Rect
 
 from src.core.common import Size
 from src.core.constant import Direction
@@ -11,7 +11,6 @@ from src.core.context import Context
 from src.core.display import Layer, GridLayer
 from src.world.camera import Camera
 from src.world.data.frames import Frames
-from src.world.debug import Debug
 from src.world.map import MapController
 
 
@@ -24,8 +23,14 @@ class Character:
         # Game context
         self.context: Context = context
 
-        # Character size
+        # Character size (surface)
         self.size: Size = context.settings.character_size
+
+        # Character collision box size
+        self.collision_box_size: Size = Size(16, 32)
+
+        # Cell size
+        self.cell_size = self.context.settings.display_cell_size
 
         # Animation frames list
         self.frames_list: List[List[Surface]] = [
@@ -147,28 +152,69 @@ class Character:
         """
         Updates this character.
         """
+        self._update_camera()
+        self._update_character_layer()
+
+    def _update_camera(self) -> None:
         dt = self.context.dt
         velocity = self.get_unit_velocity()
         displacement = Vector2(velocity.x * dt * 0.2, velocity.y * dt * 0.2)
 
-        # Camera moves
+        # Get the character center
         camera: Camera = self.context["camera"]
-        camera.move(displacement)
-
-        # Check collision
-        virtual_center: Tuple[int, int] = camera.get_virtual_center()
         map_controller: MapController = self.context["map_controller"]
+        virtual_center: Tuple[int, int] = camera.get_virtual_center()
         map_offset = map_controller.offset
-        character_center = (virtual_center[0] - map_offset.x, virtual_center[1] - map_offset.y)
+        current_center = (virtual_center[0] - map_offset.x, virtual_center[1] - map_offset.y)
+        next_center = Vector2(
+            current_center[0] + displacement.x, current_center[1] + displacement.y
+        )
 
-        # Find which cell the character center is in
-        cell_size = self.context.settings.display_cell_size
-        row: int = character_center[0] // cell_size.width
-        col: int = character_center[1] // cell_size.height
-        coordinate = (row, col)
-        Debug.INSTANCE.get_module("character_center").print(coordinate)
+        # Find which cell the character center will be in
+        col: int = int(next_center.x // self.cell_size.width)
+        row: int = int(next_center.y // self.cell_size.height)
+        character_rect = Rect(
+            next_center.x - self.size.width // 2,
+            next_center.y - self.size.height // 2,
+            self.size.width,
+            self.size.height,
+        )
+        character_rect = Rect(
+            next_center.x - self.collision_box_size.width // 2,
+            next_center.y - self.collision_box_size.height // 2,
+            self.collision_box_size.width,
+            self.collision_box_size.height,
+        )
 
-        self._update_character_layer()
+        up_coordinate = (col, row - 1)
+        right_coordinate = (col + 1, row)
+        down_coordinate = (col, row + 1)
+        left_coordinate = (col - 1, row)
+        up_rect = self.get_rect(up_coordinate)
+        right_rect = self.get_rect(right_coordinate)
+        down_rect = self.get_rect(down_coordinate)
+        left_rect = self.get_rect(left_coordinate)
+
+        def is_collide(coordinate: Tuple[int, int], rect: Rect):
+            return (
+                rect is not None
+                and map_controller.is_block(coordinate)
+                and character_rect.colliderect(rect)
+            )
+
+        if is_collide(up_coordinate, up_rect):
+            next_center.y = up_rect.bottom + self.collision_box_size.height // 2
+        if is_collide(right_coordinate, right_rect):
+            next_center.x = right_rect.left - self.collision_box_size.width // 2
+        if is_collide(down_coordinate, down_rect):
+            next_center.y = down_rect.top - self.collision_box_size.height // 2
+        if is_collide(left_coordinate, left_rect):
+            next_center.x = left_rect.right + self.collision_box_size.width // 2
+
+        real_displacement = Vector2(
+            next_center.x - current_center[0], next_center.y - current_center[1]
+        )
+        camera.move(real_displacement)
 
     def _update_character_layer(self) -> None:
         """
@@ -180,4 +226,19 @@ class Character:
         character_layer.offset = Vector2(
             virtual_center[0] - self.size.width // 2,
             virtual_center[1] - self.size.height // 2,
+        )
+
+    def get_rect(self, coordinate: Tuple[int, int]) -> Rect | None:
+        """
+        Returns the rectangle instance of the cell at a given coordinate.
+        :return None if the coordinate is not valid.
+        """
+        if coordinate[0] < 0 or coordinate[1] < 0:
+            return None
+
+        return Rect(
+            coordinate[0] * self.cell_size.width,
+            coordinate[1] * self.cell_size.height,
+            self.cell_size.width,
+            self.cell_size.height,
         )

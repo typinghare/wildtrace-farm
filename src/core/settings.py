@@ -34,20 +34,22 @@ class Settings:
             self.background = "#333333"
 
             # [Display] tile scale factor
-            self.display_tile_sf = 3
+            self.display_tile_scale_factor = 3
 
             # [Display] character scale facter
-            self.display_character_sf = 2
+            self.display_character_scale_factor = 2
 
             # [Display] cell size; how many pixels does a cell contain
-            self.display_cell_size = Size(16 * self.display_tile_sf, 16 * self.display_tile_sf)
+            self.display_cell_size = Size(
+                16 * self.display_tile_scale_factor, 16 * self.display_tile_scale_factor
+            )
 
             # [Character] animation fps
             self.character_animation_fps = 8
 
             # [Character] size
             self.character_size = Size(
-                48 * self.display_character_sf, 48 * self.display_character_sf
+                48 * self.display_character_scale_factor, 48 * self.display_character_scale_factor
             )
 
         return cls._instance

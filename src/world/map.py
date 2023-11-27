@@ -1,7 +1,7 @@
 """
 Map module
 """
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 from pygame import Vector2, Rect
 
@@ -31,6 +31,9 @@ class Map:
             "furniture_bottom": GridLayer(self.size, settings.display_cell_size),
             "furniture_top": GridLayer(self.size, settings.display_cell_size),
         }
+
+        # invisible block grid
+        self.invisible_block_grid: None | Grid = None
 
     def get_layer(self, name: str) -> GridLayer:
         """
@@ -119,6 +122,13 @@ class MapController:
         """
         Refreshes the block grid.
         """
+        # Invisible block
+        invisible_block_grid = self.map.invisible_block_grid
+        if invisible_block_grid is not None:
+            for index in range(len(invisible_block_grid)):
+                if invisible_block_grid[index]:
+                    self.block_grid[index] = True
+
         for layer in self.map.all_layers():
             self.refresh_block_grid_of_layer(layer)
 
@@ -127,12 +137,24 @@ class MapController:
         Refreshes block grid of a certain layer.
         """
         size = self.map.size
+
         iterator = layer.grid.get_iterator((0, size.height), (0, size.width))
         for cell in iterator:
             surface = cell.surface
-            if surface is None:
+            index = self.block_grid.get_index(cell.coordinate)
+            if self.block_grid[index] or surface is None:
                 continue
 
             ref = Registries.Tile.get_ref_by_res(surface)
             if ref.contain_tag(TileTags.COLLISION_OBJECT):
-                self.block_grid.set(cell.coordinate, True)
+                self.block_grid[index] = True
+
+    def is_block(self, coordinate: Tuple[int, int]) -> bool:
+        """
+        Checks whether a coordinate is a blocked cell.
+        """
+        index = self.block_grid.get_index(coordinate)
+        if index < 0 or index > len(self.block_grid):
+            return False
+
+        return self.block_grid[index]

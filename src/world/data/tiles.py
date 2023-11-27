@@ -11,11 +11,15 @@ from .tilesets import Tilesets
 from .registries import Registries
 from ..util import crop_image, scale_image
 
-scale_factor = Settings().display_tile_sf
+default_scale_factor = Settings().display_tile_scale_factor
 
 
 def register(
-    path: str, tile_set: Surface, pos: Tuple[int, int], size: Tuple[int, int] = (16, 16)
+    path: str,
+    tile_set: Surface,
+    pos: Tuple[int, int],
+    size: Tuple[int, int] = (16, 16),
+    scale_factor: int = default_scale_factor,
 ) -> Surface:
     """
     Registers a tile.
@@ -23,6 +27,7 @@ def register(
     :param tile_set: The tile set to crop from.
     :param pos: The position of the tile in the given tile set.
     :param size: The size of the tile (width, height).
+    :param scale_factor: The scale factor.
     :return: The magnified tile image.
     """
     image = scale_image(crop_image(tile_set, pos, size), scale_factor)
@@ -91,9 +96,9 @@ class Tiles:
     ChairUp = register("chair/left", Tilesets.Furniture, (112, 32))
     TableBig = register("table/big", Tilesets.Furniture, (48, 48))
     TableSmall = register("table/small", Tilesets.Furniture, (64, 48))
-    Clock0 = register("clock/0", Tilesets.Furniture, (64, 48))
-    Clock1 = register("clock/1", Tilesets.Furniture, (80, 48))
-    Clock2 = register("clock/2", Tilesets.Furniture, (96, 48))
+    Clock0 = register("clock/0", Tilesets.Furniture, (80, 48))
+    Clock1 = register("clock/1", Tilesets.Furniture, (96, 48))
+    Clock2 = register("clock/2", Tilesets.Furniture, (112, 48))
     CarpetSquareGreen = register("carpet/square/green", Tilesets.Furniture, (0, 80))
     CarpetSquareMagenta = register("carpet/square/magenta", Tilesets.Furniture, (16, 80))
     CarpetSquareCyan = register("carpet/square/cyan", Tilesets.Furniture, (32, 80))
@@ -123,6 +128,13 @@ class Tiles:
     Door3 = register("door/3", Tilesets.Door, (48, 0))
     Door4 = register("door/4", Tilesets.Door, (64, 0))
     Door5 = register("door/5", Tilesets.Door, (80, 0))
+
+    # Chest
+    ChestFront0 = register("chest/front/0", Tilesets.Chest, (16, 16), (16, 16), 3)
+    ChestFront1 = register("chest/front/1", Tilesets.Chest, (80, 16), (16, 16), 3)
+    ChestFront2 = register("chest/front/2", Tilesets.Chest, (128, 16), (16, 16), 3)
+    ChestFront3 = register("chest/front/3", Tilesets.Chest, (176, 16), (16, 16), 3)
+    ChestFront4 = register("chest/front/4", Tilesets.Chest, (224, 16), (16, 16), 3)
 
     # Wheat
     WheatSeed = register("wheat/seed", Tilesets.BasicPlants, (0, 0))
@@ -157,6 +169,17 @@ collision_objects = [
     Tiles.Door3,
     Tiles.Door4,
     Tiles.Door5,
+    Tiles.TableBig,
+    Tiles.TableSmall,
+    Tiles.ChairUp,
+    Tiles.ChairRight,
+    Tiles.ChairDown,
+    Tiles.ChairLeft,
+    Tiles.ChestFront0,
+    Tiles.ChestFront1,
+    Tiles.ChestFront2,
+    Tiles.ChestFront3,
+    Tiles.ChestFront4,
 ]
 
 for collision_object in collision_objects:
