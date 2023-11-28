@@ -14,7 +14,7 @@ def init_debug(context: Context) -> None:
 
     # debug layer
     display = context.display
-    display.append_layer("debug", Layer(display.size))
+    display.set_layer("debug", Layer(display.size))
 
 
 def update_debug(context: Context) -> None:

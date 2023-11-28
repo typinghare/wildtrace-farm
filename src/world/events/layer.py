@@ -6,12 +6,23 @@ from src.core.display import Layer
 
 
 def init_layer(context: Context) -> None:
-    display = context.display
+    """
+    Initializes layers.
+    """
+    idle_layer = Layer(context.display.size)
+    layer_name_list = [
+        # map layers
+        "water",
+        "ground",
+        "floor",
+        "furniture_bottom",
+        "furniture_top",
+        # other
+        "character",
+        "tool",
+        "message_box",
+        "debug",
+    ]
 
-    display.unshift_layer("tool", Layer(display.size))
-    display.unshift_layer("character", Layer(context.settings.character_size))
-    display.unshift_layer("furniture_top", Layer(display.size))
-    display.unshift_layer("furniture_bottom", Layer(display.size))
-    display.unshift_layer("floor", Layer(display.size))
-    display.unshift_layer("ground", Layer(display.size))
-    display.unshift_layer("water", Layer(display.size))
+    for layer_name in layer_name_list:
+        context.display.unshift_layer(layer_name, idle_layer)

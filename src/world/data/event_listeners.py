@@ -12,6 +12,7 @@ from src.core.constant import EventTypes
 from src.world.data.registries import Registries
 from src.world.events.debug import init_debug, update_debug
 from src.world.events.layer import init_layer
+from src.world.events.message_box import init_message_box, update_message_box
 from src.world.events.window import quit_game, update_loops
 from src.world.events.character import (
     init_character,
@@ -52,6 +53,7 @@ class EventListeners:
     InitCharacter = register(EventTypes.ON_START, init_character)
     InitMap = register(EventTypes.ON_START, init_map)
     InitTool = register(EventTypes.ON_START, init_tool)
+    InitMessageBox = register(EventTypes.ON_START, init_message_box)
 
     # Before render
     UpdateDebug = register(EventTypes.BEFORE_RENDER, update_debug)
@@ -59,6 +61,7 @@ class EventListeners:
     UpdateCharacter = register(EventTypes.BEFORE_RENDER, update_character)
     UpdateMap = register(EventTypes.BEFORE_RENDER, update_map)
     UpdateTool = register(EventTypes.BEFORE_RENDER, update_tool)
+    updateMessageBox = register(EventTypes.BEFORE_RENDER, update_message_box)
 
     # Key down
     CharacterKeyDown = register(pygame.KEYDOWN, character_key_down)

@@ -57,7 +57,20 @@ class Character:
         # Current facing direction
         self.facing: int = Direction.DOWN
 
-    def init_animation(self) -> None:
+        # Character layer
+        self.layer: Layer = Layer(self.context.settings.character_size)
+
+        # init
+        self._init_layer()
+        self._init_animation()
+
+    def _init_layer(self) -> None:
+        """
+        Initializes layer.
+        """
+        self.context.display.set_layer("character", self.layer)
+
+    def _init_animation(self) -> None:
         display = self.context.game.display
         character_layer: Layer = display.get_layer("character")
         character_size = self.context.settings.character_size

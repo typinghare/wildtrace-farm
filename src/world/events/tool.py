@@ -18,6 +18,9 @@ def init_tool(context: Context) -> None:
     """
     Initializes tool.
     """
+    # layer
+    context.display.set_layer("tool", Layer(context.display.size))
+
     context["current_tool"] = Tool.Hoe
     context["tool_buffer"] = None
     render_tool_layer(context, Tool.Hoe)

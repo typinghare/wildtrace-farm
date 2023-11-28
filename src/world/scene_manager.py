@@ -1,3 +1,7 @@
+"""
+Scene manager module.
+"""
+
 from typing import Type, Callable
 
 from pygame import Vector2

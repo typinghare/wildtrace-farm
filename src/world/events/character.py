@@ -18,8 +18,7 @@ def init_character(context: Context):
     """
     Initializes character.
     """
-    character = context["character"] = Character(context)
-    character.init_animation()
+    context["character"] = Character(context)
 
 
 def map_key_to_direction(key: int) -> int | None:
