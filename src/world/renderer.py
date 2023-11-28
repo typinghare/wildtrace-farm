@@ -127,3 +127,34 @@ class GrassRenderer(Renderer):
         for coordinate in coordinate_set.all():
             status = self.get_status(coordinate, coordinate_set)
             grid_layer.update_cell(coordinate, self._tiles[status])
+
+
+class TilledDirtRenderer(Renderer):
+    """
+    Tilled dirt renderer.
+    """
+
+    def __init__(self):
+        self._tiles = [
+            Tiles.TilledDirt0,
+            Tiles.TilledDirt1,
+            Tiles.TilledDirt2,
+            Tiles.TilledDirt3,
+            Tiles.TilledDirt4,
+            Tiles.TilledDirt5,
+            Tiles.TilledDirt6,
+            Tiles.TilledDirt7,
+            Tiles.TilledDirt8,
+            Tiles.TilledDirt9,
+            Tiles.TilledDirt10,
+            Tiles.TilledDirt11,
+            Tiles.TilledDirt12,
+            Tiles.TilledDirt13,
+            Tiles.TilledDirt14,
+            Tiles.TilledDirt15,
+        ]
+
+    def render(self, grid_layer: GridLayer, coordinate_set: CoordinateSet) -> None:
+        for coordinate in coordinate_set.all():
+            status = self.get_status(coordinate, coordinate_set)
+            grid_layer.update_cell(coordinate, self._tiles[status])

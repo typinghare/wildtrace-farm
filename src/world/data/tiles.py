@@ -49,7 +49,7 @@ class Tiles:
     Tile image resources.
     """
 
-    # Grass square
+    # Grass
     GrassSquare6 = register("grass_square/6", Tilesets.Grass, (0, 0))
     GrassSquare14 = register("grass_square/14", Tilesets.Grass, (16, 0))
     GrassSquare12 = register("grass_square/12", Tilesets.Grass, (32, 0))
@@ -66,6 +66,24 @@ class Tiles:
     GrassSquare10 = register("grass_square/10", Tilesets.Grass, (16, 48))
     GrassSquare8 = register("grass_square/8", Tilesets.Grass, (32, 48))
     GrassSquare0 = register("grass_square/0", Tilesets.Grass, (48, 48))
+
+    # Tilled dirt
+    TilledDirt6 = register("tilled_dirt/0", Tilesets.TilledDirt, (16, 48))
+    TilledDirt14 = register("tilled_dirt/0", Tilesets.TilledDirt, (32, 48))
+    TilledDirt12 = register("tilled_dirt/0", Tilesets.TilledDirt, (48, 48))
+    TilledDirt7 = register("tilled_dirt/0", Tilesets.TilledDirt, (16, 64))
+    TilledDirt15 = register("tilled_dirt/0", Tilesets.TilledDirt, (32, 64))
+    TilledDirt13 = register("tilled_dirt/0", Tilesets.TilledDirt, (48, 64))
+    TilledDirt3 = register("tilled_dirt/0", Tilesets.TilledDirt, (16, 80))
+    TilledDirt11 = register("tilled_dirt/0", Tilesets.TilledDirt, (32, 80))
+    TilledDirt9 = register("tilled_dirt/0", Tilesets.TilledDirt, (48, 80))
+    TilledDirt4 = register("tilled_dirt/0", Tilesets.TilledDirt, (0, 48))
+    TilledDirt5 = register("tilled_dirt/0", Tilesets.TilledDirt, (0, 64))
+    TilledDirt1 = register("tilled_dirt/0", Tilesets.TilledDirt, (0, 80))
+    TilledDirt2 = register("tilled_dirt/0", Tilesets.TilledDirt, (16, 96))
+    TilledDirt10 = register("tilled_dirt/0", Tilesets.TilledDirt, (32, 96))
+    TilledDirt8 = register("tilled_dirt/0", Tilesets.TilledDirt, (48, 96))
+    TilledDirt0 = register("tilled_dirt/0", Tilesets.TilledDirt, (0, 96))
 
     # Water
     Water0 = register("water/0", Tilesets.Water, (0, 0))
@@ -120,6 +138,21 @@ class Tiles:
     WoodenHouse3 = register("wooden_house/3", Tilesets.WoodenHouse, (0, 48))
     WoodenHouse11 = register("wooden_house/11", Tilesets.WoodenHouse, (16, 48))
     WoodenHouse9 = register("wooden_house/9", Tilesets.WoodenHouse, (32, 48))
+    Roof0 = register("roof/0", Tilesets.WoodenHouse, (48, 0))
+    Roof1 = register("roof/1", Tilesets.WoodenHouse, (64, 0))
+    Roof2 = register("roof/2", Tilesets.WoodenHouse, (80, 0))
+    Roof3 = register("roof/3", Tilesets.WoodenHouse, (48, 16))
+    Roof4 = register("roof/4", Tilesets.WoodenHouse, (64, 16))
+    Roof5 = register("roof/5", Tilesets.WoodenHouse, (80, 16))
+    Roof6 = register("roof/6", Tilesets.WoodenHouse, (48, 32))
+    Roof7 = register("roof/7", Tilesets.WoodenHouse, (64, 32))
+    Roof8 = register("roof/8", Tilesets.WoodenHouse, (80, 32))
+    Roof9 = register("roof/9", Tilesets.WoodenHouse, (48, 48))
+    Roof10 = register("roof/10", Tilesets.WoodenHouse, (64, 48))
+    Roof11 = register("roof/11", Tilesets.WoodenHouse, (80, 48))
+    Roof12 = register("roof/12", Tilesets.WoodenHouse, (48, 64))
+    Roof13 = register("roof/13", Tilesets.WoodenHouse, (64, 64))
+    Roof14 = register("roof/14", Tilesets.WoodenHouse, (80, 64))
 
     # Doors
     Door0 = register("door/0", Tilesets.Door, (0, 0))

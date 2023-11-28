@@ -14,3 +14,4 @@ def init_layer(context: Context) -> None:
     display.unshift_layer("furniture_bottom", Layer(display.size))
     display.unshift_layer("floor", Layer(display.size))
     display.unshift_layer("ground", Layer(display.size))
+    display.unshift_layer("water", Layer(display.size))

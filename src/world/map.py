@@ -25,11 +25,13 @@ class Map:
         self.size = size
 
         # The layers
+        cell_size = settings.display_cell_size
         self._layers: Dict[str, GridLayer] = {
-            "ground": GridLayer(self.size, settings.display_cell_size),
-            "floor": GridLayer(self.size, settings.display_cell_size),
-            "furniture_bottom": GridLayer(self.size, settings.display_cell_size),
-            "furniture_top": GridLayer(self.size, settings.display_cell_size),
+            "water": GridLayer(self.size, cell_size),
+            "ground": GridLayer(self.size, cell_size),
+            "floor": GridLayer(self.size, cell_size),
+            "furniture_bottom": GridLayer(self.size, cell_size),
+            "furniture_top": GridLayer(self.size, cell_size),
         }
 
         # invisible block grid
@@ -89,6 +91,7 @@ class MapController:
         display.set_layer("furniture_bottom", self.map.get_layer("furniture_bottom"))
         display.set_layer("floor", self.map.get_layer("floor"))
         display.set_layer("ground", self.map.get_layer("ground"))
+        display.set_layer("water", self.map.get_layer("water"))
 
         # Block grid; cells are booleans; a cell is marked as true if it is a collision object
         self.block_grid: Grid = Grid(self.map.size, False)

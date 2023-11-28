@@ -4,7 +4,7 @@ Renderer resource module.
 
 from src.registry import RegistryUtil
 from src.world.data.registries import Registries
-from src.world.renderer import Renderer, GrassRenderer, HouseRenderer
+from src.world.renderer import Renderer, GrassRenderer, HouseRenderer, TilledDirtRenderer
 
 
 def register(path: str, renderer: Renderer.__subclasses__()) -> Renderer.__subclasses__():
@@ -23,3 +23,4 @@ class Renderers:
 
     House: HouseRenderer = register("house", HouseRenderer())
     Grass: GrassRenderer = register("grass", GrassRenderer())
+    TilledDirt: TilledDirtRenderer = register("tilled_dirt", TilledDirtRenderer())
