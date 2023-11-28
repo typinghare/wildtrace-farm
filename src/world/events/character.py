@@ -6,7 +6,11 @@ import pygame
 from src.core.constant import Direction
 from src.core.context import Context
 from src.world.character import Character
+from src.world.data.frames import Frames
 from src.world.data.maps import Maps
+from src.world.data.tiles import Tiles
+from src.world.maps.farm import FarmMap
+from src.world.maps.home import HomeMap
 from src.world.scene_manager import SceneManager
 
 
@@ -46,40 +50,90 @@ def character_key_down(context: Context):
 
     # <J> use item / open doors
     if key == pygame.K_j:
-        # use item
-
-        # open doors
-        scene_manager: SceneManager = context["scene_manager"]
-        current_map = scene_manager.current_map
-        coordinate = character.get_coordinate()
-
-        if (
-            current_map == Maps.Home.__class__
-            and character.facing == Direction.DOWN
-            and coordinate == (4, 4)
-        ):
-            # Get out to the farm
-            def to_farm():
-                character.teleport((19, 7))
-                character.facing = Direction.DOWN
-                character.stop_all()
-
-            scene_manager.load_map(Maps.Farm, to_farm)
+        if character_open_door(context):
+            return
+        if character_use_item(context):
             return
 
-        if (
-            current_map == Maps.Farm.__class__
-            and character.facing == Direction.UP
-            and coordinate == (19, 7)
-        ):
-            # Get into the house
-            def back_home():
-                character.teleport((4, 4))
-                character.facing = Direction.UP
-                character.stop_all()
 
-            scene_manager.load_map(Maps.Home, back_home)
-            return
+def character_use_item(context: Context) -> bool:
+    """
+    Character uses item.
+    """
+    character: Character = context["character"]
+
+    return True
+
+
+def character_open_door(context: Context) -> bool:
+    """
+    Character opens door.
+    """
+
+    character: Character = context["character"]
+    scene_manager: SceneManager = context["scene_manager"]
+    current_map = scene_manager.current_map
+    coordinate = character.get_coordinate()
+
+    if (
+        current_map == Maps.Home.__class__
+        and character.facing == Direction.DOWN
+        and coordinate == (4, 4)
+    ):
+        home_map: HomeMap = scene_manager.controller.map
+        door_coordinate = home_map.door_coordinate
+        door_frames = Frames.Door.list
+        count = len(door_frames) + 1
+
+        def door_loop(index: int):
+            if index == count - 1:
+                context.loop_manager.remove(loop)
+
+                # Get out to the farm
+                def to_farm():
+                    character.teleport((19, 7))
+                    character.facing = Direction.DOWN
+                    character.stop_all()
+
+                scene_manager.load_map(Maps.Farm, to_farm)
+                home_map.furniture_bottom.update_cell(door_coordinate, Tiles.Door5)
+            else:
+                home_map.furniture_bottom.wipe_cell(door_coordinate)
+                home_map.furniture_bottom.update_cell(door_coordinate, door_frames[index])
+
+        loop = context.loop_manager.register(10, count, door_loop)
+        return True
+
+    if (
+        current_map == Maps.Farm.__class__
+        and character.facing == Direction.UP
+        and coordinate == (19, 7)
+    ):
+        farm_map: FarmMap = scene_manager.controller.map
+        door_coordinate = farm_map.get_door_coordinate()
+        door_frames = Frames.Door.list
+        count = len(door_frames) + 1
+
+        def door_loop(index: int):
+            if index == count - 1:
+                context.loop_manager.remove(loop)
+
+                # Get into the house
+                def back_home():
+                    character.teleport((4, 4))
+                    character.facing = Direction.UP
+                    character.stop_all()
+
+                scene_manager.load_map(Maps.Home, back_home)
+                farm_map.furniture_bottom.update_cell(door_coordinate, Tiles.Door5)
+            else:
+                farm_map.furniture_bottom.wipe_cell(door_coordinate)
+                farm_map.furniture_bottom.update_cell(door_coordinate, door_frames[index])
+
+        loop = context.loop_manager.register(10, count, door_loop)
+        return True
+
+    return False
 
 
 def character_key_up(context: Context):

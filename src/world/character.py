@@ -11,7 +11,6 @@ from src.core.context import Context
 from src.core.display import Layer, GridLayer
 from src.world.camera import Camera
 from src.world.data.frames import Frames
-from src.world.debug import Debug
 from src.world.map import MapController
 from src.world.scene_manager import SceneManager
 
@@ -123,8 +122,6 @@ class Character:
             coordinate[1] * self.cell_size.height,
         )
 
-        Debug.get_module("teleport_center").print(center)
-
         camera: Camera = self.context["camera"]
         screen_size = self.context.display.size
         map_offset = self._get_map_offset()
@@ -226,7 +223,6 @@ class Character:
         # Find which cell the character center will be in
         col: int = int(next_center.x // self.cell_size.width)
         row: int = int(next_center.y // self.cell_size.height)
-        Debug.get_module("coordinate").print((col, row))
         character_rect = Rect(
             next_center.x - self.collision_box_size.width // 2,
             next_center.y - self.collision_box_size.height // 2,
@@ -263,7 +259,6 @@ class Character:
             next_center.x - current_center[0], next_center.y - current_center[1]
         )
         camera.move(real_displacement)
-        Debug.get_module("camera.offset").print(camera.offset)
 
     def _update_character_layer(self) -> None:
         """

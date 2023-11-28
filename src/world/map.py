@@ -1,7 +1,7 @@
 """
 Map module
 """
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 
 from pygame import Vector2, Rect
 
@@ -78,9 +78,9 @@ class MapController:
     Map controller.
     """
 
-    def __init__(self, _map: Map.__subclasses__(), context: Context):
+    def __init__(self, _map: Map, context: Context):
         # The map to control
-        self.map: Map = _map
+        self.map: Map | Any = _map
 
         # The context
         self.context: Context = context
@@ -107,7 +107,6 @@ class MapController:
         Loads the map.
         """
         self.map.load(self.context)
-        self.refresh_block_grid()
 
     def set_offset(self, offset: Vector2) -> None:
         """

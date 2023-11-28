@@ -49,15 +49,15 @@ class EventListeners:
     # On start
     InitLayer = register(EventTypes.ON_START, init_layer)
     InitDebug = register(EventTypes.ON_START, init_debug)
-    InitMap = register(EventTypes.ON_START, init_map)
     InitCharacter = register(EventTypes.ON_START, init_character)
+    InitMap = register(EventTypes.ON_START, init_map)
     InitTool = register(EventTypes.ON_START, init_tool)
 
     # Before render
     UpdateDebug = register(EventTypes.BEFORE_RENDER, update_debug)
     UpdateLoops = register(EventTypes.BEFORE_RENDER, update_loops)
-    UpdateMap = register(EventTypes.BEFORE_RENDER, update_map)
     UpdateCharacter = register(EventTypes.BEFORE_RENDER, update_character)
+    UpdateMap = register(EventTypes.BEFORE_RENDER, update_map)
     UpdateTool = register(EventTypes.BEFORE_RENDER, update_tool)
 
     # Key down

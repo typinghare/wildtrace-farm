@@ -137,15 +137,15 @@ class Frames:
 
     # Building
     Door = register(
-        "door", [Tiles.Door0, Tiles.Door1, Tiles.Door2, Tiles.Door3, Tiles.Door4, Tiles.Door5]
+        "door", [Tiles.Door5, Tiles.Door4, Tiles.Door3, Tiles.Door2, Tiles.Door1, Tiles.Door0]
     )
     Chest = register(
         "chest",
         [
-            Tiles.ChestFront0,
-            Tiles.ChestFront1,
-            Tiles.ChestFront2,
-            Tiles.ChestFront3,
             Tiles.ChestFront4,
+            Tiles.ChestFront3,
+            Tiles.ChestFront2,
+            Tiles.ChestFront1,
+            Tiles.ChestFront0,
         ],
     )

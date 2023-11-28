@@ -1,7 +1,6 @@
 """
 House map module.
 """
-
 from pygame import Rect
 
 from src.core.common import Size, CoordinateSet, Grid
@@ -23,6 +22,7 @@ class HomeMap(Map):
         self.furniture_bottom: GridLayer = self.get_layer("furniture_bottom")
         self.furniture_top: GridLayer = self.get_layer("furniture_top")
         self.invisible_block_grid = Grid(self.size)
+        self.door_coordinate = (4, 5)
 
         self._init_wall()
         self._init_furniture()
@@ -30,6 +30,10 @@ class HomeMap(Map):
     def _init_wall(self):
         wall_rect = CoordinateSet.from_rect(Rect(0, 0, self.size.width, self.size.height))
         Renderers.House.render(self.floor, wall_rect)
+
+        # Door
+        self.furniture_bottom.update_cell(self.door_coordinate, Tiles.Door5)
+        self.floor.update_cell(self.door_coordinate, None)
 
     def _init_furniture(self):
         # Bed
@@ -40,9 +44,6 @@ class HomeMap(Map):
         self.furniture_bottom.update_cell((2, 1), Tiles.TableBig)
         self.furniture_bottom.update_cell((1, 1), Tiles.ChairRight)
         self.furniture_bottom.update_cell((3, 1), Tiles.ChairLeft)
-
-        # Door
-        self.furniture_bottom.update_cell((4, 5), Tiles.Door5)
 
         # Pictures on the wall
         self.furniture_bottom.update_cell((2, 0), Tiles.Picture0)

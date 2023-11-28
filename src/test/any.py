@@ -1,8 +1,12 @@
-class MyClass:
+from typing import Type
+
+
+class A:
     pass
 
 
-myClassInstance = MyClass()
-cls = myClassInstance.__class__
+class B(A):
+    pass
 
-print(cls == MyClass)
+
+a: Type[A] = B()
