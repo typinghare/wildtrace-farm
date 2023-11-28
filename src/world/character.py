@@ -195,6 +195,7 @@ class Character:
         """
         Updates this character.
         """
+        self._update_after_key_status_change()
         self._update_camera()
         self._update_character_layer()
 

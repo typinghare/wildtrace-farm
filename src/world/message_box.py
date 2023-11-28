@@ -8,7 +8,7 @@ from pygame import Vector2, Rect, font
 from src.core.common import Size
 from src.core.context import Context
 from src.core.display import Layer
-from src.core.loop import LoopManager
+from src.core.loop import LoopManager, Loop
 
 
 class MessageBox:
@@ -22,6 +22,9 @@ class MessageBox:
 
         # Message to display; the message box will be hidden if the message is None
         self.message: str | None = None
+
+        # Message buffer
+        self.message_buffer: str = ""
 
         # Size and offset
         screen_size = self.context.display.size
@@ -43,6 +46,9 @@ class MessageBox:
 
         # Margin offset
         self.margin = Vector2(0.03 * self.size.width, 0.1 * self.size.height)
+
+        # Loop
+        self.loop: Loop | None = None
 
         # Init
         self._init_layer()
@@ -68,6 +74,7 @@ class MessageBox:
         Plays a message.
         :param message: The message to display.
         """
+        self.message_buffer = message
         message_len = len(message)
         loop_manager: LoopManager = self.context.loop_manager
 
@@ -75,13 +82,38 @@ class MessageBox:
             self.message = message[0:index]
 
             if index == message_len:
-                loop_manager.remove(loop)
+                loop_manager.remove(self.loop)
 
-        loop = loop_manager.register(15, message_len + 1, forward)
+        self.loop = loop_manager.register(15, message_len + 1, forward)
+
+    def stop_playing(self) -> None:
+        """
+        Stops the loop and display the whole message right away.
+        """
+        # Stop the loop
+        if self.loop is not None:
+            loop_manager: LoopManager = self.context.loop_manager
+            loop_manager.remove(self.loop)
+            self.loop = None
+
+        # Flush the buffer
+        self.message = self.message_buffer
+
+    def hide(self) -> None:
+        """
+        Hides the message box; clears the buffer.
+        """
+        self.stop_playing()
+        self.message = None
+        self.message_buffer = ""
 
     def update(self) -> None:
         """
         Updates the message box layer.
         """
-        text = self.font.render(self.message, True, (0x33,) * 3)
-        self.layer.surface.blit(text, self.margin)
+        if self.message is None:
+            self.layer.hidden = True
+        else:
+            self.layer.hidden = False
+            text = self.font.render(self.message, True, (0x33,) * 3)
+            self.layer.surface.blit(text, self.margin)

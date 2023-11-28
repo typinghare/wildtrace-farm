@@ -27,6 +27,9 @@ class Layer:
         # Rectangle to crop
         self.rect: Optional[Rect] = None
 
+        # If true, this layer will not be displayed
+        self.hidden = False
+
     def render(self) -> None:
         """
         Renders this layer.
@@ -53,7 +56,9 @@ class Layer:
         :param screen: The screen to blit.
         """
         self.render()
-        screen.blit(self.surface, self.offset)
+
+        if not self.hidden:
+            screen.blit(self.surface, self.offset)
 
 
 class GridLayer(Layer):
@@ -216,9 +221,9 @@ class Display:
         original_layer = self._by_name[name]
         self._by_name[name] = layer
 
-        for i in range(len(self.layer_stack)):
-            if original_layer == self.layer_stack[i]:
-                self.layer_stack[i] = layer
+        for index in range(len(self.layer_stack)):
+            if original_layer == self.layer_stack[index]:
+                self.layer_stack[index] = layer
                 break
 
     def get_layer(self, name: str) -> Layer.__subclasses__:

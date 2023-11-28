@@ -9,7 +9,7 @@ def init_layer(context: Context) -> None:
     """
     Initializes layers.
     """
-    idle_layer = Layer(context.display.size)
+    display = context.display
     layer_name_list = [
         # map layers
         "water",
@@ -25,4 +25,4 @@ def init_layer(context: Context) -> None:
     ]
 
     for layer_name in layer_name_list:
-        context.display.unshift_layer(layer_name, idle_layer)
+        display.append_layer(layer_name, Layer(display.size))
