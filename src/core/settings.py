@@ -47,7 +47,7 @@ class Settings:
             )
 
             # [Character] animation fps
-            self.character_animation_fps = 8
+            self.character_animation_fps = 10
 
             # [Character] size
             self.character_size = Size(

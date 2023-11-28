@@ -11,7 +11,9 @@ from src.core.context import Context
 from src.core.display import Layer, GridLayer
 from src.world.camera import Camera
 from src.world.data.frames import Frames
+from src.world.debug import Debug
 from src.world.map import MapController
+from src.world.scene_manager import SceneManager
 
 
 class Character:
@@ -102,6 +104,37 @@ class Character:
 
         self._update_after_key_status_change()
 
+    def stop_all(self) -> None:
+        """
+        Stops character's movement on all directions.
+        """
+        for direction in range(0, 4):
+            self.key_status[direction] = False
+            self.movement_status[direction] = False
+
+    def teleport(self, coordinate: Tuple[int, int]) -> None:
+        """
+        Teleports the character to a certain coordinate.
+        NOTE: It will cause a bug if the coordinate is blocked.
+        """
+        # Get the center (pixel) of the coordinate
+        center = (
+            coordinate[0] * self.cell_size.width,
+            coordinate[1] * self.cell_size.height,
+        )
+
+        Debug.get_module("teleport_center").print(center)
+
+        camera: Camera = self.context["camera"]
+        screen_size = self.context.display.size
+        map_offset = self._get_map_offset()
+        # [MATH] virtual_center = (camera.offset + screen.size) / 2
+        # camera.offset = virtual_center * 2 - screen.size
+        camera.offset = Vector2(
+            (map_offset.x + center[0]) * 2 - screen_size.width + self.size.width // 2,
+            (map_offset.y + center[1]) * 2 - screen_size.height + self.size.height // 2,
+        )
+
     def _update_after_key_status_change(self) -> None:
         """
         Updates after key status changes.
@@ -155,17 +188,37 @@ class Character:
         self._update_camera()
         self._update_character_layer()
 
+    def get_current_center(self) -> Tuple[int, int]:
+        camera: Camera = self.context["camera"]
+        virtual_center: Tuple[int, int] = camera.get_virtual_center()
+        map_offset = self._get_map_offset()
+        return virtual_center[0] - map_offset.x, virtual_center[1] - map_offset.y
+
+    def get_coordinate(self) -> Tuple[int, int]:
+        """
+        Returns character's current coordinate.
+        """
+        current_center = self.get_current_center()
+
+        return (
+            int(current_center[0] // self.cell_size.width),
+            int(current_center[1] // self.cell_size.height),
+        )
+
     def _update_camera(self) -> None:
+        """
+        Updates camera.
+        """
+
         dt = self.context.dt
         velocity = self.get_unit_velocity()
         displacement = Vector2(velocity.x * dt * 0.2, velocity.y * dt * 0.2)
 
         # Get the character center
         camera: Camera = self.context["camera"]
-        map_controller: MapController = self.context["map_controller"]
-        virtual_center: Tuple[int, int] = camera.get_virtual_center()
-        map_offset = map_controller.offset
-        current_center = (virtual_center[0] - map_offset.x, virtual_center[1] - map_offset.y)
+        scene_manager: SceneManager = self.context["scene_manager"]
+        map_controller: MapController = scene_manager.controller
+        current_center = self.get_current_center()
         next_center = Vector2(
             current_center[0] + displacement.x, current_center[1] + displacement.y
         )
@@ -173,12 +226,7 @@ class Character:
         # Find which cell the character center will be in
         col: int = int(next_center.x // self.cell_size.width)
         row: int = int(next_center.y // self.cell_size.height)
-        character_rect = Rect(
-            next_center.x - self.size.width // 2,
-            next_center.y - self.size.height // 2,
-            self.size.width,
-            self.size.height,
-        )
+        Debug.get_module("coordinate").print((col, row))
         character_rect = Rect(
             next_center.x - self.collision_box_size.width // 2,
             next_center.y - self.collision_box_size.height // 2,
@@ -215,6 +263,7 @@ class Character:
             next_center.x - current_center[0], next_center.y - current_center[1]
         )
         camera.move(real_displacement)
+        Debug.get_module("camera.offset").print(camera.offset)
 
     def _update_character_layer(self) -> None:
         """
@@ -242,3 +291,11 @@ class Character:
             self.cell_size.width,
             self.cell_size.height,
         )
+
+    def _get_map_offset(self) -> Vector2:
+        """
+        Gets map offset.
+        """
+        scene_manager: SceneManager = self.context["scene_manager"]
+        map_controller: MapController = scene_manager.controller
+        return map_controller.offset

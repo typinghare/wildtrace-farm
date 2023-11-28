@@ -85,7 +85,16 @@ class MapController:
         # The context
         self.context: Context = context
 
-        # display
+        # Block grid; cells are booleans; a cell is marked as true if it is a collision object
+        self.block_grid: Grid = Grid(self.map.size, False)
+
+        # Offset for all layers
+        self.offset: Vector2 = Vector2(0, 0)
+
+    def set_layers_to_display(self) -> None:
+        """
+        Sets layers to the game display.
+        """
         display = self.context.display
         display.set_layer("furniture_top", self.map.get_layer("furniture_top"))
         display.set_layer("furniture_bottom", self.map.get_layer("furniture_bottom"))
@@ -93,18 +102,12 @@ class MapController:
         display.set_layer("ground", self.map.get_layer("ground"))
         display.set_layer("water", self.map.get_layer("water"))
 
-        # Block grid; cells are booleans; a cell is marked as true if it is a collision object
-        self.block_grid: Grid = Grid(self.map.size, False)
-
-        # Offset for all layers
-        self.offset: Vector2 = Vector2(0, 0)
-
-    def load(self, context: Context) -> None:
+    def load(self) -> None:
         """
         Loads the map.
-        :param context: The game context.
         """
-        self.map.load(context)
+        self.map.load(self.context)
+        self.refresh_block_grid()
 
     def set_offset(self, offset: Vector2) -> None:
         """

@@ -6,6 +6,8 @@ import pygame
 from src.core.constant import Direction
 from src.core.context import Context
 from src.world.character import Character
+from src.world.data.maps import Maps
+from src.world.scene_manager import SceneManager
 
 
 def init_character(context: Context):
@@ -36,9 +38,48 @@ def character_key_down(context: Context):
     key = context.event_data.get("key")
     character: Character = context["character"]
 
+    # Direction
     direction = map_key_to_direction(key)
     if direction is not None:
         character.move(direction)
+        return
+
+    # <J> use item / open doors
+    if key == pygame.K_j:
+        # use item
+
+        # open doors
+        scene_manager: SceneManager = context["scene_manager"]
+        current_map = scene_manager.current_map
+        coordinate = character.get_coordinate()
+
+        if (
+            current_map == Maps.Home.__class__
+            and character.facing == Direction.DOWN
+            and coordinate == (4, 4)
+        ):
+            # Get out to the farm
+            def to_farm():
+                character.teleport((19, 7))
+                character.facing = Direction.DOWN
+                character.stop_all()
+
+            scene_manager.load_map(Maps.Farm, to_farm)
+            return
+
+        if (
+            current_map == Maps.Farm.__class__
+            and character.facing == Direction.UP
+            and coordinate == (19, 7)
+        ):
+            # Get into the house
+            def back_home():
+                character.teleport((4, 4))
+                character.facing = Direction.UP
+                character.stop_all()
+
+            scene_manager.load_map(Maps.Home, back_home)
+            return
 
 
 def character_key_up(context: Context):

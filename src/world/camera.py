@@ -58,6 +58,7 @@ class Camera:
         """
         Returns the center of the virtual screen.
         """
+        # [MATH] virtual_center = (camera.offset + screen.size) / 2
         return (
             (self.offset.x + self.screen_size.width) / 2,
             (self.offset.y + self.screen_size.height) / 2,

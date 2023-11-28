@@ -34,8 +34,12 @@ class FarmMap(Map):
 
         self.invisible_block_grid = Grid(self.size, False)
 
+        # house rect
+        self.house_rect: Rect = Rect(16, 2, 6, 4)
+
         self._init_water()
         self._init_grass()
+        self._init_tilled_dirt()
         self._init_house()
 
     def _init_water(self) -> None:
@@ -78,11 +82,25 @@ class FarmMap(Map):
 
         Renderers.Grass.render(self.ground, grass_set)
 
+    def _init_tilled_dirt(self) -> None:
+        """
+        Initializes tilled dirt.
+        """
+        self.coordinate_set_map["tilled_dirt"] = tilled_dirt_set = CoordinateSet()
+
+        rect = Rect(11, 8, 12, 5)
+
+        for row in range(rect.top, rect.bottom):
+            for col in range(rect.left, rect.right):
+                tilled_dirt_set.add((col, row))
+
+        Renderers.TilledDirt.render(self.floor, tilled_dirt_set)
+
     def _init_house(self) -> None:
         """
         Initializes house.
         """
-        rect = Rect(16, 2, 6, 4)
+        rect = self.house_rect
         mid_row = rect.midleft[1]
 
         def render_row(_row: int, tile_list: List[Surface]) -> None:
