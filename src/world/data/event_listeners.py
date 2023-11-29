@@ -21,7 +21,7 @@ from src.world.events.character import (
     update_character,
 )
 from src.world.events.map import init_map, update_map
-from src.world.events.tool import init_tool, update_tool, tool_key_up
+from src.world.events.hotbar import init_hotbar, update_hotbar, hotbar_key_down
 
 
 def register(event_type: int, callback: Callable[[Context | None], None]) -> EventListener:
@@ -52,7 +52,7 @@ class EventListeners:
     InitDebug = register(EventTypes.ON_START, init_debug)
     InitCharacter = register(EventTypes.ON_START, init_character)
     InitMap = register(EventTypes.ON_START, init_map)
-    InitTool = register(EventTypes.ON_START, init_tool)
+    InitHotbar = register(EventTypes.ON_START, init_hotbar)
     InitMessageBox = register(EventTypes.ON_START, init_message_box)
 
     # Before render
@@ -60,13 +60,13 @@ class EventListeners:
     UpdateLoops = register(EventTypes.BEFORE_RENDER, update_loops)
     UpdateCharacter = register(EventTypes.BEFORE_RENDER, update_character)
     UpdateMap = register(EventTypes.BEFORE_RENDER, update_map)
-    UpdateTool = register(EventTypes.BEFORE_RENDER, update_tool)
+    UpdateHotbar = register(EventTypes.BEFORE_RENDER, update_hotbar)
     updateMessageBox = register(EventTypes.BEFORE_RENDER, update_message_box)
 
     # Key down
     CharacterKeyDown = register(pygame.KEYDOWN, character_key_down)
     MessageBoxKeyDown = register(pygame.KEYDOWN, message_box_key_down)
+    HotbarKeyDown = register(pygame.KEYUP, hotbar_key_down)
 
     # Key up
     CharacterKeyUp = register(pygame.KEYUP, character_key_up)
-    ToolKeyUp = register(pygame.KEYUP, tool_key_up)

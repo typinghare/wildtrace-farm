@@ -1,12 +1,3 @@
-from typing import Type
+a = [1, 2, 3, 4, None, 5]
 
-
-class A:
-    pass
-
-
-class B(A):
-    pass
-
-
-a: Type[A] = B()
+print(a.index(None))

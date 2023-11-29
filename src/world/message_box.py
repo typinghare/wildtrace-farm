@@ -117,3 +117,9 @@ class MessageBox:
             self.layer.hidden = False
             text = self.font.render(self.message, True, (0x33,) * 3)
             self.layer.surface.blit(text, self.margin)
+
+    def is_displayed(self) -> None:
+        """
+        Whether the message box is being displayed.
+        """
+        return self.message is not None

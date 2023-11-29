@@ -11,6 +11,7 @@ from src.world.data.maps import Maps
 from src.world.data.tiles import Tiles
 from src.world.maps.farm import FarmMap
 from src.world.maps.home import HomeMap
+from src.world.message_box import MessageBox
 from src.world.scene_manager import SceneManager
 
 
@@ -49,6 +50,11 @@ def character_key_down(context: Context):
 
     # <J> use item / open doors
     if key == pygame.K_j:
+        # Yield to the message box
+        message_box: MessageBox = context["message_box"]
+        if message_box.is_displayed():
+            return
+
         if character_open_door(context):
             return
         if character_use_item(context):

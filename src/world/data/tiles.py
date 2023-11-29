@@ -170,7 +170,7 @@ class Tiles:
     ChestFront4 = register("chest/front/4", Tilesets.Chest, (224, 16), (16, 16), 3)
 
     # Tools
-    ToolWaterCan = register("tool/water_can", Tilesets.ToolMaterial, (0, 0))
+    ToolWateringCan = register("tool/watering_can", Tilesets.ToolMaterial, (0, 0))
     ToolHoe = register("tool/hoe", Tilesets.ToolMaterial, (32, 0))
 
     # Wheat

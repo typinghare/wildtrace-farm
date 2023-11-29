@@ -21,7 +21,7 @@ def crop_image(
     return image.subsurface(rect)
 
 
-def scale_image(image: pygame.Surface, scale_factor: int) -> pygame.Surface:
+def scale_image(image: pygame.Surface, scale_factor: float) -> pygame.Surface:
     """
     Scales a Pygame surface by a specified factor.
     :param image: The Pygame surface to be scaled.

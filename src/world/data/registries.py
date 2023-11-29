@@ -17,3 +17,4 @@ class Registries:
     Frames = RegistryUtil.createRegistry("frames")
     Renderer = RegistryUtil.createRegistry("renderer")
     Map = RegistryUtil.createRegistry("map")
+    Item = RegistryUtil.createRegistry("item")

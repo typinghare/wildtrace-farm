@@ -40,3 +40,5 @@ Regarding coding, I have meticulously organized the code into distinct sections,
 
 * [Understanding framerate independence and delta time](https://www.youtube.com/watch?v=rWtfClpWSb8)
 * [Stardew Valley Game Clone with Python and Pygame – Full Course](https://www.youtube.com/watch?v=R9apl6B_ZgI)
+* [Minecraft Hotbar](https://minecraft360.fandom.com/wiki/Hotbar)
+* [Trending Color Palettes - Coolors](https://coolors.co/palettes/trending)

@@ -19,7 +19,7 @@ def init_layer(context: Context) -> None:
         "furniture_top",
         # other
         "character",
-        "tool",
+        "tool_box",
         "message_box",
         "debug",
     ]
