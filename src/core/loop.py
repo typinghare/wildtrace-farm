@@ -41,10 +41,16 @@ class Loop:
         if self.elapsed_time > (self.current_count + 1) * self.each_count_time:
             self.current_count += 1
             if self.current_count >= self.count_per_period:
-                self.elapsed_time = 0
-                self.current_count = 0
+                self.reset()
 
             self.callback(self.current_count)
+
+    def reset(self) -> None:
+        """
+        Resets this loop.
+        """
+        self.elapsed_time = 0
+        self.current_count = 0
 
 
 class LoopManager:
@@ -56,7 +62,7 @@ class LoopManager:
         # List of loops
         self._loop_list: List[Loop] = []
 
-    def register(self, fps: int, count_per_period: int, callback: Callable[[int], None]) -> Loop:
+    def loop(self, fps: int, count_per_period: int, callback: Callable[[int], None]) -> Loop:
         """
         Registers a loop.
         :param fps: Frame per second, or count per second.
@@ -65,6 +71,25 @@ class LoopManager:
         :return: The loop registered.
         """
         loop = Loop(fps, count_per_period, callback)
+        self._loop_list.append(loop)
+
+        return loop
+
+    def once(self, fps: int, count_per_period: int, callback: Callable[[int], None]) -> Loop:
+        """
+        Registers a once loop.
+        :param fps: Frame per second, or count per second.
+        :param count_per_period: Number of counts per period.
+        :param callback: Callback function to be called.
+        :return: The once loop registered.
+        """
+
+        def func(index: int) -> None:
+            callback(index)
+            if index == count_per_period - 1:
+                self._loop_list.remove(loop)
+
+        loop = Loop(fps, count_per_period, func)
         self._loop_list.append(loop)
 
         return loop

@@ -145,4 +145,4 @@ class FarmMap(Map):
                 self.water.update_cell(coordinate, frames[index])
 
         update_water(0)
-        context.game.loop_manager.register(2, len(frames), update_water)
+        context.game.loop_manager.loop(2, len(frames), update_water)

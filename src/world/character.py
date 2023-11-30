@@ -11,6 +11,7 @@ from src.core.context import Context
 from src.core.display import Layer, GridLayer
 from src.world.camera import Camera
 from src.world.data.frames import Frames
+from src.world.debug import Debug
 from src.world.map import MapController
 from src.world.scene_manager import SceneManager
 
@@ -86,7 +87,7 @@ class Character:
             character_layer.blit(self.current_frames[index])
 
         loop_manager = self.context.game.loop_manager
-        loop_manager.register(character_default_fps, len(self.current_frames), update_image)
+        loop_manager.loop(character_default_fps, len(self.current_frames), update_image)
 
     def move(self, direction: int) -> None:
         """
@@ -198,6 +199,7 @@ class Character:
         self._update_after_key_status_change()
         self._update_camera()
         self._update_character_layer()
+        Debug.get_module("coordinate").print(self.get_coordinate())
 
     def get_current_center(self) -> Tuple[int, int]:
         camera: Camera = self.context["camera"]

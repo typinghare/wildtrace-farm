@@ -12,6 +12,7 @@ from src.world.data.items import ItemTags
 from src.world.data.maps import Maps
 from src.world.data.registries import Registries
 from src.world.data.tiles import Tiles
+from src.world.data_window import DataWindow
 from src.world.events.game import first_time_to_farm
 from src.world.hotbar import Hotbar
 from src.world.item import GameItem
@@ -64,6 +65,8 @@ def character_key_down(context: Context):
         if character_open_door(context):
             return
         if character_use_item(context):
+            return
+        if character_sleep(context):
             return
 
 
@@ -157,7 +160,7 @@ def character_open_door(context: Context) -> bool:
                 home_map.furniture_bottom.wipe_cell(door_coordinate)
                 home_map.furniture_bottom.update_cell(door_coordinate, door_frames[index])
 
-        loop = context.loop_manager.register(10, count, door_loop)
+        loop = context.loop_manager.loop(10, count, door_loop)
         return True
 
     if (
@@ -186,10 +189,44 @@ def character_open_door(context: Context) -> bool:
                 farm_map.furniture_bottom.wipe_cell(door_coordinate)
                 farm_map.furniture_bottom.update_cell(door_coordinate, door_frames[index])
 
-        loop = context.loop_manager.register(10, count, door_loop)
+        loop = context.loop_manager.loop(10, count, door_loop)
         return True
 
     return False
+
+
+def character_sleep(context: Context) -> bool:
+    """
+    Character sleeps.
+    """
+    character: Character = context["character"]
+    scene_manager: SceneManager = context["scene_manager"]
+
+    if not scene_manager.is_map(Maps.Home):
+        return False
+
+    coordinate = character.get_coordinate()
+    if not coordinate == (2, 4) or not character.facing == Direction.LEFT:
+        return False
+
+    # Sleep
+    transition_to_next_day(context)
+
+    return True
+
+
+def transition_to_next_day(context: Context) -> None:
+    """
+    Transits to the next day.
+    """
+    data_window: DataWindow = context["data_window"]
+    data_window.day += 1
+    data_window.reset_time()
+
+    def transition() -> None:
+        pass
+
+    context.loop_manager.once(1, 1, transition)
 
 
 def character_key_up(context: Context):

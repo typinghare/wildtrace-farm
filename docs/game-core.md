@@ -50,12 +50,14 @@ context = Context(Game())
 fps = 5
 counter_per_period = 10
 
+
 def callback(index):
     # Update animation frames or something else here
     pass
 
+
 # Register a loop using the loop manager
-loop = context.loop_manager.register(fps, counter_per_period, callback)
+loop = context.loop_manager.loop(fps, counter_per_period, callback)
 
 # Remove the loop from the loop manager
 context.loop_manager.remove(loop)

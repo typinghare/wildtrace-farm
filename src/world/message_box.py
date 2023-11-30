@@ -87,7 +87,7 @@ class MessageBox:
             if index == message_len:
                 self.stop_playing()
 
-        self.loop = loop_manager.register(self.play_speed, message_len + 1, forward)
+        self.loop = loop_manager.loop(self.play_speed, message_len + 1, forward)
 
     def stop_playing(self) -> None:
         """

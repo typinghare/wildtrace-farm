@@ -6,6 +6,7 @@ from pygame import Vector2, Surface
 from src.core.common import Size
 from src.core.context import Context
 from src.core.display import Layer
+from src.core.loop import Loop
 from src.world.util import get_font
 
 
@@ -37,6 +38,17 @@ class Time:
 
         return f"{hour}:{minute} {suffix}"
 
+    def increase_minute(self, increment: int) -> None:
+        """
+        Increases minutes
+        """
+        self.minute += increment
+        while self.minute >= 60:
+            self.hour += 1
+            self.minute -= 60
+
+        self.hour %= 24
+
 
 class DataWindow:
     """
@@ -59,8 +71,12 @@ class DataWindow:
         # Layer
         self.layer = Layer(Size(150, 130))
 
+        # Time elapse loop
+        self.time_elapse_loop: Loop | None = None
+
         # Init
         self._init_layer()
+        self._init_time_elapse()
 
     def _init_layer(self) -> None:
         """
@@ -75,6 +91,24 @@ class DataWindow:
         )
 
         self.layer.surface.fill("#c38e70")
+
+    def _init_time_elapse(self) -> None:
+        """
+        Initializes time elapse. Increase 10 minutes in game every 5 seconds in real life.
+        """
+        loop_manager = self.context.loop_manager
+        count_per_period: int = 5
+
+        def time_elapse(index: int) -> None:
+            if index != count_per_period - 1:
+                return
+
+            self.time.increase_minute(10)
+            if self.time.hour == 0:
+                # Next day
+                pass
+
+        self.time_elapse_loop = loop_manager.loop(1, count_per_period, time_elapse)
 
     def update(self) -> None:
         """
@@ -106,3 +140,10 @@ class DataWindow:
         money_text = text_font.render(f"${str(self.money).rjust(13)}", False, "orange")
         money_surface.blit(money_text, (10, 3))
         self.layer.blit(money_surface, Vector2(10, 90))
+
+    def reset_time(self) -> None:
+        """
+        Resets the time.
+        """
+        self.time = Time(6, 0)
+        self.time_elapse_loop.reset()

@@ -67,12 +67,12 @@ class EventListeners:
     UpdateMap = register(EventTypes.BEFORE_RENDER, update_map)
     UpdateHotbar = register(EventTypes.BEFORE_RENDER, update_hotbar)
     UpdateMessageBox = register(EventTypes.BEFORE_RENDER, update_message_box)
-    UpdateDataWindow = register(EventTypes.ON_START, update_data_window)
+    UpdateDataWindow = register(EventTypes.BEFORE_RENDER, update_data_window)
 
     # Key down
     CharacterKeyDown = register(pygame.KEYDOWN, character_key_down)
     MessageBoxKeyDown = register(pygame.KEYDOWN, message_box_key_down)
-    HotbarKeyDown = register(pygame.KEYUP, hotbar_key_down)
+    HotbarKeyDown = register(pygame.KEYDOWN, hotbar_key_down)
 
     # Key up
     CharacterKeyUp = register(pygame.KEYUP, character_key_up)

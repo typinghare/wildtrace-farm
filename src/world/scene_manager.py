@@ -79,3 +79,9 @@ class SceneManager:
         camera: Camera = self.context["camera"]
         rect = camera.get_screen_rect()
         self.controller.set_rect(rect)
+
+    def is_map(self, _map: Map) -> bool:
+        """
+        Checks the current map.
+        """
+        return self.current_map == _map.__class__
