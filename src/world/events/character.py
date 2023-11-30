@@ -7,13 +7,12 @@ from src.core.constant import Direction
 from src.core.context import Context
 from src.core.display import GridLayer
 from src.world.character import Character
-from src.world.context_getters import get_character, get_data_window
+from src.world.context_getters import get_character, get_data_window, get_curtain
 from src.world.data.frames import Frames
 from src.world.data.items import ItemTags
 from src.world.data.maps import Maps
 from src.world.data.registries import Registries
 from src.world.data.tiles import Tiles
-from src.world.data_window import DataWindow
 from src.world.events.game import first_time_to_farm
 from src.world.hotbar import Hotbar
 from src.world.item.item import GameItem
@@ -221,8 +220,8 @@ def transition_to_next_day(context: Context) -> None:
     """
     data_window = get_data_window(context)
     character = get_character(context)
+    curtain = get_curtain(context)
     loop_manager = context.loop_manager
-    curtain = context["curtain"]
     fade_speed: int = 25
 
     def delay():
