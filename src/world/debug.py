@@ -2,14 +2,13 @@
 Debug module.
 """
 
-import os
 from typing import Any, Dict
 
-import pygame.font
 from pygame import Vector2
 
 from src.core.context import Context
 from src.core.display import Layer
+from src.world.util import get_font
 
 
 class Debug:
@@ -55,8 +54,7 @@ class Debug:
         self._font_size: int = 16
 
         # Debug font
-        font_path = os.path.join(os.path.join(context.settings.assets_dir, "fonts/Menlo.ttc"))
-        self.font = pygame.font.Font(font_path, self._font_size)
+        self.font = get_font(self._font_size, "menlo/Menlo.ttc")
 
     def print_all(self):
         debug_layer: Layer = self.context.display.get_layer("debug")

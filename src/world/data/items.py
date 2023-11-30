@@ -24,4 +24,8 @@ class Items:
 
     # Tools
     WateringCan = register("tool/watering_can", Item("Watering Can", Tiles.ToolWateringCan))
-    Hoe = register("tool/hoe", Item("Hoe", Tiles.ToolHoe, 64))
+    Hoe = register("tool/hoe", Item("Hoe", Tiles.ToolHoe))
+
+    # Seeds
+    WheatSeeds = register("seeds/wheat", Item("Wheat Seeds", Tiles.WheatSeeds, 64))
+    BeetSeeds = register("seeds/beet", Item("Beet Seeds", Tiles.BeetSeeds, 64))

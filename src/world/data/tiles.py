@@ -174,7 +174,7 @@ class Tiles:
     ToolHoe = register("tool/hoe", Tilesets.ToolMaterial, (32, 0))
 
     # Wheat
-    WheatSeed = register("wheat/seed", Tilesets.BasicPlants, (0, 0))
+    WheatSeeds = register("wheat/seeds", Tilesets.BasicPlants, (0, 0))
     WheatSeedling = register("wheat/seedling", Tilesets.BasicPlants, (16, 0))
     WheatVegetative = register("wheat/vegetative", Tilesets.BasicPlants, (32, 0))
     WheatBudding = register("wheat/budding", Tilesets.BasicPlants, (48, 0))
@@ -182,7 +182,7 @@ class Tiles:
     WheatProduct = register("wheat/product", Tilesets.BasicPlants, (80, 0))
 
     # Beet
-    BeetSeed = register("beet/seed", Tilesets.BasicPlants, (0, 16))
+    BeetSeeds = register("beet/seeds", Tilesets.BasicPlants, (0, 16))
     BeetSeedling = register("beat/seedling", Tilesets.BasicPlants, (16, 16))
     BeetVegetative = register("beat/vegetative", Tilesets.BasicPlants, (32, 16))
     BeetBudding = register("beat/budding", Tilesets.BasicPlants, (48, 16))

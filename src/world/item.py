@@ -3,7 +3,7 @@ from pygame import Surface
 
 class Item:
     """
-    Item. This class stores static information of a type of item.
+    Represents a static type of item in the game.
     """
 
     def __init__(self, name: str, image: Surface, max_stack: int = 1):
@@ -19,7 +19,7 @@ class Item:
 
 class GameItem:
     """
-    Game item. This class refers to a real item when the game is running.
+    Represents an instance of an item during gameplay.
     """
 
     def __init__(self, item: Item):
@@ -32,7 +32,7 @@ class GameItem:
     @property
     def image(self) -> Surface:
         """
-        Returns the item image.
+        Returns the item's image.
         """
         return self.item.image
 
@@ -61,3 +61,23 @@ class GameItem:
             return True
         else:
             return False
+
+    def stack_to_full(self, increment: int) -> int:
+        """
+        Stacks items to the maximum stack.
+        :param increment: The number to increase.
+        :return: The remaining number of items.
+        """
+        space: int = self.item.max_stack - self.stack
+        if space >= increment:
+            self.stack += increment
+            return 0
+        else:
+            self.stack = self.item.max_stack
+            return increment - space
+
+    def is_full(self) -> bool:
+        """
+        Checks whether the item is full.
+        """
+        return self.stack == self.item.max_stack

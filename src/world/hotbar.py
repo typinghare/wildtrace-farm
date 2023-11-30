@@ -51,7 +51,7 @@ class Hotbar:
         Initializes layer.
         """
         screen_size = self.context.display.size
-        self.context.display.set_layer("tool_box", self.layer)
+        self.context.display.set_layer("hotbar", self.layer)
         self.layer.offset = Vector2(
             (screen_size.width - self.size.width) // 2,
             screen_size.height * 0.98 - self.size.height,
@@ -79,17 +79,37 @@ class Hotbar:
         """
         return self.get_item(self._selected_index)
 
-    def add_item(self, item: Item) -> bool:
+    def add_item(self, item: Item, stack: int = 1) -> bool:
         """
         Adds an item to this hotbar.
-        :param item: The item to add.
+        :param item: The item too add.
+        :param stack: The stack number.
         :return: True if the item is successfully added; false otherwise.
         """
         first_empty_slot_index = self.item_list.index(None)
         if first_empty_slot_index == -1:
             return False
 
-        self.item_list[first_empty_slot_index] = GameItem(item)
+        game_item = GameItem(item)
+        self.item_list[first_empty_slot_index] = game_item
+        game_item.stack = stack
+
+        return True
+
+    def stack_item(self, item: Item, increment: int = 1) -> bool:
+        """
+        Stacks an item.
+        :param item: The item to stack.
+        :param increment: The number of items.
+        """
+        remaining_number = increment
+        for game_item in self.item_list:
+            if game_item is not None and game_item.item == item and not game_item.is_full():
+                remaining_number = game_item.stack_to_full(remaining_number)
+
+        if remaining_number > 0:
+            return self.add_item(item, remaining_number)
+
         return True
 
     def update(self) -> None:
@@ -123,8 +143,9 @@ class Hotbar:
                 # Blit the stack number in the bottom-right corner
                 stack_number = item.stack
                 if stack_number > 1:
-                    stack_text = stack_text_font.render(str(stack_number), False, (255, 255, 255))
-                    stack_dest = (rect.right - 10, rect.bottom - 12)
+                    s = str(stack_number)
+                    stack_text = stack_text_font.render(s, True, (255, 255, 255))
+                    stack_dest = (rect.right - 5 * (1 + len(s)), rect.bottom - 12)
                     self.layer.surface.blit(stack_text, stack_dest)
 
             # Blit the number in the top-left corner

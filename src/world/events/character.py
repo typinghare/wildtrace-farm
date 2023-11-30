@@ -9,6 +9,9 @@ from src.world.character import Character
 from src.world.data.frames import Frames
 from src.world.data.maps import Maps
 from src.world.data.tiles import Tiles
+from src.world.events.game import first_time_to_farm
+from src.world.hotbar import Hotbar
+from src.world.item import GameItem
 from src.world.maps.farm import FarmMap
 from src.world.maps.home import HomeMap
 from src.world.message_box import MessageBox
@@ -66,6 +69,10 @@ def character_use_item(context: Context) -> bool:
     Character uses item.
     """
     character: Character = context["character"]
+    hotbar: Hotbar = context["hotbar"]
+    selected_item: GameItem = hotbar.get_selected_item()
+
+    # Tools
 
     return True
 
@@ -99,6 +106,9 @@ def character_open_door(context: Context) -> bool:
                     character.teleport((19, 7))
                     character.facing = Direction.DOWN
                     character.stop_all()
+
+                    if not context["flag.been_to_farm"]:
+                        first_time_to_farm(context)
 
                 scene_manager.load_map(Maps.Farm, to_farm)
                 home_map.furniture_bottom.update_cell(door_coordinate, Tiles.Door5)

@@ -17,7 +17,9 @@ def init_hotbar(context: Context) -> None:
     hotbar = context["hotbar"] = Hotbar(context)
     hotbar.add_item(Items.WateringCan)
     hotbar.add_item(Items.Hoe)
-    hotbar.get_item(1).increase_stack()
+    hotbar.add_item(Items.BeetSeeds)
+    hotbar.stack_item(Items.BeetSeeds, 9)
+    hotbar.stack_item(Items.WheatSeeds, 10)
 
 
 def update_hotbar(context: Context) -> None:

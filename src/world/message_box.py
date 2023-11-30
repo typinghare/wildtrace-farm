@@ -1,14 +1,15 @@
 """
 Message box module.
 """
-import os
+from typing import Callable
 
-from pygame import Vector2, Rect, font
+from pygame import Vector2, Rect
 
 from src.core.common import Size
 from src.core.context import Context
 from src.core.display import Layer
 from src.core.loop import LoopManager, Loop
+from src.world.util import get_font
 
 
 class MessageBox:
@@ -19,6 +20,9 @@ class MessageBox:
     def __init__(self, context: Context):
         # Game context
         self.context = context
+
+        # Message play speed
+        self.play_speed: int = 25
 
         # Message to display; the message box will be hidden if the message is None
         self.message: str | None = None
@@ -41,14 +45,16 @@ class MessageBox:
 
         # Font
         self.font_size: int = 24
-        font_path = os.path.join(os.path.join(context.settings.assets_dir, "fonts/Menlo.ttc"))
-        self.font = font.Font(font_path, self.font_size)
+        self.font = get_font(self.font_size, context.settings.message_box_font)
 
         # Margin offset
         self.margin = Vector2(0.03 * self.size.width, 0.1 * self.size.height)
 
         # Loop
         self.loop: Loop | None = None
+
+        # Callback
+        self.callback: Callable[[], None] | None = None
 
         # Init
         self._init_layer()
@@ -61,19 +67,16 @@ class MessageBox:
         self.layer.offset = self.offset
 
         self.layer.surface.fill("blue")
-        rect = Rect(
-            self.border_thickness,
-            self.border_thickness,
-            self.layer.size.width - self.border_thickness * 2,
-            self.layer.size.height - self.border_thickness * 2,
-        )
-        self.layer.surface.fill("white", rect)
+        self.clear_layer()
 
-    def play(self, message: str) -> None:
+    def play(self, message: str, callback: Callable[[], None] | None = None) -> None:
         """
         Plays a message.
         :param message: The message to display.
+        :param callback: The callback function to call after the message box is closed.
         """
+        self.callback = callback
+
         self.message_buffer = message
         message_len = len(message)
         loop_manager: LoopManager = self.context.loop_manager
@@ -82,9 +85,9 @@ class MessageBox:
             self.message = message[0:index]
 
             if index == message_len:
-                loop_manager.remove(self.loop)
+                self.stop_playing()
 
-        self.loop = loop_manager.register(15, message_len + 1, forward)
+        self.loop = loop_manager.register(self.play_speed, message_len + 1, forward)
 
     def stop_playing(self) -> None:
         """
@@ -106,6 +109,12 @@ class MessageBox:
         self.stop_playing()
         self.message = None
         self.message_buffer = ""
+        self.clear_layer()
+
+        # Invoke the callback function
+        if self.callback is not None:
+            self.callback()
+            self.callback = None
 
     def update(self) -> None:
         """
@@ -115,8 +124,23 @@ class MessageBox:
             self.layer.hidden = True
         else:
             self.layer.hidden = False
-            text = self.font.render(self.message, True, (0x33,) * 3)
-            self.layer.surface.blit(text, self.margin)
+            lines = self.message.split("\n")
+            for i, line in enumerate(lines):
+                text = self.font.render(line, True, (0x33,) * 3)
+                line_margin = Vector2(self.margin.x, self.margin.y + self.font_size * 1.3 * i)
+                self.layer.surface.blit(text, line_margin)
+
+    def clear_layer(self) -> None:
+        """
+        Clears all words in the layer.
+        """
+        rect = Rect(
+            self.border_thickness,
+            self.border_thickness,
+            self.layer.size.width - self.border_thickness * 2,
+            self.layer.size.height - self.border_thickness * 2,
+        )
+        self.layer.surface.fill("white", rect)
 
     def is_displayed(self) -> None:
         """

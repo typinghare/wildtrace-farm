@@ -20,6 +20,8 @@ def init_layer(context: Context) -> None:
         # other
         "character",
         "tool_box",
+        "hotbar",
+        "data_window",
         "message_box",
         "debug",
     ]

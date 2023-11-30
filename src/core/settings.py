@@ -54,4 +54,7 @@ class Settings:
                 48 * self.display_character_scale_factor, 48 * self.display_character_scale_factor
             )
 
+            # [Message box] font
+            self.message_box_font = "manaspace/manaspc.ttf"
+
         return cls._instance
