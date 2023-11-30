@@ -85,7 +85,7 @@ def character_use_item(context: Context) -> bool:
     character: Character = context["character"]
     coordinate = character.get_coordinate()
     hotbar: Hotbar = context["hotbar"]
-    selected_item: GameItem | None = hotbar.get_selected_item()
+    selected_item: GameItem | None = hotbar.chest.get_selected_item()
 
     if selected_item is None:
         # Nothing can be used
@@ -113,7 +113,7 @@ def character_use_item(context: Context) -> bool:
             return False
 
         # Sow seeds: consume a packet of seeds; update the crop layer
-        hotbar.consume_selected_item()
+        hotbar.chest.consume_selected_item()
         farm_map.crop.update_cell(coordinate, Tiles.WheatSeedling)
 
         return True

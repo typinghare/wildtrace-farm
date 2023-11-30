@@ -15,11 +15,11 @@ def init_hotbar(context: Context) -> None:
     """
     # layer
     hotbar = context["hotbar"] = Hotbar(context)
-    hotbar.add_item(Items.WateringCan)
-    hotbar.add_item(Items.Hoe)
-    hotbar.add_item(Items.BeetSeeds)
-    hotbar.stack_item(Items.BeetSeeds, 9)
-    hotbar.stack_item(Items.WheatSeeds, 10)
+    hotbar.chest.add_item(Items.WateringCan)
+    hotbar.chest.add_item(Items.Hoe)
+    hotbar.chest.add_item(Items.BeetSeeds)
+    hotbar.chest.stack_item(Items.BeetSeeds, 9)
+    hotbar.chest.stack_item(Items.WheatSeeds, 10)
 
 
 def update_hotbar(context: Context) -> None:
@@ -42,4 +42,4 @@ def hotbar_key_down(context: Context) -> None:
             index = 9
 
         hotbar: Hotbar = context["hotbar"]
-        hotbar.select_item(index)
+        hotbar.chest.select_item(index)
