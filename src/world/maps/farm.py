@@ -27,7 +27,11 @@ class FarmMap(Map):
         self.water: GridLayer = self.get_layer("water")
         self.ground: GridLayer = self.get_layer("ground")
         self.floor: GridLayer = self.get_layer("floor")
+        self.crop: GridLayer = self.get_layer("crop")
         self.furniture_bottom: GridLayer = self.get_layer("furniture_bottom")
+
+        # Crop grid
+        self.crop_grid: Grid = Grid(self.size)
 
         # Coordinate sets
         self.coordinate_set_map: Dict[str, CoordinateSet] = {}

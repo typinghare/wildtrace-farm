@@ -26,10 +26,11 @@ class Map:
 
         # The layers
         cell_size = settings.display_cell_size
-        self._layers: Dict[str, GridLayer] = {
+        self.layers: Dict[str, GridLayer] = {
             "water": GridLayer(self.size, cell_size),
             "ground": GridLayer(self.size, cell_size),
             "floor": GridLayer(self.size, cell_size),
+            "crop": GridLayer(self.size, cell_size),
             "furniture_bottom": GridLayer(self.size, cell_size),
             "furniture_top": GridLayer(self.size, cell_size),
         }
@@ -42,21 +43,21 @@ class Map:
         Gets a layer.
         :param name: The name of the layer.
         """
-        return self._layers[name]
+        return self.layers[name]
 
     def all_layers(self) -> List[GridLayer]:
         """
         Returns all layers.
         """
-        return list(self._layers.values())
+        return list(self.layers.values())
 
     def clone(self) -> "Map":
         """
         Returns a deep copy of this map.
         """
         _map = Map(self.size)
-        for name, layer in self._layers.items():
-            _map._layers[name] = layer.clone()
+        for name, layer in self.layers.items():
+            _map.layers[name] = layer.clone()
 
         return _map
 
@@ -96,11 +97,8 @@ class MapController:
         Sets layers to the game display.
         """
         display = self.context.display
-        display.set_layer("furniture_top", self.map.get_layer("furniture_top"))
-        display.set_layer("furniture_bottom", self.map.get_layer("furniture_bottom"))
-        display.set_layer("floor", self.map.get_layer("floor"))
-        display.set_layer("ground", self.map.get_layer("ground"))
-        display.set_layer("water", self.map.get_layer("water"))
+        for layer_name, layer in self.map.layers.items():
+            display.set_layer(layer_name, layer)
 
     def load(self) -> None:
         """

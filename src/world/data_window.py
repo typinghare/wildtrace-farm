@@ -89,20 +89,20 @@ class DataWindow:
         # Day
         day_surface = Surface((130, 30))
         day_surface.fill("white")
-        day_text = text_font.render(f"Day    {self.day}", False, "black")
+        day_text = text_font.render(f"Day{str(self.day).rjust(9)}", False, "blue")
         day_surface.blit(day_text, (10, 3))
         self.layer.blit(day_surface, Vector2(10, 10))
 
         # Time
         time_surface = Surface((130, 30))
         time_surface.fill("white")
-        time_text = text_font.render(str(self.time), False, "black")
+        time_text = text_font.render(str(self.time), False, "pink")
         time_surface.blit(time_text, (10, 3))
         self.layer.blit(time_surface, Vector2(10, 50))
 
         # Money
         money_surface = Surface((130, 30))
         money_surface.fill("white")
-        money_text = text_font.render("$      0", False, "black")
+        money_text = text_font.render(f"${str(self.money).rjust(13)}", False, "orange")
         money_surface.blit(money_text, (10, 3))
         self.layer.blit(money_surface, Vector2(10, 90))

@@ -112,6 +112,31 @@ class Hotbar:
 
         return True
 
+    def consume_selected_item(self, volume: int = 1) -> bool:
+        """
+        Consumes selected item.
+        :param volume: The number of items to consume.
+        :return: True if the selected item can be consumed successfully.
+        """
+        game_item: GameItem | None = self.get_selected_item()
+        if game_item is None:
+            return False
+
+        result = game_item.decrease_stack(volume)
+        if result:
+            self.refresh()
+
+        return result
+
+    def refresh(self) -> None:
+        """
+        Refreshes items.
+        """
+        for index in range(self.slot_number):
+            game_item = self.item_list[index]
+            if game_item is not None and game_item.stack == 0:
+                self.item_list[index] = None
+
     def update(self) -> None:
         """
         Updates this tool box.

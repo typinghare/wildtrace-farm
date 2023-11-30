@@ -9,8 +9,11 @@ def init_flags(context: Context) -> None:
     """
     Initializes flags.
     """
-    context["flag.enter_game"] = False
-    context["flag.been_to_farm"] = False
+    # context["flag.enter_game"] = False
+    # context["flag.been_to_farm"] = False
+
+    context["flag.enter_game"] = True
+    context["flag.been_to_farm"] = True
 
 
 def before_all(context: Context) -> None:
@@ -32,9 +35,9 @@ def enter_game(context: Context) -> None:
 
     def second() -> None:
         message_box.play(
-            "Press number keys [0] to [9] to change the selected item on the hotbar.\n"
-            "Press [J] to use an item.\n"
-            "When you want to sleep, get close to the bed and press [J].\n"
+            "Press number keys [0] to [9] to change the selected items.\n"
+            "Press [J] to use an item.\n",
+            third,
         )
 
     message_box.play(
@@ -45,6 +48,9 @@ def enter_game(context: Context) -> None:
         "Press [D] to move rightward.\n",
         second,
     )
+
+    def third() -> None:
+        message_box.play("When you want to sleep, get close to the bed and press [J].\n")
 
 
 def first_time_to_farm(context: Context) -> None:

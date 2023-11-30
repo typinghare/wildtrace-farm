@@ -23,7 +23,7 @@ class SceneManager:
         self.context: Context = context
 
         # Map controllers
-        self.map_controller_map = {}
+        self._map_controller_map = {}
 
         # Current map
         self.current_map: Type[Map] | None = None
@@ -38,14 +38,14 @@ class SceneManager:
         :param callback: Callback function that is called after the map is loaded.
         """
         self.current_map = map_to_load.__class__
-        self.controller = self.map_controller_map.get(self.current_map)
+        self.controller = self._map_controller_map.get(self.current_map)
 
         if self.controller is None:
             # Create a map controller if it does not exist
             self.controller = MapController(map_to_load, self.context)
             self.controller.load()
             self.controller.refresh_block_grid()
-            self.map_controller_map[self.current_map] = self.controller
+            self._map_controller_map[self.current_map] = self.controller
 
         # Set the map's layers to the display module
         self.controller.set_layers_to_display()

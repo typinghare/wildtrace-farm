@@ -15,6 +15,7 @@ def init_layer(context: Context) -> None:
         "water",
         "ground",
         "floor",
+        "crop",
         "furniture_bottom",
         "furniture_top",
         # other

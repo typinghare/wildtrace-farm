@@ -5,9 +5,12 @@ import pygame
 
 from src.core.constant import Direction
 from src.core.context import Context
+from src.core.display import GridLayer
 from src.world.character import Character
 from src.world.data.frames import Frames
+from src.world.data.items import ItemTags
 from src.world.data.maps import Maps
+from src.world.data.registries import Registries
 from src.world.data.tiles import Tiles
 from src.world.events.game import first_time_to_farm
 from src.world.hotbar import Hotbar
@@ -64,17 +67,55 @@ def character_key_down(context: Context):
             return
 
 
+def is_tilled_dirt_cell(cell: GridLayer.Cell) -> bool:
+    """
+    Checks whether a cell is tilled dirt cell.
+    """
+    # return cell.surface in Renderers.TilledDirt.tiles
+    return cell.surface == Tiles.TilledDirt15
+
+
 def character_use_item(context: Context) -> bool:
     """
     Character uses item.
     """
     character: Character = context["character"]
+    coordinate = character.get_coordinate()
     hotbar: Hotbar = context["hotbar"]
-    selected_item: GameItem = hotbar.get_selected_item()
+    selected_item: GameItem | None = hotbar.get_selected_item()
 
-    # Tools
+    if selected_item is None:
+        # Nothing can be used
+        return False
 
-    return True
+    item_ref = Registries.Item.get_ref_by_res(selected_item.item)
+
+    if item_ref.contain_tag(ItemTags.TOOL):
+        # Tools
+        pass
+    elif item_ref.contain_tag(ItemTags.SEEDS):
+        # Sow seeds
+        scene_manager: SceneManager = context["scene_manager"]
+
+        # Check whether the current map is farm
+        if scene_manager.current_map != Maps.Farm.__class__:
+            return False
+
+        # Check whether the cell is arable
+        farm_map: FarmMap = scene_manager.controller.map
+        if (
+            not is_tilled_dirt_cell(farm_map.floor.get_cell(coordinate))
+            or farm_map.crop.get_cell(coordinate).surface is not None
+        ):
+            return False
+
+        # Sow seeds: consume a packet of seeds; update the crop layer
+        hotbar.consume_selected_item()
+        farm_map.crop.update_cell(coordinate, Tiles.WheatSeedling)
+
+        return True
+
+    return False
 
 
 def character_open_door(context: Context) -> bool:

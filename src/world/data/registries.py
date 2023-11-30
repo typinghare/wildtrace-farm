@@ -18,3 +18,5 @@ class Registries:
     Renderer = RegistryUtil.createRegistry("renderer")
     Map = RegistryUtil.createRegistry("map")
     Item = RegistryUtil.createRegistry("item")
+    Product = RegistryUtil.createRegistry("product")
+    Crop = RegistryUtil.createRegistry("crop")

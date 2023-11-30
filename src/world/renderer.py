@@ -73,7 +73,7 @@ class HouseRenderer(Renderer):
     """
 
     def __init__(self):
-        self._tiles = [
+        self.tiles = [
             Tiles.WoodenHouse15,
             Tiles.WoodenHouse15,
             Tiles.WoodenHouse15,
@@ -95,7 +95,7 @@ class HouseRenderer(Renderer):
     def render(self, grid_layer: GridLayer, coordinate_set: CoordinateSet) -> None:
         for coordinate in coordinate_set.all():
             status = self.get_status(coordinate, coordinate_set)
-            grid_layer.update_cell(coordinate, self._tiles[status])
+            grid_layer.update_cell(coordinate, self.tiles[status])
 
 
 class GrassRenderer(Renderer):
@@ -104,7 +104,7 @@ class GrassRenderer(Renderer):
     """
 
     def __init__(self):
-        self._tiles = [
+        self.tiles = [
             Tiles.GrassSquare0,
             Tiles.GrassSquare1,
             Tiles.GrassSquare2,
@@ -126,7 +126,7 @@ class GrassRenderer(Renderer):
     def render(self, grid_layer: GridLayer, coordinate_set: CoordinateSet) -> None:
         for coordinate in coordinate_set.all():
             status = self.get_status(coordinate, coordinate_set)
-            grid_layer.update_cell(coordinate, self._tiles[status])
+            grid_layer.update_cell(coordinate, self.tiles[status])
 
 
 class TilledDirtRenderer(Renderer):
@@ -135,7 +135,7 @@ class TilledDirtRenderer(Renderer):
     """
 
     def __init__(self):
-        self._tiles = [
+        self.tiles = [
             Tiles.TilledDirt0,
             Tiles.TilledDirt1,
             Tiles.TilledDirt2,
@@ -157,4 +157,4 @@ class TilledDirtRenderer(Renderer):
     def render(self, grid_layer: GridLayer, coordinate_set: CoordinateSet) -> None:
         for coordinate in coordinate_set.all():
             status = self.get_status(coordinate, coordinate_set)
-            grid_layer.update_cell(coordinate, self._tiles[status])
+            grid_layer.update_cell(coordinate, self.tiles[status])
