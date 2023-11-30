@@ -24,6 +24,17 @@ def before_all(context: Context) -> None:
     if not context["flag.enter_game"]:
         enter_game(context)
 
+    # curtain = context["curtain"]
+    # loop_manager = context.loop_manager
+    #
+    # def callback():
+    #     curtain.fade_in(25)
+    #
+    # def delay():
+    #     loop_manager.delay(1500, callback)
+    #
+    # curtain.fade_out(25, delay)
+
 
 def enter_game(context: Context) -> None:
     """

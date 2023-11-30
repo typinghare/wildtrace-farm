@@ -8,7 +8,7 @@ from pygame import Vector2, font, Rect, Surface
 from src.core.common import Size
 from src.core.context import Context
 from src.core.display import Layer
-from src.world.item import GameItem, Item
+from src.world.item.item import GameItem, Item
 
 
 class Hotbar:

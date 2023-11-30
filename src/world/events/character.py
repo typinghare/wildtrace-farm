@@ -7,6 +7,7 @@ from src.core.constant import Direction
 from src.core.context import Context
 from src.core.display import GridLayer
 from src.world.character import Character
+from src.world.context_getters import get_character, get_data_window
 from src.world.data.frames import Frames
 from src.world.data.items import ItemTags
 from src.world.data.maps import Maps
@@ -15,7 +16,7 @@ from src.world.data.tiles import Tiles
 from src.world.data_window import DataWindow
 from src.world.events.game import first_time_to_farm
 from src.world.hotbar import Hotbar
-from src.world.item import GameItem
+from src.world.item.item import GameItem
 from src.world.maps.farm import FarmMap
 from src.world.maps.home import HomeMap
 from src.world.message_box import MessageBox
@@ -142,25 +143,25 @@ def character_open_door(context: Context) -> bool:
         count = len(door_frames) + 1
 
         def door_loop(index: int):
-            if index == count - 1:
-                context.loop_manager.remove(loop)
-
-                # Get out to the farm
-                def to_farm():
-                    character.teleport((19, 7))
-                    character.facing = Direction.DOWN
-                    character.stop_all()
-
-                    if not context["flag.been_to_farm"]:
-                        first_time_to_farm(context)
-
-                scene_manager.load_map(Maps.Farm, to_farm)
-                home_map.furniture_bottom.update_cell(door_coordinate, Tiles.Door5)
-            else:
+            if index != count - 1:
+                # Only update the door frame
                 home_map.furniture_bottom.wipe_cell(door_coordinate)
                 home_map.furniture_bottom.update_cell(door_coordinate, door_frames[index])
+                return
 
-        loop = context.loop_manager.loop(10, count, door_loop)
+            # Get out to the farm
+            def to_farm():
+                character.teleport((19, 7))
+                character.facing = Direction.DOWN
+                character.stop_all()
+
+                if not context["flag.been_to_farm"]:
+                    first_time_to_farm(context)
+
+            scene_manager.load_map(Maps.Farm, to_farm)
+            home_map.furniture_bottom.update_cell(door_coordinate, Tiles.Door5)
+
+        context.loop_manager.once(10, count, door_loop)
         return True
 
     if (
@@ -174,22 +175,21 @@ def character_open_door(context: Context) -> bool:
         count = len(door_frames) + 1
 
         def door_loop(index: int):
-            if index == count - 1:
-                context.loop_manager.remove(loop)
-
-                # Get into the house
-                def back_home():
-                    character.teleport((4, 4))
-                    character.facing = Direction.UP
-                    character.stop_all()
-
-                scene_manager.load_map(Maps.Home, back_home)
-                farm_map.furniture_bottom.update_cell(door_coordinate, Tiles.Door5)
-            else:
+            if index != count - 1:
                 farm_map.furniture_bottom.wipe_cell(door_coordinate)
                 farm_map.furniture_bottom.update_cell(door_coordinate, door_frames[index])
+                return
 
-        loop = context.loop_manager.loop(10, count, door_loop)
+            # Get into the house
+            def back_home():
+                character.teleport((4, 4))
+                character.facing = Direction.UP
+                character.stop_all()
+
+            scene_manager.load_map(Maps.Home, back_home)
+            farm_map.furniture_bottom.update_cell(door_coordinate, Tiles.Door5)
+
+        context.loop_manager.once(10, count, door_loop)
         return True
 
     return False
@@ -219,14 +219,25 @@ def transition_to_next_day(context: Context) -> None:
     """
     Transits to the next day.
     """
-    data_window: DataWindow = context["data_window"]
-    data_window.day += 1
-    data_window.reset_time()
+    data_window = get_data_window(context)
+    character = get_character(context)
+    loop_manager = context.loop_manager
+    curtain = context["curtain"]
+    fade_speed: int = 25
 
-    def transition() -> None:
-        pass
+    def delay():
+        # Delay 1.5 seconds
+        loop_manager.delay(1500, callback)
 
-    context.loop_manager.once(1, 1, transition)
+    def callback():
+        # Set the data window
+        data_window.day += 1
+        data_window.reset_time()
+        character.facing = Direction.RIGHT
+
+        curtain.fade_in(25)
+
+    curtain.fade_out(fade_speed, delay)
 
 
 def character_key_up(context: Context):

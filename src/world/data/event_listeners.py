@@ -10,6 +10,7 @@ from src.core.context import Context
 from src.core.event import EventListener
 from src.core.constant import EventTypes
 from src.world.data.registries import Registries
+from src.world.events.curtain import init_curtain, update_curtain
 from src.world.events.data_window import init_data_window, update_data_window
 from src.world.events.debug import init_debug, update_debug
 from src.world.events.game import init_flags, before_all
@@ -58,6 +59,7 @@ class EventListeners:
     InitHotbar = register(EventTypes.ON_START, init_hotbar)
     InitMessageBox = register(EventTypes.ON_START, init_message_box)
     InitDataWindow = register(EventTypes.ON_START, init_data_window)
+    InitCurtain = register(EventTypes.ON_START, init_curtain)
     BeforeAll = register(EventTypes.ON_START, before_all)
 
     # Before render
@@ -68,6 +70,7 @@ class EventListeners:
     UpdateHotbar = register(EventTypes.BEFORE_RENDER, update_hotbar)
     UpdateMessageBox = register(EventTypes.BEFORE_RENDER, update_message_box)
     UpdateDataWindow = register(EventTypes.BEFORE_RENDER, update_data_window)
+    UpdateCurtain = register(EventTypes.BEFORE_RENDER, update_curtain)
 
     # Key down
     CharacterKeyDown = register(pygame.KEYDOWN, character_key_down)

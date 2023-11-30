@@ -5,7 +5,7 @@ from typing import List
 
 from pygame import Surface
 
-from src.world.farm.product import Product
+from src.world.item.product import Product
 
 
 class Crop:

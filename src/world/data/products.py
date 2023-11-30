@@ -4,8 +4,8 @@ Product resource module.
 from src.registry import RegistryUtil
 from src.world.data.items import Items
 from src.world.data.registries import Registries
-from src.world.farm.product import Product
-from src.world.item import Item
+from src.world.item.product import Product
+from src.world.item.item import Item
 
 
 def register(path: str, item: Item, price: int) -> Product:

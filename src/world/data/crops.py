@@ -5,7 +5,7 @@ from src.registry import RegistryUtil
 from src.world.data.products import Products
 from src.world.data.registries import Registries
 from src.world.data.tiles import Tiles
-from src.world.farm.crop import Crop
+from src.world.item.crop import Crop
 
 
 def register(path: str, crop: Crop) -> Crop:

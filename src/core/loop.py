@@ -9,9 +9,9 @@ class Loop:
     A frame-based loop that triggers a callback at specified intervals.
     """
 
-    def __init__(self, fps: int, count_per_period: int, callback: Callable[[int], None]):
+    def __init__(self, fps: float, count_per_period: int, callback: Callable[[int], None]):
         # Frame per second, or count per second
-        self.fps: int = fps
+        self.fps: float = fps
 
         # Number of counts per period
         self.count_per_period: int = count_per_period
@@ -62,7 +62,7 @@ class LoopManager:
         # List of loops
         self._loop_list: List[Loop] = []
 
-    def loop(self, fps: int, count_per_period: int, callback: Callable[[int], None]) -> Loop:
+    def loop(self, fps: float, count_per_period: int, callback: Callable[[int], None]) -> Loop:
         """
         Registers a loop.
         :param fps: Frame per second, or count per second.
@@ -75,7 +75,7 @@ class LoopManager:
 
         return loop
 
-    def once(self, fps: int, count_per_period: int, callback: Callable[[int], None]) -> Loop:
+    def once(self, fps: float, count_per_period: int, callback: Callable[[int], None]) -> Loop:
         """
         Registers a once loop.
         :param fps: Frame per second, or count per second.
@@ -93,6 +93,15 @@ class LoopManager:
         self._loop_list.append(loop)
 
         return loop
+
+    def delay(self, delay_ms: int, callback: Callable[[], None]) -> Loop:
+        """
+        Schedule a callback function to be executed after a specified delay.
+        :param delay_ms: The delay time in milliseconds.
+        :param callback: The function to be called after the delay.
+        :return: The registered loop.
+        """
+        return self.once(1000 / delay_ms, 1, lambda _: callback())
 
     def remove(self, loop: Loop) -> None:
         """

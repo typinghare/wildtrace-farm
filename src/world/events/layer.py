@@ -23,6 +23,7 @@ def init_layer(context: Context) -> None:
         "tool_box",
         "hotbar",
         "data_window",
+        "curtain",
         "message_box",
         "debug",
     ]

@@ -1,7 +1,7 @@
 """
 Product module.
 """
-from src.world.item import Item
+from src.world.item.item import Item
 
 
 class Product:

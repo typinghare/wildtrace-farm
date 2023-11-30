@@ -4,7 +4,7 @@ Item resource modules.
 from src.registry import RegistryUtil, Tag
 from src.world.data.registries import Registries
 from src.world.data.tiles import Tiles
-from src.world.item import Item
+from src.world.item.item import Item
 
 
 def register(path: str, item: Item) -> Item:
