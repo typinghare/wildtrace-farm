@@ -18,7 +18,7 @@ To run Wildtrace Farm, you should install the following programs as prerequisite
 Start the game with the following command:
 
 ~~~shell
-Python3 ./src/wildtrace-farm.py
+cd src && python3 wildtrace-farm.py
 ~~~
 
 ### Gameplay

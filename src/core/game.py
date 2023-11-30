@@ -3,12 +3,12 @@ Game module.
 """
 import pygame
 
-from src.core.display import Display
-from src.core.event import EventManager
-from src.core.loop import LoopManager
-from src.core.settings import Settings
-from src.core.context import Context
-from src.core.constant import EventTypes
+from .display import Display
+from .event import EventManager
+from .loop import LoopManager
+from .settings import Settings
+from .context import Context
+from .constant import EventTypes
 from src.world.data.registries import Registries
 
 
