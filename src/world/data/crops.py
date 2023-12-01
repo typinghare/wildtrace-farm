@@ -10,7 +10,7 @@ from src.world.item.crop import Crop
 
 def register(path: str, crop: Crop) -> Crop:
     """
-    Register an item.
+    Register a crop.
     :param path: The path of the crop.
     :param crop: The crop to register.
     :return: The crop.

@@ -3,7 +3,9 @@ Game related functions.
 """
 from src.core.common import Size
 from src.core.context import Context
+from src.world.data.registries import Registries
 from src.world.item.chest import Chest
+from src.world.item.crop_item import CropItem
 from src.world.message_box import MessageBox
 
 
@@ -30,16 +32,11 @@ def before_all(context: Context) -> None:
     context["shipping_chest"] = Chest(Size(10, 3))
     context["home_chest"] = Chest(Size(10, 3))
 
-    # curtain = context["curtain"]
-    # loop_manager = context.loop_manager
-    #
-    # def callback():
-    #     curtain.fade_in(25)
-    #
-    # def delay():
-    #     loop_manager.delay(1500, callback)
-    #
-    # curtain.fade_out(25, delay)
+    # Item-crop mapping
+    crop_item_mapping = context["crop_item_mapping"] = {}
+    for ref in Registries.CropItem.get_ref_list():
+        crop_item: CropItem = ref.res
+        crop_item_mapping[crop_item.item] = crop_item.crop
 
 
 def enter_game(context: Context) -> None:

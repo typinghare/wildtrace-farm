@@ -34,3 +34,13 @@ class Crop:
 
         index = int(day // (self.days_to_ripe / 3))
         return self.image_list[index]
+
+
+class GameCrop:
+    """
+    Game crop.
+    """
+
+    def __init__(self, crop: Crop):
+        # Crop
+        self.crop = crop

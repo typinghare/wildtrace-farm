@@ -1,6 +1,8 @@
 """
 Character related events.
 """
+from typing import Dict
+
 import pygame
 
 from src.core.constant import Direction
@@ -20,8 +22,9 @@ from src.world.data.maps import Maps
 from src.world.data.registries import Registries
 from src.world.data.tiles import Tiles
 from src.world.events.game import first_time_to_farm
+from src.world.item.crop import Crop
 from src.world.item.hotbar import Hotbar
-from src.world.item.item import GameItem
+from src.world.item.item import GameItem, Item
 from src.world.maps.farm import FarmMap
 from src.world.maps.home import HomeMap
 from src.world.message_box import MessageBox
@@ -122,7 +125,10 @@ def character_use_item(context: Context) -> bool:
 
         # Sow seeds: consume a packet of seeds; update the crop layer
         hotbar.chest.consume_selected_item()
-        farm_map.crop.update_cell(coordinate, Tiles.WheatSeedling)
+        crop_item_mapping: Dict[Item, Crop] = context["crop_item_mapping"]
+        crop: Crop | None = crop_item_mapping.get(selected_item.item)
+        if crop is not None:
+            farm_map.crop.update_cell(coordinate, crop.image_list[0])
 
         return True
 

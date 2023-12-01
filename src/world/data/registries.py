@@ -20,3 +20,4 @@ class Registries:
     Item = RegistryUtil.createRegistry("item")
     Product = RegistryUtil.createRegistry("product")
     Crop = RegistryUtil.createRegistry("crop")
+    CropItem = RegistryUtil.createRegistry("crop_item")

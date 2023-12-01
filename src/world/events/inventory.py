@@ -5,7 +5,7 @@ import pygame
 
 from src.core.constant import Direction
 from src.core.context import Context
-from src.world.context_getters import  get_inventory, get_character
+from src.world.context_getters import get_inventory, get_character
 from src.world.item.inventory import Inventory
 
 
