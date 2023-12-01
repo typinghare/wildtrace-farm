@@ -6,7 +6,7 @@ import pygame
 
 from src.core.context import Context
 from src.world.data.items import Items
-from src.world.hotbar import Hotbar
+from src.world.item.hotbar import Hotbar
 
 
 def init_hotbar(context: Context) -> None:

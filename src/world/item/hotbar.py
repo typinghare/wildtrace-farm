@@ -25,13 +25,13 @@ class Hotbar:
         cell_size = context.settings.display_cell_size
         self.slot_size = Size(cell_size.width, cell_size.height)
 
-        # Slot frame thickness
-        self.frame_thickness = 6
+        # Slot frame border
+        self.frame_border = 6
 
         # Layer
         self.size: Size = Size(
-            (self.slot_size.width + self.frame_thickness) * self.slot_number + self.frame_thickness,
-            self.slot_size.height + self.frame_thickness * 2,
+            (self.slot_size.width + self.frame_border) * self.slot_number + self.frame_border,
+            self.slot_size.height + self.frame_border * 2,
         )
         self.layer: Layer = Layer(self.size)
 
@@ -60,22 +60,24 @@ class Hotbar:
         """
         item_list = self.chest.item_list
         selected_item_index: int | None = self.chest.get_selected_index()
-        self.layer.surface.fill("#c38e70")
+        self.layer.surface.fill(self.context.settings.inventory_background_color)
         number_text_font = font.Font(None, 16)
         stack_text_font = font.Font(None, 20)
 
+        slot_color = self.context.settings.inventory_slot_background_color
+        selected_slot_color = self.context.settings.inventory_selected_slot_background_color
         for index in range(self.slot_number):
             item = item_list[index]
             rect = Rect(
-                self.frame_thickness + index * (self.slot_size.width + self.frame_thickness),
-                self.frame_thickness,
+                self.frame_border + index * (self.slot_size.width + self.frame_border),
+                self.frame_border,
                 self.slot_size.width,
                 self.slot_size.height,
             )
 
             # Fill white color / Blit image
             is_item_selected = index == selected_item_index
-            background_color = "#ffee99" if is_item_selected else "#f3d5b5"
+            background_color = selected_slot_color if is_item_selected else slot_color
             surface = Surface(self.slot_size.toTuple())
             surface.fill(background_color)
             if item is None:

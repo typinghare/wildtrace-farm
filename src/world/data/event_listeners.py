@@ -14,7 +14,7 @@ from src.world.events.curtain import init_curtain, update_curtain
 from src.world.events.data_window import init_data_window, update_data_window
 from src.world.events.debug import init_debug, update_debug
 from src.world.events.game import init_flags, before_all
-from src.world.events.inventory import init_inventory, update_inventory
+from src.world.events.inventory import init_inventory, update_inventory, inventory_key_down
 from src.world.events.layer import init_layer
 from src.world.events.message_box import init_message_box, update_message_box, message_box_key_down
 from src.world.events.window import quit_game, update_loops
@@ -79,6 +79,7 @@ class EventListeners:
     CharacterKeyDown = register(pygame.KEYDOWN, character_key_down)
     MessageBoxKeyDown = register(pygame.KEYDOWN, message_box_key_down)
     HotbarKeyDown = register(pygame.KEYDOWN, hotbar_key_down)
+    InventoryKeyDown = register(pygame.KEYDOWN, inventory_key_down)
 
     # Key up
     CharacterKeyUp = register(pygame.KEYUP, character_key_up)

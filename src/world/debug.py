@@ -56,7 +56,10 @@ class Debug:
         # Debug font
         self.font = get_font(self._font_size, "menlo/Menlo.ttc")
 
-    def print_all(self):
+    def print_all(self) -> None:
+        if not self.context.settings.debug:
+            return
+
         debug_layer: Layer = self.context.display.get_layer("debug")
         debug_layer.clear()
 

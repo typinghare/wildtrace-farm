@@ -7,14 +7,20 @@ from src.core.constant import Direction
 from src.core.context import Context
 from src.core.display import GridLayer
 from src.world.character import Character
-from src.world.context_getters import get_character, get_data_window, get_curtain
+from src.world.context_getters import (
+    get_character,
+    get_data_window,
+    get_curtain,
+    get_scene_manager,
+    get_inventory,
+)
 from src.world.data.frames import Frames
 from src.world.data.items import ItemTags
 from src.world.data.maps import Maps
 from src.world.data.registries import Registries
 from src.world.data.tiles import Tiles
 from src.world.events.game import first_time_to_farm
-from src.world.hotbar import Hotbar
+from src.world.item.hotbar import Hotbar
 from src.world.item.item import GameItem
 from src.world.maps.farm import FarmMap
 from src.world.maps.home import HomeMap
@@ -55,7 +61,7 @@ def character_key_down(context: Context):
         character.move(direction)
         return
 
-    # <J> use item / open doors
+    # <J> use item / open doors / sleep / open inventory
     if key == pygame.K_j:
         # Yield to the message box
         message_box: MessageBox = context["message_box"]
@@ -67,6 +73,8 @@ def character_key_down(context: Context):
         if character_use_item(context):
             return
         if character_sleep(context):
+            return
+        if character_open_chest(context):
             return
 
 
@@ -153,6 +161,7 @@ def character_open_door(context: Context) -> bool:
                 character.teleport((19, 7))
                 character.facing = Direction.DOWN
                 character.stop_all()
+                character.frozen = False
 
                 if not context["flag.been_to_farm"]:
                     first_time_to_farm(context)
@@ -160,6 +169,7 @@ def character_open_door(context: Context) -> bool:
             scene_manager.load_map(Maps.Farm, to_farm)
             home_map.furniture_bottom.update_cell(door_coordinate, Tiles.Door5)
 
+        character.frozen = True
         context.loop_manager.once(10, count, door_loop)
         return True
 
@@ -184,10 +194,12 @@ def character_open_door(context: Context) -> bool:
                 character.teleport((4, 4))
                 character.facing = Direction.UP
                 character.stop_all()
+                character.frozen = False
 
             scene_manager.load_map(Maps.Home, back_home)
             farm_map.furniture_bottom.update_cell(door_coordinate, Tiles.Door5)
 
+        character.frozen = True
         context.loop_manager.once(10, count, door_loop)
         return True
 
@@ -212,6 +224,45 @@ def character_sleep(context: Context) -> bool:
     transition_to_next_day(context)
 
     return True
+
+
+def character_open_chest(context: Context) -> bool:
+    """
+    Character opens a chest.
+    """
+    scene_manager = get_scene_manager(context)
+    character = get_character(context)
+    inventory = get_inventory(context)
+    coordinate = character.get_coordinate()
+    up_coordinate = (coordinate[0], coordinate[1] - 1)
+
+    # 1. The chest at the farm (shipping chest)
+    if scene_manager.is_map(Maps.Farm):
+        farm_map: FarmMap = scene_manager.controller.map
+        if (
+            character.facing != Direction.UP
+            or farm_map.furniture_bottom.get_cell(up_coordinate).surface != Tiles.ChestFront0
+        ):
+            return False
+
+        # Open the chest
+        character.frozen = True
+        character.stop_all()
+        inventory.open_chest(context["shipping_chest"])
+
+    # 2. The chest at home (personal chest)
+    if scene_manager.is_map(Maps.Home):
+        home_map: HomeMap = scene_manager.controller.map
+        if (
+            character.facing != Direction.UP
+            or home_map.furniture_bottom.get_cell(up_coordinate).surface != Tiles.ChestFront0
+        ):
+            return False
+
+        # Open a chest
+        character.frozen = True
+        character.stop_all()
+        inventory.open_chest(context["home_chest"])
 
 
 def transition_to_next_day(context: Context) -> None:

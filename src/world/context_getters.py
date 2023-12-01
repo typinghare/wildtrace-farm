@@ -7,6 +7,7 @@ from src.world.character import Character
 from src.world.curtain import Curtain
 from src.world.data_window import DataWindow
 from src.world.item.inventory import Inventory
+from src.world.scene_manager import SceneManager
 
 
 def get_character(context: Context) -> Character:
@@ -35,3 +36,10 @@ def get_inventory(context: Context) -> Inventory:
     Returns the inventory object in the given context.
     """
     return context["inventory"]
+
+
+def get_scene_manager(context: Context) -> SceneManager:
+    """
+    Returns the scene manager object in the given context.
+    """
+    return context["scene_manager"]

@@ -24,6 +24,9 @@ class Settings:
             # Frame per second
             self.fps = 60
 
+            # Debug mode
+            self.debug = True
+
             # [Display] Window caption
             self.display_window_caption = "Wildtrace Farm"
 
@@ -56,5 +59,10 @@ class Settings:
 
             # [Message box] font
             self.message_box_font = "manaspace/manaspc.ttf"
+
+            # [Inventory]
+            self.inventory_background_color = "#c38e70"
+            self.inventory_slot_background_color = "#f3d5b5"
+            self.inventory_selected_slot_background_color = "#ffee99"
 
         return cls._instance

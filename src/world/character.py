@@ -61,6 +61,9 @@ class Character:
         # Character layer
         self.layer: Layer = Layer(self.context.settings.character_size)
 
+        # Character cannot move when it is frozen
+        self.frozen: bool = False
+
         # init
         self._init_layer()
         self._init_animation()
@@ -82,7 +85,10 @@ class Character:
         character_layer.offset = center_coordinate
         character_default_fps = self.context.settings.character_animation_fps
 
-        def update_image(index: int):
+        def update_image(index: int) -> None:
+            if self.frozen:
+                return
+
             character_layer.clear()
             character_layer.blit(self.current_frames[index])
 
@@ -196,6 +202,9 @@ class Character:
         """
         Updates this character.
         """
+        if self.frozen:
+            return
+
         self._update_after_key_status_change()
         self._update_camera()
         self._update_character_layer()

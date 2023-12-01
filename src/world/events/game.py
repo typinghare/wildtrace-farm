@@ -1,7 +1,9 @@
 """
 Game related functions.
 """
+from src.core.common import Size
 from src.core.context import Context
+from src.world.item.chest import Chest
 from src.world.message_box import MessageBox
 
 
@@ -23,6 +25,10 @@ def before_all(context: Context) -> None:
 
     if not context["flag.enter_game"]:
         enter_game(context)
+
+    # Chests
+    context["shipping_chest"] = Chest(Size(10, 3))
+    context["home_chest"] = Chest(Size(10, 3))
 
     # curtain = context["curtain"]
     # loop_manager = context.loop_manager

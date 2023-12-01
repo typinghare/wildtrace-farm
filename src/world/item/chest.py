@@ -23,7 +23,7 @@ class Chest:
         self.item_list: List[GameItem | None] = [None] * self.size.width * self.size.height
 
         # Selected item index
-        self._selected_index: int | None = None
+        self._selected_index: int | None = 0
 
     def select_item(self, index: int):
         """

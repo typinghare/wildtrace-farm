@@ -44,6 +44,7 @@ class FarmMap(Map):
         self._init_water()
         self._init_grass()
         self._init_tilled_dirt()
+        self._init_chest()
         self._init_house()
 
     def get_door_coordinate(self) -> Tuple[int, int]:
@@ -91,6 +92,12 @@ class FarmMap(Map):
                 grass_set.add((col, row))
 
         Renderers.Grass.render(self.ground, grass_set)
+
+    def _init_chest(self) -> None:
+        """
+        Initializes a chest.
+        """
+        self.furniture_bottom.update_cell((15, 6), Tiles.ChestFront0)
 
     def _init_tilled_dirt(self) -> None:
         """
