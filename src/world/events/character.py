@@ -17,6 +17,7 @@ from src.world.context_getters import (
     get_inventory,
     get_message_box,
     get_crop_grid,
+    get_hotbar,
 )
 from src.world.data.frames import Frames
 from src.world.data.items import ItemTags, Items
@@ -79,11 +80,13 @@ def character_key_down(context: Context):
 
         if character_open_door(context):
             return
-        if character_use_item(context):
-            return
         if character_sleep(context):
             return
+        if character_use_item(context):
+            return
         if character_open_chest(context):
+            return
+        if character_harvest_crop(context):
             return
 
 
@@ -120,7 +123,7 @@ def character_use_item(context: Context) -> bool:
         scene_manager: SceneManager = context["scene_manager"]
 
         # Check whether the current map is farm
-        if scene_manager.current_map != Maps.Farm.__class__:
+        if not scene_manager.is_map(Maps.Farm):
             return False
 
         # Check whether the cell is arable
@@ -153,9 +156,27 @@ def character_use_watering_can(context: Context, character: Character) -> None:
     Character uses the watering can.
     """
     coordinate = character.get_coordinate()
+    character_fps = context.settings.character_animation_fps
 
     # Play watering animation
-    character_fps = context.settings.character_animation_fps
+    scene_manager = get_scene_manager(context)
+    animation_layer = GridLayer(
+        scene_manager.controller.map.size, context.settings.display_cell_size
+    )
+    context.display.set_layer("animation", animation_layer)
+    watering_frames = Frames.Watering.list
+
+    def update_watering_animation(index: int) -> None:
+        if index == len(watering_frames):
+            animation_layer.wipe_cell(coordinate)
+            return
+
+        animation_layer.wipe_cell(coordinate)
+        animation_layer.update_cell(coordinate, watering_frames[index])
+
+    context.loop_manager.once(character_fps, len(watering_frames) + 1, update_watering_animation)
+
+    # Character animation
     character.set_action(Character.Action.Water)
     context.loop_manager.delay(
         1000 / character_fps * 8,
@@ -176,11 +197,10 @@ def character_open_door(context: Context) -> bool:
 
     character: Character = context["character"]
     scene_manager: SceneManager = context["scene_manager"]
-    current_map = scene_manager.current_map
     coordinate = character.get_coordinate()
 
     if (
-        current_map == Maps.Home.__class__
+        scene_manager.is_map(Maps.Home)
         and character.facing == Direction.DOWN
         and coordinate == (4, 4)
     ):
@@ -209,7 +229,7 @@ def character_open_door(context: Context) -> bool:
                 if not context["flag.been_to_farm"]:
                     first_time_to_farm(context)
 
-            scene_manager.load_map(Maps.Farm, to_farm)
+            scene_manager.change_map(Maps.Farm, to_farm)
             home_map.furniture_bottom.update_cell(door_coordinate, Tiles.Door5)
 
         character.frozen = True
@@ -217,7 +237,7 @@ def character_open_door(context: Context) -> bool:
         return True
 
     if (
-        current_map == Maps.Farm.__class__
+        scene_manager.is_map(Maps.Farm)
         and character.facing == Direction.UP
         and coordinate == (19, 7)
     ):
@@ -225,15 +245,18 @@ def character_open_door(context: Context) -> bool:
         door_coordinate = farm_map.get_door_coordinate()
         door_frames = Frames.Door.list
         count = len(door_frames) + 1
-        up_coordinate = (door_coordinate[0] - 1, door_coordinate[1])
+        up_coordinate = (door_coordinate[0], door_coordinate[1] - 1)
 
         def door_loop(index: int):
             if index != count - 1:
-                farm_map.furniture_bottom.wipe_cell(door_coordinate)
+                farm_map.ground.wipe_cell(door_coordinate)
                 farm_map.ground.update_cell(door_coordinate, door_frames[index])
-                farm_map.floor.update_cell(up_coordinate, Tiles.WoodenHouse11)
+                farm_map.floor.update_cell(up_coordinate, Tiles.WoodenHouse13)
 
                 return
+
+            farm_map.ground.update_cell(door_coordinate, door_frames[0])
+            farm_map.floor.update_cell(up_coordinate, Tiles.WoodenHouse13)
 
             # Get into the house
             def back_home():
@@ -245,7 +268,7 @@ def character_open_door(context: Context) -> bool:
                 # Stop music
                 stop_music()
 
-            scene_manager.load_map(Maps.Home, back_home)
+            scene_manager.change_map(Maps.Home, back_home)
             farm_map.furniture_bottom.update_cell(door_coordinate, Tiles.Door5)
 
         character.frozen = True
@@ -262,6 +285,10 @@ def character_sleep(context: Context) -> bool:
     character: Character = context["character"]
     scene_manager: SceneManager = context["scene_manager"]
 
+    # Reject any requests if the character is sleeping
+    if context["flag.sleeping"]:
+        return True
+
     if not scene_manager.is_map(Maps.Home):
         return False
 
@@ -270,6 +297,7 @@ def character_sleep(context: Context) -> bool:
         return False
 
     # Sleep
+    context["flag.sleeping"] = True
     transition_to_next_day(context)
 
     return True
@@ -355,11 +383,66 @@ def transition_to_next_day(context: Context) -> None:
         # Set the data window
         data_window.day += 1
         data_window.reset_time()
+
+        # Crops
+        crop_grid = get_crop_grid(context)
+        scene_manager = get_scene_manager(context)
+        farm_map: FarmMap = scene_manager.get_map_controller(Maps.Farm).map
+        for row in range(crop_grid.size.height):
+            for col in range(crop_grid.size.width):
+                coordinate = (col, row)
+                game_crop: GameCrop | None = crop_grid.get(coordinate)
+                if game_crop is None:
+                    continue
+
+                # Update crop status
+                game_crop.day += 1
+                game_crop.watered = False
+
+                # Update the crop layer
+                farm_map.crop.update_cell(coordinate, game_crop.image)
+
+        # Character facing
         character.facing = Direction.RIGHT
+
+        # End sleeping
+        context["flag.sleeping"] = False
 
         curtain.fade_in(25)
 
     curtain.fade_out(fade_speed, delay)
+
+
+def character_harvest_crop(context: Context) -> bool:
+    """
+    Character harvests a crop.
+    """
+    character = get_character(context)
+    coordinate = character.get_coordinate()
+    scene_manager = get_scene_manager(context)
+
+    if not scene_manager.is_map(Maps.Farm):
+        return False
+
+    crop_grid = get_crop_grid(context)
+    game_crop: GameCrop | None = crop_grid.get(coordinate)
+    if game_crop is None:
+        return False
+
+    if game_crop.stage != Crop.Stage.Ripening:
+        # Not yet ripen
+        return False
+
+    # Harvest logic
+    # Remove the crop from the crop grid; update the crop layer
+    farm_map: FarmMap = scene_manager.controller.map
+    crop_grid.set(coordinate, None)
+    farm_map.crop.wipe_cell(coordinate)
+    farm_map.crop.update_cell(coordinate, None)
+
+    # Update character hotbar
+    hotbar = get_hotbar(context)
+    hotbar.chest.stack_item(game_crop.crop.product.item)
 
 
 def character_key_up(context: Context):

@@ -65,7 +65,7 @@ class Context:
         :param key: The key for the data.
         :return: The value associated with the given key; None if the key is not found.
         """
-        return self._data[key]
+        return self._data.get(key)
 
     def __setitem__(self, key: str, value: Any) -> None:
         """

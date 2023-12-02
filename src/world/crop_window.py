@@ -86,3 +86,9 @@ class CropWindow:
         is_watered_color = "#27a300" if game_crop.watered else "#ff5400"
         self.layer.surface.blit(get_key_text("Status:"), Vector2(10, 70))
         self.layer.surface.blit(get_value_text(is_watered_str, is_watered_color), Vector2(75, 70))
+
+    def hide(self) -> None:
+        """
+        Hides this crop window.
+        """
+        self.layer.hidden = True

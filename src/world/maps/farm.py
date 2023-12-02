@@ -77,6 +77,10 @@ class FarmMap(Map):
             self.invisible_block_grid.set((0, row), True)
             self.invisible_block_grid.set((self.size.width - 1, row), True)
 
+        for row in range(2, 5):
+            for col in range(2, 5):
+                water_set.add((row, col))
+
         # Update cells
         for coordinate in water_set.all():
             self.water.update_cell(coordinate, Tiles.Water0)
@@ -90,6 +94,14 @@ class FarmMap(Map):
         for row in range(1, self.size.height - 1):
             for col in range(1, self.size.width - 1):
                 grass_set.add((col, row))
+
+        # Top-left corner
+        grass_set.remove((1, 1))
+        grass_set.remove((1, 2))
+        grass_set.remove((1, 3))
+        grass_set.remove((2, 1))
+        grass_set.remove((2, 2))
+        grass_set.remove((2, 3))
 
         Renderers.Grass.render(self.ground, grass_set)
 

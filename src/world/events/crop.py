@@ -35,8 +35,8 @@ def update_crop_window(context: Context) -> None:
     crop_grid = get_crop_grid(context)
     crop: GameCrop | None = crop_grid.get(coordinate)
 
-    if crop is None:
-        return
-
     crop_window = get_crop_window(context)
+    if crop is None:
+        crop_window.hide()
+
     crop_window.display_crop_info(crop)

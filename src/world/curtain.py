@@ -26,9 +26,6 @@ class Curtain:
         # Alpha
         self.alpha: int = 0
 
-        # Loop
-        self.loop: Loop | None = None
-
         # Init
         self._init_layer()
 
@@ -81,3 +78,8 @@ class Curtain:
         Updates the layer.
         """
         self.layer.surface.fill((0, 0, 0, self.alpha))
+
+    def is_ongoing(self) -> bool:
+        """
+        Whether the curtain animation is ongoing.
+        """

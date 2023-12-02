@@ -59,8 +59,8 @@ def play_music(music_path: str) -> None:
     """
     Play a specific piece of music.
     """
-    mixer.music.load(music_path)
-    mixer.music.play(-1)
+    # mixer.music.load(music_path)
+    # mixer.music.play(-1)
 
 
 def stop_music() -> None:

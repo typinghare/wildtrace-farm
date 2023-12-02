@@ -31,21 +31,31 @@ class SceneManager:
         # Current controller
         self.controller: MapController | None = None
 
-    def load_map(self, map_to_load: Map, callback: Callable[[], None] | None = None) -> None:
+    def load_map(self, map_to_load: Map) -> MapController:
         """
         Loads a map.
         :param map_to_load: The map to load.
+        """
+        map_class = map_to_load.__class__
+        controller = self._map_controller_map.get(map_class)
+
+        if controller is None:
+            # Create a map controller if it does not exist
+            controller = MapController(map_to_load, self.context)
+            controller.load()
+            controller.refresh_block_grid()
+            self._map_controller_map[map_class] = controller
+
+        return controller
+
+    def change_map(self, map_to_change: Map, callback: Callable[[], None] | None = None) -> None:
+        """
+        Loads a map.
+        :param map_to_change: The map to load.
         :param callback: Callback function that is called after the map is loaded.
         """
-        self.current_map = map_to_load.__class__
-        self.controller = self._map_controller_map.get(self.current_map)
-
-        if self.controller is None:
-            # Create a map controller if it does not exist
-            self.controller = MapController(map_to_load, self.context)
-            self.controller.load()
-            self.controller.refresh_block_grid()
-            self._map_controller_map[self.current_map] = self.controller
+        self.current_map = map_to_change.__class__
+        self.controller = self.load_map(map_to_change)
 
         # Set the map's layers to the display module
         self.controller.set_layers_to_display()
@@ -85,3 +95,13 @@ class SceneManager:
         Checks the current map.
         """
         return self.current_map == _map.__class__
+
+    def get_map_controller(self, _map: Map) -> MapController:
+        """
+        Gets a map controller.
+        """
+        map_class = _map.__class__
+        if map_class not in self._map_controller_map:
+            self.load_map(_map)
+
+        return self._map_controller_map[_map.__class__]

@@ -53,3 +53,4 @@ class Tilesets:
 
     # Character
     CharacterSpriteSheet = register("tilesets/character/sprite_sheet.png")
+    Watering = register("tilesets/character/watering.png")

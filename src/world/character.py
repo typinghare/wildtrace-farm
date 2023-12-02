@@ -58,10 +58,10 @@ class Character:
             Frames.CharacterMoveDown.list,
             Frames.CharacterMoveLeft.list,
             # Water
+            Frames.CharacterWaterUp.list,
+            Frames.CharacterWaterRight.list,
             Frames.CharacterWaterDown.list,
-            Frames.CharacterWaterDown.list,
-            Frames.CharacterWaterDown.list,
-            Frames.CharacterWaterDown.list,
+            Frames.CharacterWaterLeft.list,
             # Hoe
         ]
 

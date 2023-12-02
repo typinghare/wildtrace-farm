@@ -194,6 +194,12 @@ class CoordinateSet:
         """
         return coordinate in self._coordinate_set
 
+    def remove(self, coordinate: Tuple[int, int]) -> None:
+        """
+        Removes a coordinate
+        """
+        self._coordinate_set.remove(coordinate)
+
     def all(self) -> set:
         """
         Returns all coordinates.

@@ -18,7 +18,7 @@ def init_layer(context: Context) -> None:
         "crop",
         "furniture_bottom",
         "furniture_top",
-        # other
+        # fixed
         "character",
         "tool_box",
         "hotbar",
@@ -27,6 +27,9 @@ def init_layer(context: Context) -> None:
         "inventory",
         "curtain",
         "message_box",
+        # animation
+        "animation",
+        # debug
         "debug",
     ]
 

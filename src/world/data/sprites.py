@@ -21,6 +21,7 @@ def register(
     pos: Tuple[int, int],
     size: Tuple[int, int] = (48, 48),
     is_character: bool = False,
+    sf: int | None = None,
 ) -> Surface:
     """
     Registers a sprite image.
@@ -29,9 +30,11 @@ def register(
     :param pos: The position of the tile in the given tile set.
     :param size: The size of the tile (width, height).
     :param is_character: Whether the sprite is the character.
+    :param sf: Scale factor.
     :return: The magnified sprite image.
     """
-    sf = character_sf if is_character else tile_sf
+    if sf is None:
+        sf = character_sf if is_character else tile_sf
     image = scale_image(crop_image(tile_set, pos, size), sf)
 
     return Registries.TileSet.register(RegistryUtil.createLoc(path), image)
@@ -243,6 +246,104 @@ class Sprites:
     )
 
     # Watering
+    CharacterWaterUp0 = register(
+        "character/water/up/0",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 0, 48 * 21),
+        is_character=True,
+    )
+    CharacterWaterUp1 = register(
+        "character/water/up/1",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 1, 48 * 21),
+        is_character=True,
+    )
+    CharacterWaterUp2 = register(
+        "character/water/up/2",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 2, 48 * 21),
+        is_character=True,
+    )
+    CharacterWaterUp3 = register(
+        "character/water/up/3",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 3, 48 * 21),
+        is_character=True,
+    )
+    CharacterWaterUp4 = register(
+        "character/water/up/4",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 4, 48 * 21),
+        is_character=True,
+    )
+    CharacterWaterUp5 = register(
+        "character/water/up/5",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 5, 48 * 21),
+        is_character=True,
+    )
+    CharacterWaterUp6 = register(
+        "character/water/up/6",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 6, 48 * 21),
+        is_character=True,
+    )
+    CharacterWaterUp7 = register(
+        "character/water/up/7",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 7, 48 * 21),
+        is_character=True,
+    )
+
+    CharacterWaterRight0 = register(
+        "character/water/right/0",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 0, 48 * 23),
+        is_character=True,
+    )
+    CharacterWaterRight1 = register(
+        "character/water/right/1",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 1, 48 * 23),
+        is_character=True,
+    )
+    CharacterWaterRight2 = register(
+        "character/water/right/2",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 2, 48 * 23),
+        is_character=True,
+    )
+    CharacterWaterRight3 = register(
+        "character/water/right/3",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 3, 48 * 23),
+        is_character=True,
+    )
+    CharacterWaterRight4 = register(
+        "character/water/right/4",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 4, 48 * 23),
+        is_character=True,
+    )
+    CharacterWaterRight5 = register(
+        "character/water/right/5",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 5, 48 * 23),
+        is_character=True,
+    )
+    CharacterWaterRight6 = register(
+        "character/water/right/6",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 6, 48 * 23),
+        is_character=True,
+    )
+    CharacterWaterRight7 = register(
+        "character/water/right/7",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 7, 48 * 23),
+        is_character=True,
+    )
+
     CharacterWaterDown0 = register(
         "character/water/down/0",
         Tilesets.CharacterSpriteSheet,
@@ -291,3 +392,63 @@ class Sprites:
         (48 * 7, 48 * 20),
         is_character=True,
     )
+
+    CharacterWaterLeft0 = register(
+        "character/water/left/0",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 0, 48 * 22),
+        is_character=True,
+    )
+    CharacterWaterLeft1 = register(
+        "character/water/left/1",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 1, 48 * 22),
+        is_character=True,
+    )
+    CharacterWaterLeft2 = register(
+        "character/water/left/2",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 2, 48 * 22),
+        is_character=True,
+    )
+    CharacterWaterLeft3 = register(
+        "character/water/left/3",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 3, 48 * 22),
+        is_character=True,
+    )
+    CharacterWaterLeft4 = register(
+        "character/water/left/4",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 4, 48 * 22),
+        is_character=True,
+    )
+    CharacterWaterLeft5 = register(
+        "character/water/left/5",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 5, 48 * 22),
+        is_character=True,
+    )
+    CharacterWaterLeft6 = register(
+        "character/water/left/6",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 6, 48 * 22),
+        is_character=True,
+    )
+    CharacterWaterLeft7 = register(
+        "character/water/left/7",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 7, 48 * 22),
+        is_character=True,
+    )
+
+    # Watering
+    Watering0 = register("watering/0", Tilesets.Watering, (48 * 0, 0), sf=1)
+    Watering1 = register("watering/1", Tilesets.Watering, (48 * 1, 0), sf=1)
+    Watering2 = register("watering/2", Tilesets.Watering, (48 * 2, 0), sf=1)
+    Watering3 = register("watering/3", Tilesets.Watering, (48 * 3, 0), sf=1)
+    Watering4 = register("watering/4", Tilesets.Watering, (48 * 4, 0), sf=1)
+    Watering5 = register("watering/5", Tilesets.Watering, (48 * 5, 0), sf=1)
+    Watering6 = register("watering/6", Tilesets.Watering, (48 * 6, 0), sf=1)
+    Watering7 = register("watering/7", Tilesets.Watering, (48 * 7, 0), sf=1)
+    Watering8 = register("watering/8", Tilesets.Watering, (48 * 8, 0), sf=1)

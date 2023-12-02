@@ -133,6 +133,32 @@ class Frames:
         ],
     )
 
+    CharacterWaterUp = register(
+        "character/water/up",
+        [
+            Sprites.CharacterWaterUp0,
+            Sprites.CharacterWaterUp1,
+            Sprites.CharacterWaterUp2,
+            Sprites.CharacterWaterUp3,
+            Sprites.CharacterWaterUp4,
+            Sprites.CharacterWaterUp5,
+            Sprites.CharacterWaterUp6,
+            Sprites.CharacterWaterUp7,
+        ],
+    )
+    CharacterWaterRight = register(
+        "character/water/right",
+        [
+            Sprites.CharacterWaterRight0,
+            Sprites.CharacterWaterRight1,
+            Sprites.CharacterWaterRight2,
+            Sprites.CharacterWaterRight3,
+            Sprites.CharacterWaterRight4,
+            Sprites.CharacterWaterRight5,
+            Sprites.CharacterWaterRight6,
+            Sprites.CharacterWaterRight7,
+        ],
+    )
     CharacterWaterDown = register(
         "character/water/down",
         [
@@ -144,6 +170,35 @@ class Frames:
             Sprites.CharacterWaterDown5,
             Sprites.CharacterWaterDown6,
             Sprites.CharacterWaterDown7,
+        ],
+    )
+    CharacterWaterLeft = register(
+        "character/water/left",
+        [
+            Sprites.CharacterWaterLeft0,
+            Sprites.CharacterWaterLeft1,
+            Sprites.CharacterWaterLeft2,
+            Sprites.CharacterWaterLeft3,
+            Sprites.CharacterWaterLeft4,
+            Sprites.CharacterWaterLeft5,
+            Sprites.CharacterWaterLeft6,
+            Sprites.CharacterWaterLeft7,
+        ],
+    )
+
+    # Character actions
+    Watering = register(
+        "watering",
+        [
+            Sprites.Watering0,
+            Sprites.Watering1,
+            Sprites.Watering2,
+            Sprites.Watering3,
+            Sprites.Watering4,
+            Sprites.Watering5,
+            Sprites.Watering6,
+            Sprites.Watering7,
+            Sprites.Watering8,
         ],
     )
 

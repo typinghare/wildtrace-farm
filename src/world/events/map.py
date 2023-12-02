@@ -19,7 +19,7 @@ def init_map(context: Context) -> None:
         character.teleport((2, 4))
         character.facing = Direction.RIGHT
 
-    scene_manger.load_map(Maps.Home, init_character_position)
+    scene_manger.change_map(Maps.Home, init_character_position)
 
 
 def update_map(context: Context) -> None:
