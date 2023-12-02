@@ -255,9 +255,6 @@ def character_open_door(context: Context) -> bool:
 
                 return
 
-            farm_map.ground.update_cell(door_coordinate, door_frames[0])
-            farm_map.floor.update_cell(up_coordinate, Tiles.WoodenHouse13)
-
             # Get into the house
             def back_home():
                 character.teleport((4, 4))
@@ -269,7 +266,8 @@ def character_open_door(context: Context) -> bool:
                 stop_music()
 
             scene_manager.change_map(Maps.Home, back_home)
-            farm_map.furniture_bottom.update_cell(door_coordinate, Tiles.Door5)
+            farm_map.floor.update_cell(up_coordinate, Tiles.WoodenHouse13)
+            farm_map.ground.update_cell(door_coordinate, Tiles.Door5)
 
         character.frozen = True
         context.loop_manager.once(10, count, door_loop)
