@@ -73,5 +73,6 @@ def get_crop_window(context: Context) -> CropWindow:
 def get_crop_grid(context: Context) -> Grid:
     """
     Returns the crop grid object in the given context.
+    @returns: Grid[GameCrop | None]
     """
     return context["crop_grid"]

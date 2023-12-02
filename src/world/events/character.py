@@ -19,8 +19,9 @@ from src.world.context_getters import (
     get_crop_grid,
 )
 from src.world.data.frames import Frames
-from src.world.data.items import ItemTags
+from src.world.data.items import ItemTags, Items
 from src.world.data.maps import Maps
+from src.world.data.music import Music
 from src.world.data.registries import Registries
 from src.world.data.tiles import Tiles
 from src.world.events.game import first_time_to_farm
@@ -33,6 +34,7 @@ from src.world.maps.farm import FarmMap
 from src.world.maps.home import HomeMap
 from src.world.message_box import MessageBox
 from src.world.scene_manager import SceneManager
+from src.world.util import stop_music, play_music
 
 
 def init_character(context: Context):
@@ -110,7 +112,9 @@ def character_use_item(context: Context) -> bool:
 
     if item_ref.contain_tag(ItemTags.TOOL):
         # Tools
-        pass
+        if selected_item.item == Items.WateringCan:
+            if character_use_watering_can(context, character):
+                return True
     elif item_ref.contain_tag(ItemTags.SEEDS):
         # Sow seeds
         scene_manager: SceneManager = context["scene_manager"]
@@ -142,6 +146,22 @@ def character_use_item(context: Context) -> bool:
         return True
 
     return False
+
+
+def character_use_watering_can(context: Context, character: Character) -> bool:
+    """
+    Character uses the watering can.
+    """
+    coordinate = character.get_coordinate()
+
+    # Play watering animation
+    frames = Frames.Water.list
+    num_frames = len(frames)
+
+    crop_grid = get_crop_grid(context)
+    game_crop: GameCrop | None = crop_grid.get(coordinate)
+    if game_crop:
+        game_crop.watered = True
 
 
 def character_open_door(context: Context) -> bool:
@@ -178,6 +198,9 @@ def character_open_door(context: Context) -> bool:
                 character.stop_all()
                 character.frozen = False
 
+                # Play music
+                play_music(Music.Farm)
+
                 if not context["flag.been_to_farm"]:
                     first_time_to_farm(context)
 
@@ -197,11 +220,14 @@ def character_open_door(context: Context) -> bool:
         door_coordinate = farm_map.get_door_coordinate()
         door_frames = Frames.Door.list
         count = len(door_frames) + 1
+        up_coordinate = (door_coordinate[0] - 1, door_coordinate[1])
 
         def door_loop(index: int):
             if index != count - 1:
                 farm_map.furniture_bottom.wipe_cell(door_coordinate)
-                farm_map.furniture_bottom.update_cell(door_coordinate, door_frames[index])
+                farm_map.ground.update_cell(door_coordinate, door_frames[index])
+                farm_map.floor.update_cell(up_coordinate, Tiles.WoodenHouse11)
+
                 return
 
             # Get into the house
@@ -210,6 +236,9 @@ def character_open_door(context: Context) -> bool:
                 character.facing = Direction.UP
                 character.stop_all()
                 character.frozen = False
+
+                # Stop music
+                stop_music()
 
             scene_manager.load_map(Maps.Home, back_home)
             farm_map.furniture_bottom.update_cell(door_coordinate, Tiles.Door5)

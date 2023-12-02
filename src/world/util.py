@@ -4,7 +4,7 @@ Utility module.
 import os
 from typing import Tuple, Dict
 
-from pygame import Surface, Rect, transform, font
+from pygame import Surface, Rect, transform, font, mixer
 
 from src.core.settings import Settings
 
@@ -53,3 +53,18 @@ def get_font(size: int, file: str | None = None) -> font.Font:
     font_instance_memo[key] = font_instance
 
     return font_instance
+
+
+def play_music(music_path: str) -> None:
+    """
+    Play a specific piece of music.
+    """
+    mixer.music.load(music_path)
+    mixer.music.play(-1)
+
+
+def stop_music() -> None:
+    """
+    Stop playing the music.
+    """
+    mixer.music.stop()

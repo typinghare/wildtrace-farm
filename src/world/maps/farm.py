@@ -140,7 +140,11 @@ class FarmMap(Map):
             self.floor.update_cell((col, rect.bottom), Tiles.WoodenHouse11)
         self.floor.update_cell((rect.left, rect.bottom), Tiles.WoodenHouse3)
         self.floor.update_cell((rect.right - 1, rect.bottom), Tiles.WoodenHouse9)
-        self.floor.update_cell(self.get_door_coordinate(), Tiles.Door5)
+
+        # Door
+        door_coordinate = self.get_door_coordinate()
+        self.floor.update_cell(door_coordinate, None)
+        self.ground.update_cell(door_coordinate, Tiles.Door5)
 
     def load(self, context: Context) -> None:
         # Water animation
