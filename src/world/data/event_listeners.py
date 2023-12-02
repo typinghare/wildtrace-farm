@@ -10,6 +10,7 @@ from src.core.context import Context
 from src.core.event import EventListener
 from src.core.constant import EventTypes
 from src.world.data.registries import Registries
+from src.world.events.crop import init_crop, update_crop_window
 from src.world.events.curtain import init_curtain, update_curtain
 from src.world.events.data_window import init_data_window, update_data_window
 from src.world.events.debug import init_debug, update_debug
@@ -62,6 +63,7 @@ class EventListeners:
     InitDataWindow = register(EventTypes.ON_START, init_data_window)
     InitCurtain = register(EventTypes.ON_START, init_curtain)
     InitInventory = register(EventTypes.ON_START, init_inventory)
+    InitCrop = register(EventTypes.ON_START, init_crop)
     BeforeAll = register(EventTypes.ON_START, before_all)
 
     # Before render
@@ -74,6 +76,7 @@ class EventListeners:
     UpdateDataWindow = register(EventTypes.BEFORE_RENDER, update_data_window)
     UpdateCurtain = register(EventTypes.BEFORE_RENDER, update_curtain)
     UpdateInventory = register(EventTypes.BEFORE_RENDER, update_inventory)
+    UpdateCropWindow = register(EventTypes.BEFORE_RENDER, update_crop_window)
 
     # Key down
     CharacterKeyDown = register(pygame.KEYDOWN, character_key_down)

@@ -123,7 +123,7 @@ class DataWindow:
         # Day
         day_surface = Surface((150, 30))
         day_surface.fill("white")
-        day_text = text_font.render(f"Day{str(self.day).rjust(5)}", True, "blue")
+        day_text = text_font.render(f"Day{str(self.day).rjust(5)}", False, "blue")
         self.layer.blit(day_surface, Vector2(10, 10))
         self.layer.blit(day_text, Vector2(20, 16))
 

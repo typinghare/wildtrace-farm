@@ -2,8 +2,10 @@
 Context getters module. This module provides a bunch of utility functions that get a value from the
 given context.
 """
+from src.core.common import Grid
 from src.core.context import Context
 from src.world.character import Character
+from src.world.crop_window import CropWindow
 from src.world.curtain import Curtain
 from src.world.data_window import DataWindow
 from src.world.item.hotbar import Hotbar
@@ -59,3 +61,17 @@ def get_message_box(context: Context) -> MessageBox:
     Returns the message box object in the given context.
     """
     return context["message_box"]
+
+
+def get_crop_window(context: Context) -> CropWindow:
+    """
+    Returns the crop window object in the given context.
+    """
+    return context["crop_window"]
+
+
+def get_crop_grid(context: Context) -> Grid:
+    """
+    Returns the crop grid object in the given context.
+    """
+    return context["crop_grid"]

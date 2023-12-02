@@ -16,6 +16,7 @@ from src.world.context_getters import (
     get_scene_manager,
     get_inventory,
     get_message_box,
+    get_crop_grid,
 )
 from src.world.data.frames import Frames
 from src.world.data.items import ItemTags
@@ -24,7 +25,7 @@ from src.world.data.registries import Registries
 from src.world.data.tiles import Tiles
 from src.world.events.game import first_time_to_farm
 from src.world.item.chest import Chest
-from src.world.item.crop import Crop
+from src.world.item.crop import Crop, GameCrop
 from src.world.item.hotbar import Hotbar
 from src.world.item.item import GameItem, Item
 from src.world.map import Map
@@ -130,8 +131,13 @@ def character_use_item(context: Context) -> bool:
         hotbar.chest.consume_selected_item()
         crop_item_mapping: Dict[Item, Crop] = context["crop_item_mapping"]
         crop: Crop | None = crop_item_mapping.get(selected_item.item)
-        if crop is not None:
-            farm_map.crop.update_cell(coordinate, crop.image_list[0])
+        if crop is None:
+            return False
+
+        game_crop = GameCrop(crop)
+        crop_grid = get_crop_grid(context)
+        crop_grid.set(coordinate, game_crop)
+        farm_map.crop.update_cell(coordinate, game_crop.image)
 
         return True
 
