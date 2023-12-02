@@ -101,7 +101,12 @@ class LoopManager:
         :param callback: The function to be called after the delay.
         :return: The registered loop.
         """
-        return self.once(1000 / delay_ms, 1, lambda _: callback())
+
+        def delay_func(index: int) -> None:
+            if index == 1:
+                callback()
+
+        return self.once(1000 / delay_ms, 2, delay_func)
 
     def remove(self, loop: Loop) -> None:
         """

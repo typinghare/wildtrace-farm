@@ -241,3 +241,53 @@ class Sprites:
     CharacterMoveLeft7 = register(
         "character/move/left/7", Tilesets.CharacterSpriteSheet, (48 * 7, 48 * 7), is_character=True
     )
+
+    # Watering
+    CharacterWaterDown0 = register(
+        "character/water/down/0",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 0, 48 * 20),
+        is_character=True,
+    )
+    CharacterWaterDown1 = register(
+        "character/water/down/1",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 1, 48 * 20),
+        is_character=True,
+    )
+    CharacterWaterDown2 = register(
+        "character/water/down/2",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 2, 48 * 20),
+        is_character=True,
+    )
+    CharacterWaterDown3 = register(
+        "character/water/down/3",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 3, 48 * 20),
+        is_character=True,
+    )
+    CharacterWaterDown4 = register(
+        "character/water/down/4",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 4, 48 * 20),
+        is_character=True,
+    )
+    CharacterWaterDown5 = register(
+        "character/water/down/5",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 5, 48 * 20),
+        is_character=True,
+    )
+    CharacterWaterDown6 = register(
+        "character/water/down/6",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 6, 48 * 20),
+        is_character=True,
+    )
+    CharacterWaterDown7 = register(
+        "character/water/down/7",
+        Tilesets.CharacterSpriteSheet,
+        (48 * 7, 48 * 20),
+        is_character=True,
+    )

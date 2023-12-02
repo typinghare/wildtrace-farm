@@ -113,8 +113,8 @@ def character_use_item(context: Context) -> bool:
     if item_ref.contain_tag(ItemTags.TOOL):
         # Tools
         if selected_item.item == Items.WateringCan:
-            if character_use_watering_can(context, character):
-                return True
+            character_use_watering_can(context, character)
+            return True
     elif item_ref.contain_tag(ItemTags.SEEDS):
         # Sow seeds
         scene_manager: SceneManager = context["scene_manager"]
@@ -148,16 +148,21 @@ def character_use_item(context: Context) -> bool:
     return False
 
 
-def character_use_watering_can(context: Context, character: Character) -> bool:
+def character_use_watering_can(context: Context, character: Character) -> None:
     """
     Character uses the watering can.
     """
     coordinate = character.get_coordinate()
 
     # Play watering animation
-    frames = Frames.Water.list
-    num_frames = len(frames)
+    character_fps = context.settings.character_animation_fps
+    character.set_action(Character.Action.Water)
+    context.loop_manager.delay(
+        1000 / character_fps * 8,
+        lambda: character.set_action(Character.Action.Idle),
+    )
 
+    # Update the corresponding game crop
     crop_grid = get_crop_grid(context)
     game_crop: GameCrop | None = crop_grid.get(coordinate)
     if game_crop:

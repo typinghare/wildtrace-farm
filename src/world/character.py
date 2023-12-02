@@ -9,6 +9,7 @@ from src.core.common import Size
 from src.core.constant import Direction
 from src.core.context import Context
 from src.core.display import Layer, GridLayer
+from src.core.loop import Loop
 from src.world.camera import Camera
 from src.world.data.frames import Frames
 from src.world.debug import Debug
@@ -20,6 +21,16 @@ class Character:
     """
     Main character in the game.
     """
+
+    class Action:
+        """
+        Character actions.
+        """
+
+        Idle = 0
+        Move = 1
+        Water = 2
+        Hoe = 3
 
     def __init__(self, context: Context):
         # Game context
@@ -36,18 +47,26 @@ class Character:
 
         # Animation frames list
         self.frames_list: List[List[Surface]] = [
+            # Idle
             Frames.CharacterIdleUp.list,
             Frames.CharacterIdleRight.list,
             Frames.CharacterIdleDown.list,
             Frames.CharacterIdleLeft.list,
+            # Move
             Frames.CharacterMoveUp.list,
             Frames.CharacterMoveRight.list,
             Frames.CharacterMoveDown.list,
             Frames.CharacterMoveLeft.list,
+            # Water
+            Frames.CharacterWaterDown.list,
+            Frames.CharacterWaterDown.list,
+            Frames.CharacterWaterDown.list,
+            Frames.CharacterWaterDown.list,
+            # Hoe
         ]
 
-        # Current frames
-        self.current_frames: List[Surface] = self.frames_list[Direction.DOWN]
+        # Character action
+        self.action: int = Character.Action.Idle
 
         # A list to stores the key-pressing status of each direction
         self.key_status = [False] * 4
@@ -63,6 +82,12 @@ class Character:
 
         # Character cannot move when it is frozen
         self.frozen: bool = False
+
+        # Animation loop
+        self.loop: Loop | None = None
+
+        # Previous frames
+        self.previous_frames: List[Surface] = self.frames_list[0]
 
         # init
         self._init_layer()
@@ -83,17 +108,31 @@ class Character:
             display.center[1] - character_size.height // 2,
         )
         character_layer.offset = center_coordinate
-        character_default_fps = self.context.settings.character_animation_fps
+        default_fps = self.context.settings.character_animation_fps
+
+        self.previous_frames = self.get_current_frame_list()
 
         def update_image(index: int) -> None:
             if self.frozen:
                 return
 
             character_layer.clear()
-            character_layer.blit(self.current_frames[index])
 
-        loop_manager = self.context.game.loop_manager
-        loop_manager.loop(character_default_fps, len(self.current_frames), update_image)
+            current_frames = self.get_current_frame_list()
+            if current_frames == self.previous_frames:
+                character_layer.blit(current_frames[index])
+            else:
+                self.loop.reset()
+                self.previous_frames = current_frames
+                character_layer.blit(current_frames[0])
+
+        self.loop = self.context.loop_manager.loop(default_fps, 8, update_image)
+
+    def get_current_frame_list(self) -> List[Surface]:
+        """
+        Returns the frame list based on character's current action and facing.
+        """
+        return self.frames_list[self.action * 4 + self.facing]
 
     def move(self, direction: int) -> None:
         """
@@ -157,12 +196,13 @@ class Character:
         Updates after key status changes.
         """
         # Check if it is idle
-        is_idle = True
-        direction_count = 0
+        direction_count = 0  # The number of direction the character is moving towards
         for direction in range(0, 4):
             if self.movement_status[direction]:
-                is_idle = False
                 direction_count += 1
+
+        # The character is idle if the direction count is 0
+        is_idle = direction_count == 0
 
         # correct facing if direction count is 1
         if direction_count == 1:
@@ -174,9 +214,9 @@ class Character:
             self.facing = curr_direction
 
         if is_idle:
-            self.current_frames = self.frames_list[self.facing]
+            self.action = Character.Action.Idle
         else:
-            self.current_frames = self.frames_list[self.facing + 4]
+            self.action = Character.Action.Move
 
     def get_unit_velocity(self) -> Vector2:
         """
@@ -205,7 +245,9 @@ class Character:
         if self.frozen:
             return
 
-        self._update_after_key_status_change()
+        if self.action < Character.Action.Move:
+            self._update_after_key_status_change()
+
         self._update_camera()
         self._update_character_layer()
         Debug.get_module("coordinate").print(self.get_coordinate())
@@ -319,3 +361,10 @@ class Character:
         scene_manager: SceneManager = self.context["scene_manager"]
         map_controller: MapController = scene_manager.controller
         return map_controller.offset
+
+    def set_action(self, action: int) -> None:
+        """
+        Sets this character's action.
+        :param action: The action to set.
+        """
+        self.action = action

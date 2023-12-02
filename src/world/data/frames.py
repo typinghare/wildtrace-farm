@@ -133,6 +133,20 @@ class Frames:
         ],
     )
 
+    CharacterWaterDown = register(
+        "character/water/down",
+        [
+            Sprites.CharacterWaterDown0,
+            Sprites.CharacterWaterDown1,
+            Sprites.CharacterWaterDown2,
+            Sprites.CharacterWaterDown3,
+            Sprites.CharacterWaterDown4,
+            Sprites.CharacterWaterDown5,
+            Sprites.CharacterWaterDown6,
+            Sprites.CharacterWaterDown7,
+        ],
+    )
+
     Water = register("water", [Tiles.Water0, Tiles.Water1, Tiles.Water2, Tiles.Water3])
 
     # Building
