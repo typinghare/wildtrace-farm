@@ -6,7 +6,9 @@ from src.core.context import Context
 from src.world.character import Character
 from src.world.curtain import Curtain
 from src.world.data_window import DataWindow
+from src.world.item.hotbar import Hotbar
 from src.world.item.inventory import Inventory
+from src.world.message_box import MessageBox
 from src.world.scene_manager import SceneManager
 
 
@@ -43,3 +45,17 @@ def get_scene_manager(context: Context) -> SceneManager:
     Returns the scene manager object in the given context.
     """
     return context["scene_manager"]
+
+
+def get_hotbar(context: Context) -> Hotbar:
+    """
+    Returns the hotbar object in the given context.
+    """
+    return context["hotbar"]
+
+
+def get_message_box(context: Context) -> MessageBox:
+    """
+    Returns the message box object in the given context.
+    """
+    return context["message_box"]

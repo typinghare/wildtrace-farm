@@ -15,6 +15,7 @@ from src.world.context_getters import (
     get_curtain,
     get_scene_manager,
     get_inventory,
+    get_message_box,
 )
 from src.world.data.frames import Frames
 from src.world.data.items import ItemTags
@@ -22,9 +23,11 @@ from src.world.data.maps import Maps
 from src.world.data.registries import Registries
 from src.world.data.tiles import Tiles
 from src.world.events.game import first_time_to_farm
+from src.world.item.chest import Chest
 from src.world.item.crop import Crop
 from src.world.item.hotbar import Hotbar
 from src.world.item.item import GameItem, Item
+from src.world.map import Map
 from src.world.maps.farm import FarmMap
 from src.world.maps.home import HomeMap
 from src.world.message_box import MessageBox
@@ -158,7 +161,7 @@ def character_open_door(context: Context) -> bool:
         def door_loop(index: int):
             if index != count - 1:
                 # Only update the door frame
-                home_map.furniture_bottom.wipe_cell(door_coordinate)
+                home_map.furniture_bottom.wipe_cell(door_coordinate, 255)
                 home_map.furniture_bottom.update_cell(door_coordinate, door_frames[index])
                 return
 
@@ -242,33 +245,56 @@ def character_open_chest(context: Context) -> bool:
     coordinate = character.get_coordinate()
     up_coordinate = (coordinate[0], coordinate[1] - 1)
 
-    # 1. The chest at the farm (shipping chest)
-    if scene_manager.is_map(Maps.Farm):
-        farm_map: FarmMap = scene_manager.controller.map
+    def check_chest(_map: Map, chest: Chest) -> bool:
+        if not scene_manager.is_map(_map):
+            return False
+
+        concrete_map = scene_manager.controller.map
+        furniture_bottom_layer: GridLayer = concrete_map.furniture_bottom
+        floor_layer: GridLayer = concrete_map.floor
+
         if (
             character.facing != Direction.UP
-            or farm_map.furniture_bottom.get_cell(up_coordinate).surface != Tiles.ChestFront0
+            or furniture_bottom_layer.get_cell(up_coordinate).surface != Tiles.ChestFront0
         ):
             return False
 
-        # Open the chest
-        character.frozen = True
-        character.stop_all()
-        inventory.open_chest(context["shipping_chest"])
+        frames = Frames.Chest.list
+        num_frame: int = len(frames)
+        floor_cell = floor_layer.get_cell(up_coordinate)
 
-    # 2. The chest at home (personal chest)
-    if scene_manager.is_map(Maps.Home):
-        home_map: HomeMap = scene_manager.controller.map
-        if (
-            character.facing != Direction.UP
-            or home_map.furniture_bottom.get_cell(up_coordinate).surface != Tiles.ChestFront0
-        ):
-            return False
+        def after_animation() -> None:
+            character.frozen = True
+            character.stop_all()
+            inventory.open_chest(chest)
 
-        # Open a chest
-        character.frozen = True
-        character.stop_all()
-        inventory.open_chest(context["home_chest"])
+        def chest_animation(index: int):
+            if index < num_frame:
+                furniture_bottom_layer.wipe_cell(up_coordinate)
+                furniture_bottom_layer.update_cell(up_coordinate, frames[index])
+                floor_layer.update_cell(up_coordinate, floor_cell.surface)
+            else:
+                # First open the chest
+                if context["flag.first_open_chest"]:
+                    context["flag.first_open_chest"] = True
+                    message_box = get_message_box(context)
+                    message = ["Looks like this is your first time using a chest.", "You can "]
+                    message_box.play("\n".join(message), after_animation)
+                else:
+                    after_animation()
+
+        # Play frames
+        context.loop_manager.once(6, num_frame + 1, chest_animation)
+
+        return True
+
+    if check_chest(Maps.Farm, context["shipping_chest"]):
+        return True
+
+    if check_chest(Maps.Home, context["home_chest"]):
+        return True
+
+    return False
 
 
 def transition_to_next_day(context: Context) -> None:

@@ -26,7 +26,7 @@ class Loop:
         self.elapsed_time: float = 0
 
         # Current count
-        self.current_count: int = 0
+        self.current_count: int = -1
 
         # Whether it is paused
         self.paused: bool = False

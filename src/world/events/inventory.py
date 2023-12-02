@@ -5,8 +5,12 @@ import pygame
 
 from src.core.constant import Direction
 from src.core.context import Context
-from src.world.context_getters import get_inventory, get_character
+from src.core.display import GridLayer
+from src.world.context_getters import get_inventory, get_character, get_hotbar, get_scene_manager
+from src.world.data.frames import Frames
+from src.world.data.tiles import Tiles
 from src.world.item.inventory import Inventory
+from src.world.item.item import GameItem
 
 
 def init_inventory(context: Context) -> None:
@@ -29,40 +33,73 @@ def inventory_key_down(context: Context) -> None:
     """
     key: int = context.event_data["key"]
     inventory = get_inventory(context)
+    hotbar = get_hotbar(context)
     chest = inventory.chest
 
     if not inventory.displayed or chest is None:
         return
 
     chest_num_col = chest.size.width
-    chest_num_row = chest.size.height
     chest_selected_index = chest.get_selected_index()
 
     if key == pygame.K_c:
         # Close the inventory
         inventory.close_chest()
 
+        # Close chest animation
+        character = get_character(context)
+        coordinate = character.get_coordinate()
+        up_coordinate = (coordinate[0], coordinate[1] - 1)
+        frames = Frames.Chest.list[::-1]
+        num_frame: int = len(frames)
+
+        scene_manager = get_scene_manager(context)
+        concrete_map = scene_manager.controller.map
+        furniture_bottom_layer: GridLayer = concrete_map.furniture_bottom
+        floor_layer: GridLayer = concrete_map.floor
+        floor_cell = floor_layer.get_cell(up_coordinate)
+
+        def chest_animation(index: int):
+            if index < num_frame:
+                furniture_bottom_layer.wipe_cell(up_coordinate)
+                furniture_bottom_layer.update_cell(up_coordinate, frames[index])
+                floor_layer.update_cell(up_coordinate, floor_cell.surface)
+
+        context.loop_manager.once(6, num_frame + 1, chest_animation)
+
         # Unfreeze the character
         character = get_character(context)
         character.frozen = False
         character.facing = Direction.UP
     elif key == pygame.K_w:
-        index = chest_selected_index - chest_num_col
-        if index > 0:
-            chest.select_item(index)
+        # Up
+        chest.select_item(chest_selected_index - chest_num_col)
     elif key == pygame.K_d:
-        if (1 + chest_selected_index % chest_num_col) != 0:
-            chest.select_item(chest_selected_index + 1)
+        # Right
+        chest.select_item(chest_selected_index + 1)
     elif key == pygame.K_s:
-        index = chest_selected_index + chest_num_col
-        if index < chest_num_col * chest_num_row:
-            chest.select_item(index)
+        # Down
+        chest.select_item(chest_selected_index + chest_num_col)
     elif key == pygame.K_a:
-        if chest_selected_index % chest_num_col != 0:
-            chest.select_item(chest_selected_index - 1)
+        # Left
+        chest.select_item(chest_selected_index - 1)
     elif key == pygame.K_n:
         # Move item from the hotbar to the inventory
-        pass
+        hotbar_selected_index: int = hotbar.chest.get_selected_index()
+        hotbar_selected_item: GameItem = hotbar.chest.get_selected_item()
+        if hotbar_selected_item is None:
+            return
+
+        result = chest.append_game_item(hotbar_selected_item)
+        if result:
+            hotbar.chest.remove_item(hotbar_selected_index)
     elif key == pygame.K_m:
         # Move item from the inventory to the hotbar
-        pass
+        inventory_selected_index: int = chest.get_selected_index()
+        inventory_selected_item: GameItem = chest.get_selected_item()
+        if inventory_selected_item is None:
+            return
+
+        result = hotbar.chest.append_game_item(inventory_selected_item)
+        if result:
+            chest.remove_item(inventory_selected_index)

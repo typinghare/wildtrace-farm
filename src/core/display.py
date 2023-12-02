@@ -117,10 +117,11 @@ class GridLayer(Layer):
 
         self.updated_indices.append(index)
 
-    def wipe_cell(self, coordinate: Tuple[int, int]) -> None:
+    def wipe_cell(self, coordinate: Tuple[int, int], alpha: int = 0) -> None:
         """
         Wipes a certain cell.
         :param coordinate: The coordinate to wipe.
+        :param alpha:
         """
         rect = (
             coordinate[0] * self.cell_size.width,
@@ -128,7 +129,7 @@ class GridLayer(Layer):
             self.cell_size.width,
             self.cell_size.height,
         )
-        self.surface.fill("black", rect)
+        self.surface.fill((0, 0, 0, alpha), rect)
 
     def render_all(self):
         """

@@ -163,11 +163,11 @@ class Tiles:
     Door5 = register("door/5", Tilesets.Door, (80, 0))
 
     # Chest
-    ChestFront0 = register("chest/front/0", Tilesets.Chest, (16, 16), (16, 16), 3)
-    ChestFront1 = register("chest/front/1", Tilesets.Chest, (80, 16), (16, 16), 3)
-    ChestFront2 = register("chest/front/2", Tilesets.Chest, (128, 16), (16, 16), 3)
-    ChestFront3 = register("chest/front/3", Tilesets.Chest, (176, 16), (16, 16), 3)
-    ChestFront4 = register("chest/front/4", Tilesets.Chest, (224, 16), (16, 16), 3)
+    ChestFront0 = register("chest/front/0", Tilesets.Chest, (12, 12), (24, 24), 2)
+    ChestFront1 = register("chest/front/1", Tilesets.Chest, (60, 12), (24, 24), 2)
+    ChestFront2 = register("chest/front/2", Tilesets.Chest, (108, 12), (24, 24), 2)
+    ChestFront3 = register("chest/front/3", Tilesets.Chest, (156, 12), (24, 24), 2)
+    ChestFront4 = register("chest/front/4", Tilesets.Chest, (204, 12), (24, 24), 2)
 
     # Tools
     ToolWateringCan = register("tool/watering_can", Tilesets.ToolMaterial, (0, 0))

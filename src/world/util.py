@@ -33,6 +33,7 @@ def scale_image(image: Surface, scale_factor: float) -> Surface:
 
 
 font_instance_memo: Dict[Tuple[int, str], font.Font] = {}
+assets_dir: str = Settings().assets_dir
 
 
 def get_font(size: int, file: str | None = None) -> font.Font:
@@ -45,12 +46,10 @@ def get_font(size: int, file: str | None = None) -> font.Font:
     if key in font_instance_memo:
         return font_instance_memo[key]
 
-    filepath = None
     if file is not None:
-        settings = Settings()
-        filepath = os.path.join(os.path.join(settings.assets_dir, f"fonts/{file}"))
+        file = os.path.abspath(os.path.join(assets_dir, "fonts/", file))
 
-    font_instance = font.Font(filepath, size)
+    font_instance = font.Font(file, size)
     font_instance_memo[key] = font_instance
 
     return font_instance

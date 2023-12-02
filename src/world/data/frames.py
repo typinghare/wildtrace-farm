@@ -142,10 +142,10 @@ class Frames:
     Chest = register(
         "chest",
         [
-            Tiles.ChestFront4,
-            Tiles.ChestFront3,
-            Tiles.ChestFront2,
-            Tiles.ChestFront1,
             Tiles.ChestFront0,
+            Tiles.ChestFront1,
+            Tiles.ChestFront2,
+            Tiles.ChestFront3,
+            Tiles.ChestFront4,
         ],
     )

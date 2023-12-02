@@ -84,6 +84,17 @@ class Chest:
 
         return True
 
+    def append_game_item(self, game_item: GameItem) -> bool:
+        """
+        Appends a game item.
+        """
+        first_empty_slot_index = self.item_list.index(None)
+        if first_empty_slot_index == -1:
+            return False
+
+        self.item_list[first_empty_slot_index] = game_item
+        return True
+
     def consume_selected_item(self, volume: int = 1) -> bool:
         """
         Consumes selected item.
@@ -99,6 +110,13 @@ class Chest:
             self.refresh()
 
         return result
+
+    def remove_item(self, index: int) -> None:
+        """
+        Removes an item from the chest.
+        :param index: The index of the item.
+        """
+        self.item_list[index] = None
 
     def refresh(self) -> None:
         """
