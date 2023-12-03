@@ -1,7 +1,7 @@
 """
 Character related events.
 """
-from typing import Dict, Callable
+from typing import Dict, Callable, List
 
 import pygame
 
@@ -447,9 +447,11 @@ def shipping(context: Context, callback: Callable) -> None:
 
     # Calculate total price
     total_price: int = 0
+    str_list: List[str] = []
     for product_id, number_product in shipped_products.items():
         product: Product = Registries.Product.by_id[product_id].res
         total_price += product.price * number_product
+        str_list.append(f"  {product.item.name} - ${product.price * number_product}")
 
     if total_price == 0:
         return callback()
@@ -465,7 +467,12 @@ def shipping(context: Context, callback: Callable) -> None:
 
     # Display price using message box
     message_box = get_message_box(context)
-    message_box.play(f"You have shipped some products, and you earn ${total_price}!", callback)
+    message_box.play(
+        f"You have shipped the following products:\n"
+        + "\n".join(str_list)
+        + f"\nYou earn ${total_price}!",
+        callback,
+    )
 
 
 def character_harvest_crop(context: Context) -> bool:

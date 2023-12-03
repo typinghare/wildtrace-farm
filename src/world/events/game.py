@@ -41,6 +41,10 @@ def before_all(context: Context) -> None:
         crop_item: CropItem = ref.res
         crop_item_mapping[crop_item.item] = crop_item.crop
 
+    # shipping_chest: Chest = context["shipping_chest"]
+    # shipping_chest.stack_item(Items.BeetProduct, 2)
+    # shipping_chest.stack_item(Items.WheatProduct, 3)
+
 
 def enter_game(context: Context) -> None:
     """
