@@ -417,7 +417,7 @@ def transition_to_next_day(context: Context) -> None:
             context["flag.sleeping"] = False
 
         if flip_coin(0.35):
-            play_music(Music.Home,context)
+            play_music(Music.Home, context)
         curtain.fade_in(25, end_sleeping)
 
     def delay():
