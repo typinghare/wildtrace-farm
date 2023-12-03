@@ -12,6 +12,7 @@ from src.world.context_getters import (
 from src.world.crop_window import CropWindow
 from src.world.data.maps import Maps
 from src.world.item.crop import GameCrop
+from src.world.maps.farm import FarmMap
 
 
 def init_crop(context: Context) -> None:
@@ -40,3 +41,25 @@ def update_crop_window(context: Context) -> None:
         crop_window.hide()
 
     crop_window.display_crop_info(crop)
+
+
+def update_crop(context: Context) -> None:
+    crop_grid = get_crop_grid(context)
+    scene_manager = get_scene_manager(context)
+    farm_map: FarmMap = scene_manager.get_map_controller(Maps.Farm).map
+    for row in range(crop_grid.size.height):
+        for col in range(crop_grid.size.width):
+            coordinate = (col, row)
+            game_crop: GameCrop | None = crop_grid.get(coordinate)
+            if game_crop is None:
+                continue
+
+            # Update crop status
+            is_watered = game_crop.watered
+            game_crop.day += 1 if is_watered else 0.5
+
+            # Reset watered
+            game_crop.watered = False
+
+            # Update the crop layer
+            farm_map.crop.update_cell(coordinate, game_crop.image)

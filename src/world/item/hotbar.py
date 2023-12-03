@@ -7,6 +7,7 @@ from src.core.common import Size
 from src.core.context import Context
 from src.core.display import Layer
 from src.world.item.chest import Chest
+from src.world.util import get_font, get_outlined_text_surface
 
 
 class Hotbar:
@@ -62,7 +63,7 @@ class Hotbar:
         selected_item_index: int | None = self.chest.get_selected_index()
         self.layer.surface.fill(self.context.settings.inventory_background_color)
         number_text_font = font.Font(None, 16)
-        stack_text_font = font.Font(None, 20)
+        stack_text_font = get_font(18)
 
         slot_color = self.context.settings.inventory_slot_background_color
         selected_slot_color = self.context.settings.inventory_selected_slot_background_color
@@ -90,9 +91,14 @@ class Hotbar:
                 stack_number = item.stack
                 if stack_number > 1:
                     stack_str = str(stack_number)
-                    stack_text = stack_text_font.render(stack_str, True, "#999999")
-                    stack_dest = (rect.right - 5 * (1 + len(stack_str)), rect.bottom - 12)
-                    self.layer.surface.blit(stack_text, stack_dest)
+                    text_surface = get_outlined_text_surface(
+                        stack_str,
+                        stack_text_font,
+                        "#333333",
+                        "#FFFFFF",
+                    )
+                    stack_dest = (rect.right - 5 * (1 + len(stack_str)) - 3, rect.bottom - 16)
+                    self.layer.surface.blit(text_surface, stack_dest)
 
             # Blit the number in the top-left corner
             number_text = number_text_font.render(str((index + 1) % 10), True, "#333333")

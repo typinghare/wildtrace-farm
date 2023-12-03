@@ -14,7 +14,7 @@ def register(path: str, item: Item) -> Item:
     :param item: The Item to register.
     :return: The item.
     """
-    return Registries.Item.register(RegistryUtil.createRegistry(path), item)
+    return Registries.Item.register(RegistryUtil.createLoc(path), item)
 
 
 class Items:

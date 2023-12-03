@@ -15,7 +15,7 @@ def register(path: str, _map: Map.__subclasses__()) -> Map.__subclasses__():
     :param _map: The map to register.
     :return: The map registered.
     """
-    return Registries.Map.register(RegistryUtil.createRegistry(path), _map)
+    return Registries.Map.register(RegistryUtil.createLoc(path), _map)
 
 
 class Maps:

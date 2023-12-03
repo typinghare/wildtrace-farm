@@ -17,7 +17,7 @@ def register(path: str) -> str:
     :return The absolute path of the music file.
     """
     absolute_path = os.path.abspath(os.path.join(assets_dir, "music", path))
-    return Registries.Music.register(RegistryUtil.createRegistry(path), absolute_path)
+    return Registries.Music.register(RegistryUtil.createLoc(path), absolute_path)
 
 
 class Music:

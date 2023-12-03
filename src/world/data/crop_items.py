@@ -16,7 +16,7 @@ def register(path: str, crop_item: CropItem) -> Crop:
     :param crop_item: The crop item to register.
     :return: The crop item.
     """
-    return Registries.CropItem.register(RegistryUtil.createRegistry(path), crop_item)
+    return Registries.CropItem.register(RegistryUtil.createLoc(path), crop_item)
 
 
 class CropItems:

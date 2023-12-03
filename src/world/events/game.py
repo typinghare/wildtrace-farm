@@ -4,6 +4,7 @@ Game related functions.
 from src.core.common import Size
 from src.core.context import Context
 from src.core.display import GridLayer
+from src.world.data.items import Items
 from src.world.data.registries import Registries
 from src.world.item.chest import Chest
 from src.world.item.crop_item import CropItem

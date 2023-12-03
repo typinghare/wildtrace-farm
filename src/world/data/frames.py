@@ -19,7 +19,7 @@ def register(path: str, frames: List[Surface]) -> ListWrapper:
     :return: The animation.
     """
     res = ListWrapper(frames)
-    return Registries.Frames.register(RegistryUtil.createRegistry(path), res)
+    return Registries.Frames.register(RegistryUtil.createLoc(path), res)
 
 
 class Frames:

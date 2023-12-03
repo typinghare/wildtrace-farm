@@ -42,3 +42,4 @@ Regarding coding, I have meticulously organized the code into distinct sections,
 * [Stardew Valley Game Clone with Python and Pygame – Full Course](https://www.youtube.com/watch?v=R9apl6B_ZgI)
 * [Minecraft Hotbar](https://minecraft360.fandom.com/wiki/Hotbar)
 * [Trending Color Palettes - Coolors](https://coolors.co/palettes/trending)
+* [How to draw outline on the font(Pygame)](https://stackoverflow.com/questions/54363047/how-to-draw-outline-on-the-fontpygame)

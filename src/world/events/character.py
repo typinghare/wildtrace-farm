@@ -1,13 +1,14 @@
 """
 Character related events.
 """
-from typing import Dict
+from typing import Dict, Callable
 
 import pygame
 
 from src.core.constant import Direction
 from src.core.context import Context
 from src.core.display import GridLayer
+from src.registry import RegistryUtil
 from src.world.character import Character
 from src.world.context_getters import (
     get_character,
@@ -25,11 +26,13 @@ from src.world.data.maps import Maps
 from src.world.data.music import Music
 from src.world.data.registries import Registries
 from src.world.data.tiles import Tiles
+from src.world.events.crop import update_crop
 from src.world.events.game import first_time_to_farm
 from src.world.item.chest import Chest
 from src.world.item.crop import Crop, GameCrop
 from src.world.item.hotbar import Hotbar
 from src.world.item.item import GameItem, Item
+from src.world.item.product import Product
 from src.world.map import Map
 from src.world.maps.farm import FarmMap
 from src.world.maps.home import HomeMap
@@ -82,11 +85,11 @@ def character_key_down(context: Context):
             return
         if character_sleep(context):
             return
-        if character_use_item(context):
-            return
         if character_open_chest(context):
             return
         if character_harvest_crop(context):
+            return
+        if character_use_item(context):
             return
 
 
@@ -116,8 +119,7 @@ def character_use_item(context: Context) -> bool:
     if item_ref.contain_tag(ItemTags.TOOL):
         # Tools
         if selected_item.item == Items.WateringCan:
-            character_use_watering_can(context, character)
-            return True
+            return character_use_watering_can(context, character)
     elif item_ref.contain_tag(ItemTags.SEEDS):
         # Sow seeds
         scene_manager: SceneManager = context["scene_manager"]
@@ -151,10 +153,14 @@ def character_use_item(context: Context) -> bool:
     return False
 
 
-def character_use_watering_can(context: Context, character: Character) -> None:
+def character_use_watering_can(context: Context, character: Character) -> bool:
     """
     Character uses the watering can.
     """
+    scene_manager = get_scene_manager(context)
+    if not scene_manager.is_map(Maps.Farm):
+        return False
+
     coordinate = character.get_coordinate()
     character_fps = context.settings.character_animation_fps
 
@@ -189,11 +195,15 @@ def character_use_watering_can(context: Context, character: Character) -> None:
     if game_crop:
         game_crop.watered = True
 
+    return True
+
 
 def character_open_door(context: Context) -> bool:
     """
     Character opens door.
     """
+    if context["flag.door_opening"]:
+        return True
 
     character: Character = context["character"]
     scene_manager: SceneManager = context["scene_manager"]
@@ -231,8 +241,10 @@ def character_open_door(context: Context) -> bool:
 
             scene_manager.change_map(Maps.Farm, to_farm)
             home_map.furniture_bottom.update_cell(door_coordinate, Tiles.Door5)
+            context["flag.door_opening"] = False
 
         character.frozen = True
+        context["flag.door_opening"] = True
         context.loop_manager.once(10, count, door_loop)
         return True
 
@@ -269,7 +281,10 @@ def character_open_door(context: Context) -> bool:
             farm_map.floor.update_cell(up_coordinate, Tiles.WoodenHouse13)
             farm_map.ground.update_cell(door_coordinate, Tiles.Door5)
 
+            context["flag.door_opening"] = False
+
         character.frozen = True
+        context["flag.door_opening"] = True
         context.loop_manager.once(10, count, door_loop)
         return True
 
@@ -296,6 +311,7 @@ def character_sleep(context: Context) -> bool:
 
     # Sleep
     context["flag.sleeping"] = True
+    character.frozen = True
     transition_to_next_day(context)
 
     return True
@@ -373,42 +389,83 @@ def transition_to_next_day(context: Context) -> None:
     loop_manager = context.loop_manager
     fade_speed: int = 25
 
-    def delay():
-        # Delay 1.5 seconds
-        loop_manager.delay(1500, callback)
-
     def callback():
         # Set the data window
         data_window.day += 1
         data_window.reset_time()
 
-        # Crops
-        crop_grid = get_crop_grid(context)
-        scene_manager = get_scene_manager(context)
-        farm_map: FarmMap = scene_manager.get_map_controller(Maps.Farm).map
-        for row in range(crop_grid.size.height):
-            for col in range(crop_grid.size.width):
-                coordinate = (col, row)
-                game_crop: GameCrop | None = crop_grid.get(coordinate)
-                if game_crop is None:
-                    continue
-
-                # Update crop status
-                game_crop.day += 1
-                game_crop.watered = False
-
-                # Update the crop layer
-                farm_map.crop.update_cell(coordinate, game_crop.image)
+        # Update crops
+        update_crop(context)
 
         # Character facing
         character.facing = Direction.RIGHT
+        character.frozen = False
 
-        # End sleeping
-        context["flag.sleeping"] = False
+        def end_sleeping() -> None:
+            context["flag.sleeping"] = False
 
-        curtain.fade_in(25)
+        curtain.fade_in(25, end_sleeping)
 
-    curtain.fade_out(fade_speed, delay)
+    def delay():
+        # Delay one seconds
+        loop_manager.delay(1000, callback)
+
+    def ship() -> None:
+        shipping(context, delay)
+
+    curtain.fade_out(fade_speed, ship)
+
+
+def shipping(context: Context, callback: Callable) -> None:
+    """
+    Ships all products in the shipping chest.
+    """
+    shipping_chest: Chest = context["shipping_chest"]
+
+    shipped_products: Dict[int, int] = {}
+    for game_item in shipping_chest.item_list:
+        if game_item is None:
+            continue
+
+        item_ref = Registries.Item.get_ref_by_res(game_item.item)
+        loc = item_ref.res_key.loc
+        path = loc.path
+        if not path.startswith("product/"):
+            continue
+
+        # Get product
+        product_name = path[8:]
+        product_ref = Registries.Product.get_ref(RegistryUtil.createLoc(product_name))
+        product_id: int = product_ref.get_id()
+
+        # Aggregate
+        number_product = game_item.stack
+        if product_id in shipped_products:
+            shipped_products[product_id] += number_product
+        else:
+            shipped_products[product_id] = number_product
+
+    # Calculate total price
+    total_price: int = 0
+    for product_id, number_product in shipped_products.items():
+        product: Product = Registries.Product.by_id[product_id].res
+        total_price += product.price * number_product
+
+    if total_price == 0:
+        return callback()
+
+    # Update money
+    data_window = get_data_window(context)
+    data_window.money += total_price
+
+    # Clear all items in the chest
+    item_list = shipping_chest.item_list
+    for i in range(len(item_list)):
+        item_list[i] = None
+
+    # Display price using message box
+    message_box = get_message_box(context)
+    message_box.play(f"You have shipped some products, and you earn ${total_price}!", callback)
 
 
 def character_harvest_crop(context: Context) -> bool:

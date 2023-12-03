@@ -42,6 +42,7 @@ class Registry:
             raise ResKeyConflictException(res_key)
 
         ref = Ref(res_key, res, len(self.by_id))
+        self.key_map[loc_str] = res_key
         self.by_id.append(ref)
         self.by_loc[res_loc] = ref
         self.by_res[res] = res_loc
@@ -56,7 +57,13 @@ class Registry:
         ref = self.by_loc.get(res_loc)
 
         if ref is None:
-            raise ResNotFoundException(res_loc)
+            loc_str = res_loc.__repr__()
+            res_key = self.key_map.get(loc_str)
+
+            if res_key is None:
+                raise ResNotFoundException(res_loc)
+
+            return self.get_ref(res_key.loc)
 
         return ref
 

@@ -16,7 +16,7 @@ def register(path: str, item: Item, price: int) -> Product:
     :param price: The selling price of the product.
     :return: The product.
     """
-    return Registries.Product.register(RegistryUtil.createRegistry(path), Product(item, price))
+    return Registries.Product.register(RegistryUtil.createLoc(path), Product(item, price))
 
 
 class Products:

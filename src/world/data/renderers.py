@@ -13,7 +13,7 @@ def register(path: str, renderer: Renderer.__subclasses__()) -> Renderer.__subcl
     :param path: The path of the renderer.
     :param renderer: The renderer to register.
     """
-    return Registries.Renderer.register(RegistryUtil.createRegistry(path), renderer)
+    return Registries.Renderer.register(RegistryUtil.createLoc(path), renderer)
 
 
 class Renderers:

@@ -54,14 +54,14 @@ class GameCrop:
         self.crop = crop
 
         # The current day of the crop
-        self.day: int = 1
+        self.day: float = 1
 
         # Whether the crop is watered today
         self.watered: bool = False
 
     @property
     def stage(self) -> int:
-        return self.crop.get_stage(self.day)
+        return self.crop.get_stage(int(self.day))
 
     @property
     def image(self) -> Surface:

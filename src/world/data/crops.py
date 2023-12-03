@@ -15,7 +15,7 @@ def register(path: str, crop: Crop) -> Crop:
     :param crop: The crop to register.
     :return: The crop.
     """
-    return Registries.Crop.register(RegistryUtil.createRegistry(path), crop)
+    return Registries.Crop.register(RegistryUtil.createLoc(path), crop)
 
 
 class Crops:
@@ -29,11 +29,11 @@ class Crops:
             Products.Wheat,
             [
                 Tiles.WheatSeedling,
-                Tiles.WheatBudding,
                 Tiles.WheatVegetative,
+                Tiles.WheatBudding,
                 Tiles.WheatRipening,
             ],
-            6,
+            5,
         ),
     )
     Beet = register(
@@ -42,8 +42,8 @@ class Crops:
             Products.Beet,
             [
                 Tiles.BeetSeedling,
-                Tiles.BeetBudding,
                 Tiles.BeetVegetative,
+                Tiles.BeetBudding,
                 Tiles.BeetRipening,
             ],
             7,

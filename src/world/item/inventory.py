@@ -1,13 +1,15 @@
 """
 Inventory module.
 """
+import pygame
 from pygame import Vector2, Rect, Surface
 
 from src.core.common import Size
 from src.core.context import Context
 from src.core.display import Layer
+from src.world.constant import Fonts
 from src.world.item.chest import Chest
-from src.world.util import get_font
+from src.world.util import get_font, get_outlined_text_surface
 
 
 class Inventory:
@@ -61,6 +63,7 @@ class Inventory:
         slot_color = self.context.settings.inventory_slot_background_color
         selected_slot_color = self.context.settings.inventory_selected_slot_background_color
         selected_index: int = self.chest.get_selected_index()
+        stack_text_font = get_font(16)
 
         for row in range(num_row):
             for col in range(num_col):
@@ -79,7 +82,24 @@ class Inventory:
                 if item is None:
                     continue
 
+                # Blit image
                 self.layer.surface.blit(item.image, dest)
+
+                # Blit number
+                stack_number = item.stack
+                if stack_number > 1:
+                    stack_str = str(stack_number)
+                    text_surface = get_outlined_text_surface(
+                        stack_str,
+                        stack_text_font,
+                        "#333333",
+                        "#FFFFFF",
+                    )
+                    text_dest = (
+                        dest.x + cell_width - 5 * (1 + len(stack_str)) - 3,
+                        dest.y + cell_height - 16,
+                    )
+                    self.layer.surface.blit(text_surface, text_dest)
 
     def open_chest(self, chest: Chest) -> None:
         """
@@ -98,7 +118,8 @@ class Inventory:
             (
                 self.frame_border * (num_col + 1) + cell_width * num_col,
                 self.frame_border * (num_row + 1) + cell_height * num_row + 75,
-            )
+            ),
+            pygame.SRCALPHA,
         )
 
         # Background color

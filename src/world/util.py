@@ -4,6 +4,7 @@ Utility module.
 import os
 from typing import Tuple, Dict
 
+import pygame
 from pygame import Surface, Rect, transform, font, mixer
 
 from src.core.settings import Settings
@@ -68,3 +69,47 @@ def stop_music() -> None:
     Stop playing the music.
     """
     mixer.music.stop()
+
+
+_circle_cache = {}
+
+
+def _circle_points(r):
+    r = int(round(r))
+    if r in _circle_cache:
+        return _circle_cache[r]
+    x, y, e = r, 0, 1 - r
+    _circle_cache[r] = points = []
+    while x >= y:
+        points.append((x, y))
+        y += 1
+        if e < 0:
+            e += 2 * y - 1
+        else:
+            x -= 1
+            e += 2 * (y - x) - 1
+    points += [(y, x) for x, y in points if x > y]
+    points += [(-x, y) for x, y in points if x]
+    points += [(x, -y) for x, y in points if y]
+    points.sort()
+    return points
+
+
+def get_outlined_text_surface(text, _font, inner_color: str, outer_color: str, opx=2) -> Surface:
+    text_surface = _font.render(text, True, inner_color).convert_alpha()
+    w = text_surface.get_width() + 2 * opx
+    h = _font.get_height()
+
+    osurf = pygame.Surface((w, h + 2 * opx)).convert_alpha()
+    osurf.fill((0, 0, 0, 0))
+
+    surf = osurf.copy()
+
+    osurf.blit(_font.render(text, True, outer_color).convert_alpha(), (0, 0))
+
+    for dx, dy in _circle_points(opx):
+        surf.blit(osurf, (dx + opx, dy + opx))
+
+    surf.blit(text_surface, (opx, opx))
+
+    return surf
