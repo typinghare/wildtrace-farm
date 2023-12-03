@@ -250,7 +250,7 @@ class Character:
 
         self._update_camera()
         self._update_character_layer()
-        Debug.get_module("coordinate").print(self.get_coordinate())
+        # Debug.get_module("coordinate").print(self.get_coordinate())
 
     def get_current_center(self) -> Tuple[int, int]:
         camera: Camera = self.context["camera"]

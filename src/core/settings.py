@@ -25,7 +25,7 @@ class Settings:
             self.fps = 60
 
             # Debug mode
-            self.debug = True
+            self.debug = False
 
             # [Display] Window caption
             self.display_window_caption = "Wildtrace Farm"

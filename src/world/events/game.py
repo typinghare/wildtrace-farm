@@ -3,8 +3,7 @@ Game related functions.
 """
 from src.core.common import Size
 from src.core.context import Context
-from src.core.display import GridLayer
-from src.world.data.items import Items
+from src.world.context_getters import get_character
 from src.world.data.registries import Registries
 from src.world.item.chest import Chest
 from src.world.item.crop_item import CropItem
@@ -15,12 +14,11 @@ def init_flags(context: Context) -> None:
     """
     Initializes flags.
     """
-    # context["flag.enter_game"] = False
-    # context["flag.been_to_farm"] = False
+    is_debug = context.settings.debug
 
-    context["flag.enter_game"] = True
-    context["flag.been_to_farm"] = True
-    context["flag.first_open_chest"] = False
+    context["flag.enter_game"] = is_debug
+    context["flag.been_to_farm"] = is_debug
+    context["flag.first_open_chest"] = not is_debug
 
 
 def before_all(context: Context) -> None:
@@ -54,10 +52,16 @@ def enter_game(context: Context) -> None:
 
     message_box: MessageBox = context["message_box"]
 
+    def third() -> None:
+        message_box.play(
+            "When you want to sleep, get close to the bed and press [J].\n"
+            "Your crops will grow overnight!",
+        )
+
     def second() -> None:
         message_box.play(
-            "Press number keys [0] to [9] to change the selected items.\n"
-            "Press [J] to use an item.\n",
+            "Press number keys [0] to [9] to select items.\n"
+            "Press [J] to use an item, open a door or a chest.\n",
             third,
         )
 
@@ -70,9 +74,6 @@ def enter_game(context: Context) -> None:
         second,
     )
 
-    def third() -> None:
-        message_box.play("When you want to sleep, get close to the bed and press [J].\n")
-
 
 def first_time_to_farm(context: Context) -> None:
     """
@@ -81,8 +82,15 @@ def first_time_to_farm(context: Context) -> None:
     context["flag.been_to_farm"] = True
 
     message_box: MessageBox = context["message_box"]
+
+    def second() -> None:
+        message_box.play(
+            "Remember to water your crops.\nMaking them happy will boost their growth."
+        )
+
     message_box.play(
         "You are now at the farm. You can sow seeds on plowed land.\n"
-        "Press 3 or 4 to select seeds.\n"
-        "Press J on the plowed land to sow seeds!"
+        "Press [3] or [4] to select seeds.\n"
+        "Press [J] on the plowed land to sow seeds!",
+        second,
     )

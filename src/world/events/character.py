@@ -68,6 +68,11 @@ def character_key_down(context: Context):
     key = context.event_data.get("key")
     character: Character = context["character"]
 
+    # Yield to the message box
+    message_box: MessageBox = get_message_box(context)
+    if message_box.is_displayed():
+        return
+
     # Direction
     direction = map_key_to_direction(key)
     if direction is not None:
@@ -76,11 +81,6 @@ def character_key_down(context: Context):
 
     # <J> use item / open doors / sleep / open inventory
     if key == pygame.K_j:
-        # Yield to the message box
-        message_box: MessageBox = context["message_box"]
-        if message_box.is_displayed():
-            return
-
         if character_open_door(context):
             return
         if character_sleep(context):
@@ -358,10 +358,7 @@ def character_open_chest(context: Context) -> bool:
             else:
                 # First open the chest
                 if context["flag.first_open_chest"]:
-                    context["flag.first_open_chest"] = True
-                    message_box = get_message_box(context)
-                    message = ["Looks like this is your first time using a chest.", "You can "]
-                    message_box.play("\n".join(message), after_animation)
+                    first_time_to_open_chest(context, after_animation)
                 else:
                     after_animation()
 
@@ -377,6 +374,19 @@ def character_open_chest(context: Context) -> bool:
         return True
 
     return False
+
+
+def first_time_to_open_chest(context: Context, callback) -> None:
+    context["flag.first_open_chest"] = False
+    message_box = get_message_box(context)
+    message = [
+        "Looks like this is your first time using a chest.",
+        "You can press [W][A][S][D] to select items in the chest;",
+        "Press [N] to move the selected item to the chest;",
+        "Press [M] to move the selected item to the hotbar;",
+        "Press [C] to close the chest.",
+    ]
+    message_box.play("\n".join(message), callback)
 
 
 def transition_to_next_day(context: Context) -> None:
@@ -470,7 +480,7 @@ def shipping(context: Context, callback: Callable) -> None:
     message_box.play(
         f"You have shipped the following products:\n"
         + "\n".join(str_list)
-        + f"\nYou earn ${total_price}!",
+        + f"\nYou earned ${total_price}!",
         callback,
     )
 
@@ -506,6 +516,17 @@ def character_harvest_crop(context: Context) -> bool:
     hotbar = get_hotbar(context)
     hotbar.chest.stack_item(game_crop.crop.product.item)
 
+    # First time to harvest
+    if context["flag.first_time_to_harvest"]:
+        context["flag.first_time_to_harvest"] = False
+        message_box = get_message_box(context)
+        message_box.play(
+            "You harvested your first crop!\n"
+            "You can put crop products to the chest in the farm."
+            "All products will be shipped to town overnight,"
+            "and they will pay you."
+        )
+
 
 def character_key_up(context: Context):
     """
@@ -513,6 +534,11 @@ def character_key_up(context: Context):
     """
     key = context.event_data.get("key")
     character: Character = context["character"]
+
+    # Yield to the message box
+    message_box: MessageBox = get_message_box(context)
+    if message_box.is_displayed():
+        return
 
     direction = map_key_to_direction(key)
     if direction is not None:

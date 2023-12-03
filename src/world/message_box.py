@@ -114,7 +114,7 @@ class MessageBox:
         # Invoke the callback function
         if self.callback is not None:
             self.callback()
-            self.callback = None
+            # self.callback = None
 
     def update(self) -> None:
         """
