@@ -2,11 +2,13 @@
 Utility module.
 """
 import os
+from random import random
 from typing import Tuple, Dict
 
 import pygame
 from pygame import Surface, Rect, transform, font, mixer
 
+from src.core.context import Context
 from src.core.settings import Settings
 
 
@@ -56,19 +58,41 @@ def get_font(size: int, file: str | None = None) -> font.Font:
     return font_instance
 
 
-def play_music(music_path: str) -> None:
+def play_music(music_path: str, context: Context) -> None:
     """
     Play a specific piece of music.
     """
+    if context["music_loop"]:
+        context.loop_manager.remove(context["music_loop"])
+
     mixer.music.load(music_path)
+    mixer.music.set_volume(1)
     mixer.music.play(-1)
 
 
-def stop_music() -> None:
+def music_is_playing() -> bool:
+    """
+    Whether a music is playing
+    """
+    return pygame.mixer.music.get_busy()
+
+
+def stop_music(context: Context) -> None:
     """
     Stop playing the music.
     """
-    mixer.music.stop()
+    if not music_is_playing():
+        return
+
+    count = 30
+
+    def fade_out(index: int) -> None:
+        mixer.music.set_volume((30 - index) / count)
+
+        if index == count - 1:
+            mixer.music.stop()
+
+    context["music_loop"] = context.loop_manager.once(10, count, fade_out)
 
 
 _circle_cache = {}
@@ -95,7 +119,9 @@ def _circle_points(r):
     return points
 
 
-def get_outlined_text_surface(text, _font, inner_color: str, outer_color: str, opx=2) -> Surface:
+def get_outlined_text_surface(
+    text: str, _font: font.Font, inner_color: str, outer_color: str, opx=2
+) -> Surface:
     text_surface = _font.render(text, True, inner_color).convert_alpha()
     w = text_surface.get_width() + 2 * opx
     h = _font.get_height()
@@ -113,3 +139,11 @@ def get_outlined_text_surface(text, _font, inner_color: str, outer_color: str, o
     surf.blit(text_surface, (opx, opx))
 
     return surf
+
+
+def flip_coin(true_possibility: float = 0.5) -> bool:
+    """
+    Returns a bool value.
+    """
+
+    return random() < true_possibility

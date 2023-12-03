@@ -19,6 +19,7 @@ def init_flags(context: Context) -> None:
     context["flag.enter_game"] = is_debug
     context["flag.been_to_farm"] = is_debug
     context["flag.first_open_chest"] = not is_debug
+    context["flag.first_time_to_harvest"] = not is_debug
 
 
 def before_all(context: Context) -> None:

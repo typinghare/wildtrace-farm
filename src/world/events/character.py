@@ -38,7 +38,7 @@ from src.world.maps.farm import FarmMap
 from src.world.maps.home import HomeMap
 from src.world.message_box import MessageBox
 from src.world.scene_manager import SceneManager
-from src.world.util import stop_music, play_music
+from src.world.util import stop_music, play_music, flip_coin, music_is_playing
 
 
 def init_character(context: Context):
@@ -233,8 +233,10 @@ def character_open_door(context: Context) -> bool:
                 character.stop_all()
                 character.frozen = False
 
-                # Play music
-                play_music(Music.Farm)
+                # Stop music and play another music
+                if flip_coin() or not context["flag.been_to_farm"]:
+                    if not music_is_playing():
+                        play_music(Music.Farm, context)
 
                 if not context["flag.been_to_farm"]:
                     first_time_to_farm(context)
@@ -273,9 +275,6 @@ def character_open_door(context: Context) -> bool:
                 character.facing = Direction.UP
                 character.stop_all()
                 character.frozen = False
-
-                # Stop music
-                stop_music()
 
             scene_manager.change_map(Maps.Home, back_home)
             farm_map.floor.update_cell(up_coordinate, Tiles.WoodenHouse13)
@@ -399,6 +398,9 @@ def transition_to_next_day(context: Context) -> None:
     loop_manager = context.loop_manager
     fade_speed: int = 25
 
+    # Stop music and play another
+    stop_music(context)
+
     def callback():
         # Set the data window
         data_window.day += 1
@@ -414,6 +416,8 @@ def transition_to_next_day(context: Context) -> None:
         def end_sleeping() -> None:
             context["flag.sleeping"] = False
 
+        if flip_coin(0.35):
+            play_music(Music.Home,context)
         curtain.fade_in(25, end_sleeping)
 
     def delay():
@@ -461,7 +465,10 @@ def shipping(context: Context, callback: Callable) -> None:
     for product_id, number_product in shipped_products.items():
         product: Product = Registries.Product.by_id[product_id].res
         total_price += product.price * number_product
-        str_list.append(f"  {product.item.name} - ${product.price * number_product}")
+        str_list.append(
+            f"  {product.item.name} - ${product.price}"
+            f" * {number_product} = ${product.price * number_product}"
+        )
 
     if total_price == 0:
         return callback()
@@ -522,9 +529,9 @@ def character_harvest_crop(context: Context) -> bool:
         message_box = get_message_box(context)
         message_box.play(
             "You harvested your first crop!\n"
-            "You can put crop products to the chest in the farm."
-            "All products will be shipped to town overnight,"
-            "and they will pay you."
+            "You can put crop products to the chest in the farm.\n"
+            "All products will be shipped to town overnight,\n"
+            "and they will pay you.\n"
         )
 
 

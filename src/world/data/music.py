@@ -25,5 +25,5 @@ class Music:
     Music resources.
     """
 
-    Home = register("music.mp3")
+    Home = register("home.mp3")
     Farm = register("farm.mp3")

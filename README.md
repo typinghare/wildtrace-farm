@@ -8,6 +8,10 @@ Since I only have two weeks to accomplish it, I decided to make a simple idle ga
 
 I determined to make a complete program instead of a just-runnable one. That means I must focus much on advanced skills such as game development principles, frameworks, design patterns, and so on. Also, I will write complete documentation as professionally as I can.
 
+## To Professor
+
+I didn't expect the game ends up being so complicated. I have many features yet to be implemented, and I will finish them later and send the <del>release edition</del> to you via email.
+
 ## Get Started
 
 To run Wildtrace Farm, you should install the following programs as prerequisites:
@@ -20,8 +24,6 @@ Start the game with the following command:
 ~~~shell
 PYTHONPATH=. python3 src/wildtrace-farm.py
 ~~~
-
-### Gameplay
 
 ## Development
 
