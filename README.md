@@ -12,7 +12,7 @@ I determined to make a complete program instead of a just-runnable one. That mea
 
 I didn't expect the game ends up being so complicated. I have many features yet to be implemented, and I will finish them later and send the <del>release edition</del> to you via email.
 
-Please let me know if you come across bugs when you play this game. It's my first time making a game and I don't have experience testing it.
+Please let me know if you come across any bugs when you play this game. It's my first time making a game and I don't have experience testing it.
 
 ## Get Started
 
@@ -23,8 +23,14 @@ To run Wildtrace Farm, you should install the following programs as prerequisite
 
 Start the game with the following command:
 
+On **macOS**:
 ~~~shell
 PYTHONPATH=. python3 src/wildtrace-farm.py
+~~~
+
+On **Windows**:
+~~~shell
+PYTHONPATH=./ python src/wildtrace-farm.py
 ~~~
 
 ## Development
