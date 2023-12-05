@@ -10,6 +10,7 @@ from src.core.context import Context
 from src.core.display import GridLayer
 from src.registry import RegistryUtil
 from src.world.character import Character
+from src.world.common.methodical import CallbackQueue, CallbackNode
 from src.world.context_getters import (
     get_character,
     get_data_window,
@@ -375,17 +376,21 @@ def character_open_chest(context: Context) -> bool:
     return False
 
 
-def first_time_to_open_chest(context: Context, callback) -> None:
+def first_time_to_open_chest(context: Context, callback: Callable) -> None:
     context["flag.first_open_chest"] = False
     message_box = get_message_box(context)
-    message = [
-        "Looks like this is your first time using a chest.",
-        "You can press [W][A][S][D] to select items in the chest;",
-        "Press [N] to move the selected item to the chest;",
-        "Press [M] to move the selected item to the hotbar;",
-        "Press [C] to close the chest.",
-    ]
-    message_box.play("\n".join(message), callback)
+
+    def fn0() -> CallbackNode:
+        lines = [
+            "Looks like this is your first time using a chest.",
+            "You can press [W][A][S][D] to select items in the chest;",
+            "Press [N] to move the selected item to the chest;",
+            "Press [M] to move the selected item to the hotbar;",
+            "Press [C] to close the chest.",
+        ]
+        return message_box.play("\n".join(lines))
+
+    CallbackQueue([fn0, callback]).start()
 
 
 def transition_to_next_day(context: Context) -> None:
@@ -484,12 +489,15 @@ def shipping(context: Context, callback: Callable) -> None:
 
     # Display price using message box
     message_box = get_message_box(context)
-    message_box.play(
-        f"You have shipped the following products:\n"
-        + "\n".join(str_list)
-        + f"\nYou earned ${total_price}!",
-        callback,
-    )
+
+    def fn0() -> None:
+        message_box.play(
+            f"You have shipped the following products:\n"
+            + "\n".join(str_list)
+            + f"\nYou earned ${total_price}!",
+        )
+
+    CallbackQueue([fn0, callback]).invoke_next()
 
 
 def character_harvest_crop(context: Context) -> bool:

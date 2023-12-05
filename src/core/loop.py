@@ -38,12 +38,14 @@ class Loop:
         """
         self.elapsed_time += dt
 
-        if self.elapsed_time > (self.current_count + 1) * self.each_count_time:
-            self.current_count += 1
-            if self.current_count >= self.count_per_period:
-                self.reset()
+        if self.elapsed_time < (self.current_count + 1) * self.each_count_time:
+            return
 
-            self.callback(self.current_count)
+        self.current_count += 1
+        if self.current_count >= self.count_per_period:
+            self.reset()
+
+        self.callback(self.current_count)
 
     def reset(self) -> None:
         """
@@ -59,8 +61,8 @@ class LoopManager:
     """
 
     def __init__(self):
-        # List of loops
-        self._loop_list: List[Loop] = []
+        # A list of loops
+        self._loops: List[Loop] = []
 
     def loop(self, fps: float, count_per_period: int, callback: Callable[[int], None]) -> Loop:
         """
@@ -71,55 +73,61 @@ class LoopManager:
         :return: The loop registered.
         """
         loop = Loop(fps, count_per_period, callback)
-        self._loop_list.append(loop)
+        self._loops.append(loop)
 
         return loop
 
     def once(self, fps: float, count_per_period: int, callback: Callable[[int], None]) -> Loop:
         """
-        Registers a once loop.
-        :param fps: Frame per second, or count per second.
+        Registers a loop that will be deleted after one period.
+        :param fps: Frames per second, or counts per second.
         :param count_per_period: Number of counts per period.
-        :param callback: Callback function to be called.
+        :param callback: Callback function to be called when indices change.
         :return: The once loop registered.
         """
 
-        def func(index: int) -> None:
+        def fn(index: int) -> None:
             callback(index)
             if index == count_per_period - 1:
-                self._loop_list.remove(loop)
+                self._loops.remove(loop)
 
-        loop = Loop(fps, count_per_period, func)
-        self._loop_list.append(loop)
+        loop = Loop(fps, count_per_period, fn)
+        self._loops.append(loop)
 
         return loop
 
     def delay(self, delay_ms: int, callback: Callable[[], None]) -> Loop:
         """
-        Schedule a callback function to be executed after a specified delay.
+        Schedules a callback function to be executed after a specified delay.
         :param delay_ms: The delay time in milliseconds.
         :param callback: The function to be called after the delay.
         :return: The registered loop.
         """
 
-        def delay_func(index: int) -> None:
+        def delay_fn(index: int) -> None:
             if index == 1:
                 callback()
+                self._loops.remove(loop)
 
-        return self.once(1000 / delay_ms, 2, delay_func)
+        loop = self.loop(1000 / delay_ms, 2, delay_fn)
+        self._loops.append(loop)
+
+        return loop
 
     def remove(self, loop: Loop) -> None:
         """
         Removes a loop from the list if it exists.
         :param loop: The loop to remove.
         """
-        if loop in self._loop_list:
-            self._loop_list.remove(loop)
+        if loop in self._loops:
+            self._loops.remove(loop)
 
     def update(self, dt: float) -> None:
         """
         Updates all loops.
         """
-        for loop in self._loop_list:
-            if not loop.paused:
-                loop.update(dt)
+        for loop in self._loops:
+            if loop.paused:
+                continue
+
+            loop.update(dt)

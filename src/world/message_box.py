@@ -1,14 +1,13 @@
 """
 Message box module.
 """
-from typing import Callable
-
 from pygame import Vector2, Rect
 
 from src.core.common import Size
 from src.core.context import Context
 from src.core.display import Layer
 from src.core.loop import LoopManager, Loop
+from src.world.common.methodical import CallbackNode
 from src.world.util import get_font
 
 
@@ -54,7 +53,7 @@ class MessageBox:
         self.loop: Loop | None = None
 
         # Callback
-        self.callback: Callable[[], None] | None = None
+        self.callback_node: CallbackNode = CallbackNode.Dummy
 
         # Init
         self._init_layer()
@@ -69,14 +68,11 @@ class MessageBox:
         self.layer.surface.fill("blue")
         self.clear_layer()
 
-    def play(self, message: str, callback: Callable[[], None] | None = None) -> None:
+    def play(self, message: str) -> CallbackNode:
         """
         Plays a message.
         :param message: The message to display.
-        :param callback: The callback function to call after the message box is closed.
         """
-        self.callback = callback
-
         self.message_buffer = message
         message_len = len(message)
         loop_manager: LoopManager = self.context.loop_manager
@@ -88,6 +84,9 @@ class MessageBox:
                 self.stop_playing()
 
         self.loop = loop_manager.loop(self.play_speed, message_len + 1, forward)
+        self.callback_node = CallbackNode()
+
+        return self.callback_node
 
     def stop_playing(self) -> None:
         """
@@ -111,10 +110,8 @@ class MessageBox:
         self.message_buffer = ""
         self.clear_layer()
 
-        # Invoke the callback function
-        if self.callback is not None:
-            self.callback()
-            # self.callback = None
+        # Invoke the callback node
+        self.callback_node.invoke()
 
     def update(self) -> None:
         """

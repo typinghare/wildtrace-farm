@@ -2,7 +2,7 @@
 Game context module.
 """
 
-from typing import Dict, TYPE_CHECKING, Any
+from typing import Dict, TYPE_CHECKING, Any, Callable
 
 if TYPE_CHECKING:
     from src.core.settings import Settings
@@ -89,3 +89,23 @@ class Context:
         :param key: The key to check.
         """
         return key in self._data
+
+    def if_true(self, flag: str, callback: Callable[["Context"], None]) -> None:
+        """
+        Calls a callback function if the flag is true.
+        """
+        if self[flag]:
+            callback(self)
+
+    def if_false(self, flag: str, callback: Callable[["Context"], None]) -> None:
+        """
+        Calls a callback function if the flag is false.
+        """
+        if not self[flag]:
+            callback(self)
+
+    def flip(self, flag: str) -> None:
+        """
+        Flips a flag; if the flag does not exist, it will become true.
+        """
+        self[flag] = not bool(self[flag])

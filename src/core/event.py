@@ -12,7 +12,7 @@ from src.core.context import Context
 
 class EventListener:
     """
-    Event listener that responds to a specific type of event.
+    Event listener that responds to a specific type of events.
     """
 
     def __init__(self, event_type: int, callback: Callable[[Context], None] | Callable[[], None]):
@@ -65,7 +65,9 @@ class EventManager:
 
         return event_listener
 
-    def on(self, event_type: int, callback: Callable[[Context], None]) -> EventListener:
+    def on(
+        self, event_type: int, callback: Callable[[Context], None] | Callable[[], None]
+    ) -> EventListener:
         """
         Listens for an event.
         :param event_type: The type of the event to listen for.
