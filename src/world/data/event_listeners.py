@@ -14,7 +14,7 @@ from src.world.events.crop import init_crop, update_crop_window
 from src.world.events.curtain import init_curtain, update_curtain
 from src.world.events.data_window import init_data_window, update_data_window
 from src.world.events.debug import init_debug, update_debug
-from src.world.events.game import init_flags, before_all
+from src.world.events.game import init_flags, before_all, init_music
 from src.world.events.inventory import init_inventory, update_inventory, inventory_key_down
 from src.world.events.layer import init_layer
 from src.world.events.message_box import init_message_box, update_message_box, message_box_key_down
@@ -64,6 +64,7 @@ class EventListeners:
     InitCurtain = register(EventTypes.ON_START, init_curtain)
     InitInventory = register(EventTypes.ON_START, init_inventory)
     InitCrop = register(EventTypes.ON_START, init_crop)
+    InitMusic = register(EventTypes.ON_START, init_music)
     BeforeAll = register(EventTypes.ON_START, before_all)
 
     # Before render

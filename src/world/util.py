@@ -6,9 +6,8 @@ from random import random
 from typing import Tuple, Dict
 
 import pygame
-from pygame import Surface, Rect, transform, font, mixer
+from pygame import Surface, Rect, transform, font
 
-from src.core.context import Context
 from src.core.settings import Settings
 
 
@@ -56,43 +55,6 @@ def get_font(size: int, file: str | None = None) -> font.Font:
     font_instance_memo[key] = font_instance
 
     return font_instance
-
-
-def play_music(music_path: str, context: Context) -> None:
-    """
-    Play a specific piece of music.
-    """
-    if context["music_loop"]:
-        context.loop_manager.remove(context["music_loop"])
-
-    mixer.music.load(music_path)
-    mixer.music.set_volume(1)
-    mixer.music.play(-1)
-
-
-def music_is_playing() -> bool:
-    """
-    Whether a music is playing
-    """
-    return pygame.mixer.music.get_busy()
-
-
-def stop_music(context: Context) -> None:
-    """
-    Stop playing the music.
-    """
-    if not music_is_playing():
-        return
-
-    count = 30
-
-    def fade_out(index: int) -> None:
-        mixer.music.set_volume((30 - index) / count)
-
-        if index == count - 1:
-            mixer.music.stop()
-
-    context["music_loop"] = context.loop_manager.once(10, count, fade_out)
 
 
 _circle_cache = {}

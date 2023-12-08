@@ -11,6 +11,7 @@ from src.world.data_window import DataWindow
 from src.world.item.hotbar import Hotbar
 from src.world.item.inventory import Inventory
 from src.world.message_box import MessageBox
+from src.world.music import Music
 from src.world.scene_manager import SceneManager
 
 
@@ -73,6 +74,13 @@ def get_crop_window(context: Context) -> CropWindow:
 def get_crop_grid(context: Context) -> Grid:
     """
     Returns the crop grid object in the given context.
-    @returns: Grid[GameCrop | None]
+    :returns: Grid[GameCrop | None]
     """
     return context["crop_grid"]
+
+
+def get_music(context: Context) -> Music:
+    """
+    Returns the music object.
+    """
+    return context["music"]

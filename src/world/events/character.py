@@ -20,6 +20,7 @@ from src.world.context_getters import (
     get_message_box,
     get_crop_grid,
     get_hotbar,
+    get_music,
 )
 from src.world.data.frames import Frames
 from src.world.data.items import ItemTags, Items
@@ -39,7 +40,7 @@ from src.world.maps.farm import FarmMap
 from src.world.maps.home import HomeMap
 from src.world.message_box import MessageBox
 from src.world.scene_manager import SceneManager
-from src.world.util import stop_music, play_music, flip_coin, music_is_playing
+from src.world.util import flip_coin
 
 
 def init_character(context: Context):
@@ -236,8 +237,9 @@ def character_open_door(context: Context) -> bool:
 
                 # Stop music and play another music
                 if flip_coin() or not context["flag.been_to_farm"]:
-                    if not music_is_playing():
-                        play_music(Music.Farm, context)
+                    music = get_music(context)
+                    if not music.is_playing():
+                        get_music(context).fade_in(Music.Farm)
 
                 if not context["flag.been_to_farm"]:
                     first_time_to_farm(context)
@@ -401,10 +403,8 @@ def transition_to_next_day(context: Context) -> None:
     character = get_character(context)
     curtain = get_curtain(context)
     loop_manager = context.loop_manager
-    fade_speed: int = 25
 
-    # Stop music and play another
-    stop_music(context)
+    get_music(context).fade_out()
 
     def fn0() -> CallbackNode:
         return curtain.fade_out(context.settings.sleep_fade_speed)
@@ -428,7 +428,8 @@ def transition_to_next_day(context: Context) -> None:
         character.frozen = False
 
         if flip_coin(0.35):
-            play_music(Music.Home, context)
+            get_music(context).fade_in(Music.Home)
+
         return curtain.fade_in(context.settings.sleep_fade_speed)
 
     def fn4() -> None:

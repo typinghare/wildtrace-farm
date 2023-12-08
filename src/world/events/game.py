@@ -9,6 +9,7 @@ from src.world.data.registries import Registries
 from src.world.item.chest import Chest
 from src.world.item.crop_item import CropItem
 from src.world.message_box import MessageBox
+from src.world.music import Music
 
 
 def init_flags(context: Context) -> None:
@@ -21,6 +22,13 @@ def init_flags(context: Context) -> None:
     context["flag.been_to_farm"] = is_debug
     context["flag.first_open_chest"] = not is_debug
     context["flag.first_time_to_harvest"] = not is_debug
+
+
+def init_music(context: Context) -> None:
+    """
+    Initializes music.
+    """
+    context["music"] = Music(context)
 
 
 def before_all(context: Context) -> None:

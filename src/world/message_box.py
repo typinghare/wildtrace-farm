@@ -53,7 +53,7 @@ class MessageBox(ContextModule):
         self.loop: Loop | None = None
 
         # Callback
-        self.callback_node: CallbackNode = CallbackNode.Dummy
+        self.callback_node: CallbackNode = CallbackNode()
 
         # Init
         self._init_layer()
