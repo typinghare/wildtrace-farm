@@ -35,6 +35,10 @@ def register(
     return Registries.Tile.register(RegistryUtil.createLoc(path), image)
 
 
+darken_surface = Surface((48, 48))
+darken_surface.fill("#B0805A")
+
+
 class TileTags:
     """
     Tile tags.
@@ -84,6 +88,11 @@ class Tiles:
     TilledDirt10 = register("tilled_dirt/10", Tilesets.TilledDirt, (32, 96))
     TilledDirt8 = register("tilled_dirt/8", Tilesets.TilledDirt, (48, 96))
     TilledDirt0 = register("tilled_dirt/0", Tilesets.TilledDirt, (0, 96))
+
+    # Darken tilled dirt
+    DarkenTilledDirt15 = Registries.Tile.register(
+        RegistryUtil.createLoc("darken_tilled_dirt/15"), darken_surface
+    )
 
     # Water
     Water0 = register("water/0", Tilesets.Water, (0, 0))

@@ -197,6 +197,10 @@ def character_use_watering_can(context: Context, character: Character) -> bool:
     if game_crop:
         game_crop.watered = True
 
+    # Update floor
+    farm_map: FarmMap = scene_manager.get_map_controller(Maps.Farm).map
+    farm_map.floor.update_cell(coordinate, Tiles.DarkenTilledDirt15)
+
     return True
 
 

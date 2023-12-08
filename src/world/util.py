@@ -6,7 +6,8 @@ from random import random
 from typing import Tuple, Dict
 
 import pygame
-from pygame import Surface, Rect, transform, font
+import numpy as np
+from pygame import Surface, Rect, transform, font, surfarray
 
 from src.core.settings import Settings
 
@@ -32,6 +33,20 @@ def scale_image(image: Surface, scale_factor: float) -> Surface:
     """
     new_size = (image.get_width() * scale_factor, image.get_height() * scale_factor)
     return transform.scale(image, new_size)
+
+
+def darken_surface(original_surface, factor) -> Surface:
+    # Get the pixels as a 3D array
+    pixel_array = surfarray.array3d(original_surface)
+
+    # Apply darkening to the pixel array
+    darkened_array = np.multiply(pixel_array, factor)
+    np.clip(darkened_array, 0, 255, out=darkened_array)
+
+    # Create a new surface and update it with the modified pixel values
+    darkened_surface = pygame.surfarray.make_surface(darkened_array)
+
+    return darkened_surface
 
 
 font_instance_memo: Dict[Tuple[int, str], font.Font] = {}

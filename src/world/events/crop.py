@@ -11,6 +11,7 @@ from src.world.context_getters import (
 )
 from src.world.crop_window import CropWindow
 from src.world.data.maps import Maps
+from src.world.data.tiles import Tiles
 from src.world.item.crop import GameCrop
 from src.world.maps.farm import FarmMap
 
@@ -63,3 +64,9 @@ def update_crop(context: Context) -> None:
 
             # Update the crop layer
             farm_map.crop.update_cell(coordinate, game_crop.image)
+
+    for row in range(farm_map.size.height):
+        for col in range(farm_map.size.width):
+            coordinate = (col, row)
+            if farm_map.floor.get_cell(coordinate).surface == Tiles.DarkenTilledDirt15:
+                farm_map.floor.update_cell(coordinate, Tiles.TilledDirt15)
