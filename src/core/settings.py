@@ -65,4 +65,7 @@ class Settings:
             self.inventory_slot_background_color = "#f3d5b5"
             self.inventory_selected_slot_background_color = "#ffee99"
 
+            # [Sleep]
+            self.sleep_fade_speed = 25
+
         return cls._instance

@@ -11,13 +11,14 @@ from src.core.context import Context
 from src.core.display import Layer, GridLayer
 from src.core.loop import Loop
 from src.world.camera import Camera
+from src.world.context_module import ContextModule
 from src.world.data.frames import Frames
 from src.world.debug import Debug
 from src.world.map import MapController
 from src.world.scene_manager import SceneManager
 
 
-class Character:
+class Character(ContextModule):
     """
     Main character in the game.
     """
@@ -33,8 +34,7 @@ class Character:
         Hoe = 3
 
     def __init__(self, context: Context):
-        # Game context
-        self.context: Context = context
+        super().__init__(context)
 
         # Character size (surface)
         self.size: Size = context.settings.character_size

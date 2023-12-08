@@ -3,6 +3,8 @@ Loop module.
 """
 from typing import Callable, List
 
+from src.core.common import CallbackNode
+
 
 class Loop:
     """
@@ -113,6 +115,24 @@ class LoopManager:
         self._loops.append(loop)
 
         return loop
+
+    def delay_methodical(self, delay_ms: int) -> CallbackNode:
+        """
+        Schedules a callback function to be executed after a specified delay.
+        :param delay_ms: The delay time in milliseconds.
+        :return: The callback node.
+        """
+        callback_node = CallbackNode()
+
+        def delay_fn(index: int) -> None:
+            if index == 1:
+                callback_node.invoke()
+                self._loops.remove(loop)
+
+        loop = self.loop(1000 / delay_ms, 2, delay_fn)
+        self._loops.append(loop)
+
+        return callback_node
 
     def remove(self, loop: Loop) -> None:
         """

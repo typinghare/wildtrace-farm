@@ -7,18 +7,18 @@ from src.core.common import Size
 from src.core.context import Context
 from src.core.display import Layer
 from src.core.loop import LoopManager, Loop
-from src.world.common.methodical import CallbackNode
+from src.core.common.methodical import CallbackNode
+from src.world.context_module import ContextModule
 from src.world.util import get_font
 
 
-class MessageBox:
+class MessageBox(ContextModule):
     """
     Message box.
     """
 
     def __init__(self, context: Context):
-        # Game context
-        self.context = context
+        super().__init__(context)
 
         # Message play speed
         self.play_speed: int = 25

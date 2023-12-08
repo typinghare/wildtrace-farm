@@ -3,7 +3,7 @@ Game related functions.
 """
 from src.core.common import Size
 from src.core.context import Context
-from src.world.common.methodical import CallbackNode, CallbackQueue
+from src.core.common.methodical import CallbackNode, CallbackQueue
 from src.world.context_getters import get_message_box
 from src.world.data.registries import Registries
 from src.world.item.chest import Chest

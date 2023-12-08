@@ -1,14 +1,13 @@
 """
 Curtain module
 """
-from typing import Callable
-
 from src.core.context import Context
 from src.core.display import Layer
-from src.core.loop import Loop
+from src.core.common.methodical import CallbackNode
+from src.world.context_module import ContextModule
 
 
-class Curtain:
+class Curtain(ContextModule):
     """
     Curtain.
     """
@@ -17,14 +16,16 @@ class Curtain:
     MAX_ALPHA = 255
 
     def __init__(self, context: Context):
-        # Game context
-        self.context: Context = context
+        super().__init__(context)
 
         # Layer
         self.layer: Layer = Layer(context.display.size)
 
-        # Alpha
+        # Alpha (0 is transparent, 1 is opaque)
         self.alpha: int = 0
+
+        # Callback node
+        self.callback_node: CallbackNode = CallbackNode.Dummy
 
         # Init
         self._init_layer()
@@ -35,7 +36,7 @@ class Curtain:
         """
         self.context.display.set_layer("curtain", self.layer)
 
-    def fade_out(self, speed: int, callback: Callable[[], None] | None = None) -> None:
+    def fade_out(self, speed: int) -> CallbackNode:
         """
         Fades out.
         :param: The speed to fade out.
@@ -49,12 +50,14 @@ class Curtain:
 
             if index == count - 1:
                 self.alpha = Curtain.MAX_ALPHA
-                if callback is not None:
-                    callback()
+                self.callback_node.invoke()
 
         self.context.loop_manager.once(10, count, fade)
+        self.callback_node = CallbackNode()
 
-    def fade_in(self, speed: int, callback: Callable[[], None] | None = None) -> None:
+        return self.callback_node
+
+    def fade_in(self, speed: int) -> CallbackNode:
         """
         Fades in.
         :param: The speed to fade out.
@@ -68,10 +71,12 @@ class Curtain:
 
             if index == count - 1:
                 self.alpha = Curtain.MIN_ALPHA
-                if callback is not None:
-                    callback()
+                self.callback_node.invoke()
 
         self.context.loop_manager.once(10, count, fade)
+        self.callback_node = CallbackNode()
+
+        return self.callback_node
 
     def update(self) -> None:
         """
@@ -83,3 +88,4 @@ class Curtain:
         """
         Whether the curtain animation is ongoing.
         """
+        return self.alpha != 0

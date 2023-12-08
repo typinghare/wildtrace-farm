@@ -5,7 +5,7 @@ from typing import Tuple
 
 from abc import ABC, abstractmethod
 
-from src.core.common import CoordinateSet, Grid
+from src.core.common import CoordinateSet
 from src.core.display import GridLayer
 from src.world.data.tiles import Tiles
 

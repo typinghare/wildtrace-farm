@@ -6,18 +6,18 @@ from pygame import Vector2, font, Rect, Surface
 from src.core.common import Size
 from src.core.context import Context
 from src.core.display import Layer
+from src.world.context_module import ContextModule
 from src.world.item.chest import Chest
 from src.world.util import get_font, get_outlined_text_surface
 
 
-class Hotbar:
+class Hotbar(ContextModule):
     """
     Tool box.
     """
 
     def __init__(self, context: Context):
-        # Game context
-        self.context: Context = context
+        super().__init__(context)
 
         # Number of slots
         self.slot_number = 10

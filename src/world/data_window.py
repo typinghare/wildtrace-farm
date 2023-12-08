@@ -7,6 +7,7 @@ from src.core.common import Size
 from src.core.context import Context
 from src.core.display import Layer
 from src.core.loop import Loop
+from src.world.context_module import ContextModule
 from src.world.util import get_font
 
 
@@ -50,14 +51,13 @@ class Time:
         self.hour %= 24
 
 
-class DataWindow:
+class DataWindow(ContextModule):
     """
     Data window.
     """
 
     def __init__(self, context: Context):
-        # Game context
-        self.context = context
+        super().__init__(context)
 
         # Day
         self.day: int = 1

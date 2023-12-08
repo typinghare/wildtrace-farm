@@ -6,18 +6,18 @@ from pygame import Vector2, Surface
 from src.core.common import Size
 from src.core.context import Context
 from src.core.display import Layer
+from src.world.context_module import ContextModule
 from src.world.item.crop import GameCrop
 from src.world.util import get_font
 
 
-class CropWindow:
+class CropWindow(ContextModule):
     """
     The window of the crop.
     """
 
     def __init__(self, context: Context):
-        # Game context
-        self.context: Context = context
+        super().__init__(context)
 
         # Layer
         self.layer: Layer = Layer(Size(175, 100))

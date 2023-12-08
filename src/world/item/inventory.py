@@ -7,19 +7,18 @@ from pygame import Vector2, Rect, Surface
 from src.core.common import Size
 from src.core.context import Context
 from src.core.display import Layer
-from src.world.constant import Fonts
+from src.world.context_module import ContextModule
 from src.world.item.chest import Chest
 from src.world.util import get_font, get_outlined_text_surface
 
 
-class Inventory:
+class Inventory(ContextModule):
     """
     Inventory
     """
 
     def __init__(self, context: Context):
-        # Game context
-        self.context: Context = context
+        super().__init__(context)
 
         # Cell size
         self.cell_size: Size = context.settings.display_cell_size

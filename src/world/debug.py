@@ -8,10 +8,11 @@ from pygame import Vector2
 
 from src.core.context import Context
 from src.core.display import Layer
+from src.world.context_module import ContextModule
 from src.world.util import get_font
 
 
-class Debug:
+class Debug(ContextModule):
     """
     Debug tool.
     """
@@ -44,8 +45,7 @@ class Debug:
             self.text = f"[{self.name}] {text}"
 
     def __init__(self, context: Context):
-        # Game context
-        self.context: Context = context
+        super().__init__(context)
 
         # Modules
         self._by_name: Dict[str, Debug.Module] = {}

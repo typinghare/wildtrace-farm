@@ -10,7 +10,7 @@ from src.core.context import Context
 from src.core.display import GridLayer
 from src.registry import RegistryUtil
 from src.world.character import Character
-from src.world.common.methodical import CallbackQueue, CallbackNode
+from src.core.common.methodical import CallbackQueue, CallbackNode
 from src.world.context_getters import (
     get_character,
     get_data_window,
@@ -406,7 +406,16 @@ def transition_to_next_day(context: Context) -> None:
     # Stop music and play another
     stop_music(context)
 
-    def callback():
+    def fn0() -> CallbackNode:
+        return curtain.fade_out(context.settings.sleep_fade_speed)
+
+    def fn1() -> CallbackNode | None:
+        return shipping(context)
+
+    def fn2() -> CallbackNode:
+        return loop_manager.delay_methodical(1000)
+
+    def fn3() -> CallbackNode:
         # Set the data window
         data_window.day += 1
         data_window.reset_time()
@@ -418,24 +427,17 @@ def transition_to_next_day(context: Context) -> None:
         character.facing = Direction.RIGHT
         character.frozen = False
 
-        def end_sleeping() -> None:
-            context["flag.sleeping"] = False
-
         if flip_coin(0.35):
             play_music(Music.Home, context)
-        curtain.fade_in(25, end_sleeping)
+        return curtain.fade_in(context.settings.sleep_fade_speed)
 
-    def delay():
-        # Delay one seconds
-        loop_manager.delay(1000, callback)
+    def fn4() -> None:
+        context["flag.sleeping"] = False
 
-    def ship() -> None:
-        shipping(context, delay)
-
-    curtain.fade_out(fade_speed, ship)
+    CallbackQueue([fn0, fn1, fn2, fn3, fn4]).start()
 
 
-def shipping(context: Context, callback: Callable) -> None:
+def shipping(context: Context) -> CallbackNode | None:
     """
     Ships all products in the shipping chest.
     """
@@ -476,7 +478,7 @@ def shipping(context: Context, callback: Callable) -> None:
         )
 
     if total_price == 0:
-        return callback()
+        return None
 
     # Update money
     data_window = get_data_window(context)
@@ -490,14 +492,11 @@ def shipping(context: Context, callback: Callable) -> None:
     # Display price using message box
     message_box = get_message_box(context)
 
-    def fn0() -> None:
-        message_box.play(
-            f"You have shipped the following products:\n"
-            + "\n".join(str_list)
-            + f"\nYou earned ${total_price}!",
-        )
-
-    CallbackQueue([fn0, callback]).invoke_next()
+    return message_box.play(
+        f"You have shipped the following products:\n"
+        + "\n".join(str_list)
+        + f"\nYou earned ${total_price}!",
+    )
 
 
 def character_harvest_crop(context: Context) -> bool:
