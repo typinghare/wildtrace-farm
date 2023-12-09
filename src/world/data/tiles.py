@@ -205,34 +205,34 @@ class Tiles:
     BeetProduct = register("beat/product", Tilesets.BasicPlants, (80, 16))
 
     # Carrot
-    CarrotSeedling = register("carrot/seedling", Tilesets.Plants, (0 * 16, 1 * 16))
-    CarrotVegetative = register("carrot/vegetative", Tilesets.Plants, (1 * 16, 1 * 16))
-    CarrotBudding = register("carrot/budding", Tilesets.Plants, (2 * 16, 1 * 16))
-    CarrotRipening = register("carrot/ripening", Tilesets.Plants, (3 * 16, 1 * 16))
+    CarrotSeedling = register("carrot/seedling", Tilesets.Plants, (0 * 16, 2 * 16))
+    CarrotVegetative = register("carrot/vegetative", Tilesets.Plants, (1 * 16, 2 * 16))
+    CarrotBudding = register("carrot/budding", Tilesets.Plants, (2 * 16, 2 * 16))
+    CarrotRipening = register("carrot/ripening", Tilesets.Plants, (3 * 16, 2 * 16))
     CarrotSeeds = register("carrot/seeds", Tilesets.PlantsItem, (0 * 16, 2 * 16))
     CarrotProduct = register("carrot/product", Tilesets.PlantsItem, (1 * 16, 2 * 16))
 
     # Cauliflower
-    CauliflowerSeedling = register("cauliflower/seedling", Tilesets.Plants, (0 * 16, 2 * 16))
-    CauliflowerVegetative = register("cauliflower/vegetative", Tilesets.Plants, (1 * 16, 2 * 16))
-    CauliflowerBudding = register("cauliflower/budding", Tilesets.Plants, (2 * 16, 2 * 16))
-    CauliflowerRipening = register("cauliflower/ripening", Tilesets.Plants, (3 * 16, 2 * 16))
+    CauliflowerSeedling = register("cauliflower/seedling", Tilesets.Plants, (0 * 16, 3 * 16))
+    CauliflowerVegetative = register("cauliflower/vegetative", Tilesets.Plants, (1 * 16, 3 * 16))
+    CauliflowerBudding = register("cauliflower/budding", Tilesets.Plants, (2 * 16, 3 * 16))
+    CauliflowerRipening = register("cauliflower/ripening", Tilesets.Plants, (3 * 16, 3 * 16))
     CauliflowerSeeds = register("cauliflower/seeds", Tilesets.PlantsItem, (0 * 16, 3 * 16))
     CauliflowerProduct = register("cauliflower/product", Tilesets.PlantsItem, (1 * 16, 3 * 16))
 
     # Eggplant
-    EggplantSeedling = register("eggplant/seedling", Tilesets.Plants, (0 * 16, 4 * 16))
-    EggplantVegetative = register("eggplant/vegetative", Tilesets.Plants, (1 * 16, 4 * 16))
-    EggplantBudding = register("eggplant/budding", Tilesets.Plants, (2 * 16, 4 * 16))
-    EggplantRipening = register("eggplant/ripening", Tilesets.Plants, (3 * 16, 4 * 16))
+    EggplantSeedling = register("eggplant/seedling", Tilesets.Plants, (0 * 16, 5 * 16))
+    EggplantVegetative = register("eggplant/vegetative", Tilesets.Plants, (1 * 16, 5 * 16))
+    EggplantBudding = register("eggplant/budding", Tilesets.Plants, (2 * 16, 5 * 16))
+    EggplantRipening = register("eggplant/ripening", Tilesets.Plants, (3 * 16, 5 * 16))
     EggplantSeeds = register("eggplant/seeds", Tilesets.PlantsItem, (0 * 16, 5 * 16))
     EggplantProduct = register("eggplant/product", Tilesets.PlantsItem, (1 * 16, 5 * 16))
 
     # Pumpkin
-    PumpkinSeedling = register("pumpkin/seedling", Tilesets.Plants, (0 * 16, 8 * 16))
-    PumpkinVegetative = register("pumpkin/vegetative", Tilesets.Plants, (1 * 16, 8 * 16))
-    PumpkinBudding = register("pumpkin/budding", Tilesets.Plants, (2 * 16, 8 * 16))
-    PumpkinRipening = register("pumpkin/ripening", Tilesets.Plants, (3 * 16, 8 * 16))
+    PumpkinSeedling = register("pumpkin/seedling", Tilesets.Plants, (0 * 16, 9 * 16))
+    PumpkinVegetative = register("pumpkin/vegetative", Tilesets.Plants, (1 * 16, 9 * 16))
+    PumpkinBudding = register("pumpkin/budding", Tilesets.Plants, (2 * 16, 9 * 16))
+    PumpkinRipening = register("pumpkin/ripening", Tilesets.Plants, (3 * 16, 9 * 16))
     PumpkinSeeds = register("pumpkin/seeds", Tilesets.PlantsItem, (0 * 16, 9 * 16))
     PumpkinProduct = register("pumpkin/product", Tilesets.PlantsItem, (1 * 16, 9 * 16))
 

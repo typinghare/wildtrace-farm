@@ -13,6 +13,7 @@ from src.world.item.inventory import Inventory
 from src.world.message_box import MessageBox
 from src.world.music import Music
 from src.world.scene_manager import SceneManager
+from src.world.shopping import Shopping
 
 
 def get_character(context: Context) -> Character:
@@ -81,6 +82,13 @@ def get_crop_grid(context: Context) -> Grid:
 
 def get_music(context: Context) -> Music:
     """
-    Returns the music object.
+    Returns the music object in the given context.
     """
     return context["music"]
+
+
+def get_shopping(context: Context) -> Shopping:
+    """
+    Returns the shopping object in the given context.
+    """
+    return context["shopping"]

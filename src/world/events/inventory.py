@@ -1,9 +1,10 @@
 """
 Inventory related functions.
 """
+from typing import Tuple
+
 import pygame
 
-from src.core.constant import Direction
 from src.core.context import Context
 from src.core.display import GridLayer
 from src.world.context_getters import get_inventory, get_character, get_hotbar, get_scene_manager
@@ -82,8 +83,7 @@ def close_chest(context: Context) -> None:
     inventory.close_chest()
 
     # Close chest animation
-    character = get_character(context)
-    front_coordinate = character.get_front_coordinate()
+    chest_coordinate: Tuple[int, int] = context["chest_coordinate"]
     frames = Frames.Chest.list[::-1]
     num_frame: int = len(frames)
 
@@ -91,16 +91,16 @@ def close_chest(context: Context) -> None:
     concrete_map = scene_manager.controller.map
     furniture_bottom_layer: GridLayer = concrete_map.furniture_bottom
     floor_layer: GridLayer = concrete_map.floor
-    floor_cell = floor_layer.get_cell(front_coordinate)
+    floor_cell = floor_layer.get_cell(chest_coordinate)
 
     def chest_animation(index: int):
         if index < num_frame:
-            furniture_bottom_layer.wipe_cell(front_coordinate)
-            furniture_bottom_layer.update_cell(front_coordinate, frames[index])
-            floor_layer.update_cell(front_coordinate, floor_cell.surface)
+            furniture_bottom_layer.wipe_cell(chest_coordinate)
+            furniture_bottom_layer.update_cell(chest_coordinate, frames[index])
+            floor_layer.update_cell(chest_coordinate, floor_cell.surface)
+        elif index == num_frame:
+            # Unfreeze the character
+            character = get_character(context)
+            character.frozen = False
 
     context.loop_manager.once(6, num_frame + 1, chest_animation)
-
-    # Unfreeze the character
-    character = get_character(context)
-    character.frozen = False

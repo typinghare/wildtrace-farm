@@ -63,7 +63,14 @@ for tool_item in tool_items:
     ref.bind_tag(ItemTags.TOOL)
 
 # seeds tag
-seeds_items = [Items.WheatSeeds, Items.BeetSeeds]
+seeds_items = [
+    Items.WheatSeeds,
+    Items.BeetSeeds,
+    Items.CarrotSeeds,
+    Items.CauliflowerSeeds,
+    Items.EggplantSeeds,
+    Items.PumpkinSeeds,
+]
 for seeds_item in seeds_items:
     ref = Registries.Item.get_ref_by_res(seeds_item)
     ref.bind_tag(ItemTags.SEEDS)

@@ -4,7 +4,8 @@ Game related functions.
 from src.core.common import Size
 from src.core.context import Context
 from src.core.common.methodical import CallbackNode, CallbackQueue
-from src.world.context_getters import get_message_box
+from src.world.context_getters import get_message_box, get_hotbar
+from src.world.data.items import Items
 from src.world.data.registries import Registries
 from src.world.item.chest import Chest
 from src.world.item.crop_item import CropItem
@@ -46,6 +47,13 @@ def before_all(context: Context) -> None:
     for ref in Registries.CropItem.get_ref_list():
         crop_item: CropItem = ref.res
         crop_item_mapping[crop_item.item] = crop_item.crop
+
+    # Items
+    hotbar = get_hotbar(context)
+    hotbar.chest.add_item(Items.WateringCan)
+    hotbar.chest.add_item(Items.Hoe)
+    hotbar.chest.stack_item(Items.EggplantSeeds, 5)
+    hotbar.chest.stack_item(Items.CarrotSeeds, 5)
 
 
 def enter_game(context: Context) -> None:

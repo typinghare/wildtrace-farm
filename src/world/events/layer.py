@@ -25,6 +25,7 @@ def init_layer(context: Context) -> None:
         "data_window",
         "crop_window",
         "inventory",
+        "shopping",
         "curtain",
         "message_box",
         # animation

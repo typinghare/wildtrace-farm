@@ -18,6 +18,7 @@ from src.world.events.game import init_flags, before_all, init_music
 from src.world.events.inventory import init_inventory, update_inventory, inventory_key_down
 from src.world.events.layer import init_layer
 from src.world.events.message_box import init_message_box, update_message_box, message_box_key_down
+from src.world.events.shopping import init_shopping, update_shopping, shopping_key_down
 from src.world.events.window import quit_game, update_loops
 from src.world.events.character import (
     init_character,
@@ -65,6 +66,7 @@ class EventListeners:
     InitInventory = register(EventTypes.ON_START, init_inventory)
     InitCrop = register(EventTypes.ON_START, init_crop)
     InitMusic = register(EventTypes.ON_START, init_music)
+    InitShopping = register(EventTypes.ON_START, init_shopping)
     BeforeAll = register(EventTypes.ON_START, before_all)
 
     # Before render
@@ -77,6 +79,7 @@ class EventListeners:
     UpdateDataWindow = register(EventTypes.BEFORE_RENDER, update_data_window)
     UpdateCurtain = register(EventTypes.BEFORE_RENDER, update_curtain)
     UpdateInventory = register(EventTypes.BEFORE_RENDER, update_inventory)
+    UpdateShopping = register(EventTypes.BEFORE_RENDER, update_shopping)
     UpdateCropWindow = register(EventTypes.BEFORE_RENDER, update_crop_window)
 
     # Key down
@@ -84,6 +87,7 @@ class EventListeners:
     MessageBoxKeyDown = register(pygame.KEYDOWN, message_box_key_down)
     HotbarKeyDown = register(pygame.KEYDOWN, hotbar_key_down)
     InventoryKeyDown = register(pygame.KEYDOWN, inventory_key_down)
+    ShippingKeyDown = register(pygame.KEYDOWN, shopping_key_down)
 
     # Key up
     CharacterKeyUp = register(pygame.KEYUP, character_key_up)

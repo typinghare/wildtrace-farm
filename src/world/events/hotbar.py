@@ -15,11 +15,6 @@ def init_hotbar(context: Context) -> None:
     """
     # layer
     hotbar = context["hotbar"] = Hotbar(context)
-    hotbar.chest.add_item(Items.WateringCan)
-    hotbar.chest.add_item(Items.Hoe)
-    hotbar.chest.add_item(Items.BeetSeeds)
-    hotbar.chest.stack_item(Items.BeetSeeds, 9)
-    hotbar.chest.stack_item(Items.WheatSeeds, 10)
 
 
 def update_hotbar(context: Context) -> None:

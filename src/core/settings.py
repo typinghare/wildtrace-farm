@@ -26,6 +26,7 @@ class Settings:
 
             # Debug mode
             self.debug = False
+            self.debug = True
 
             # [Display] Window caption
             self.display_window_caption = "Wildtrace Farm"

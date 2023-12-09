@@ -21,6 +21,7 @@ from src.world.context_getters import (
     get_crop_grid,
     get_hotbar,
     get_music,
+    get_shopping,
 )
 from src.world.data.frames import Frames
 from src.world.data.items import ItemTags, Items
@@ -89,6 +90,8 @@ def character_key_down(context: Context):
             return
         if character_open_chest(context):
             return
+        if character_open_basket(context):
+            return
         if character_harvest_crop(context):
             return
         if character_use_item(context):
@@ -139,12 +142,12 @@ def character_use_item(context: Context) -> bool:
             return False
 
         # Sow seeds: consume a packet of seeds; update the crop layer
-        hotbar.chest.consume_selected_item()
         crop_item_mapping: Dict[Item, Crop] = context["crop_item_mapping"]
         crop: Crop | None = crop_item_mapping.get(selected_item.item)
         if crop is None:
             return False
 
+        hotbar.chest.consume_selected_item()
         game_crop = GameCrop(crop)
         crop_grid = get_crop_grid(context)
         crop_grid.set(coordinate, game_crop)
@@ -332,6 +335,7 @@ def character_open_chest(context: Context) -> bool:
     character = get_character(context)
     inventory = get_inventory(context)
     front_coordinate = character.get_front_coordinate()
+    context["chest_coordinate"] = front_coordinate
 
     def check_chest(_map: Map, chest: Chest) -> bool:
         if not scene_manager.is_map(_map):
@@ -365,6 +369,9 @@ def character_open_chest(context: Context) -> bool:
                 else:
                     after_animation()
 
+        # Freeze character
+        character.frozen = True
+
         # Play frames
         context.loop_manager.once(6, num_frame + 1, chest_animation)
 
@@ -377,6 +384,42 @@ def character_open_chest(context: Context) -> bool:
         return True
 
     return False
+
+
+def character_open_basket(context: Context) -> False:
+    """
+    Characters open basket.
+    """
+    scene_manager = get_scene_manager(context)
+    shopping = get_shopping(context)
+    character = get_character(context)
+    front_coordinate = character.get_front_coordinate()
+
+    if not scene_manager.is_map(Maps.Home):
+        return False
+
+    home_map: HomeMap = scene_manager.get_map_controller(Maps.Home).map
+    if home_map.furniture_bottom.get_cell(front_coordinate).surface != Tiles.Basket:
+        return False
+
+    character.set_action(Character.Action.Idle)
+    character.frozen = True
+
+    # Open shopping
+    shopping.open()
+
+    if not context["flag.has_opened_basket"]:
+        context.flip("flag.has_opened_basket")
+        message_box = get_message_box(context)
+        message_box.play(
+            "Tips for shopping:\n"
+            "Press [W] and [S] to select products to buy.\n"
+            "Press [B] to buy one selected product.\n"
+            "Press [C] to close the basket.\n"
+            "You cannot buy a product if you don't have enough money!\n"
+        )
+
+    return True
 
 
 def first_time_to_open_chest(context: Context, callback: Callable) -> None:
@@ -473,10 +516,11 @@ def shipping(context: Context) -> CallbackNode | None:
     str_list: List[str] = []
     for product_id, number_product in shipped_products.items():
         product: Product = Registries.Product.by_id[product_id].res
-        total_price += product.price * number_product
+        sell_price = product.price // 2
+        total_price += sell_price * number_product
         str_list.append(
-            f"  {product.item.name} - ${product.price}"
-            f" * {number_product} = ${product.price * number_product}"
+            f"  {product.item.name} - ${sell_price}"
+            f" * {number_product} = ${sell_price * number_product}"
         )
 
     if total_price == 0:
