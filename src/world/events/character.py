@@ -331,8 +331,7 @@ def character_open_chest(context: Context) -> bool:
     scene_manager = get_scene_manager(context)
     character = get_character(context)
     inventory = get_inventory(context)
-    coordinate = character.get_coordinate()
-    up_coordinate = (coordinate[0], coordinate[1] - 1)
+    front_coordinate = character.get_front_coordinate()
 
     def check_chest(_map: Map, chest: Chest) -> bool:
         if not scene_manager.is_map(_map):
@@ -342,15 +341,12 @@ def character_open_chest(context: Context) -> bool:
         furniture_bottom_layer: GridLayer = concrete_map.furniture_bottom
         floor_layer: GridLayer = concrete_map.floor
 
-        if (
-            character.facing != Direction.UP
-            or furniture_bottom_layer.get_cell(up_coordinate).surface != Tiles.ChestFront0
-        ):
+        if furniture_bottom_layer.get_cell(front_coordinate).surface != Tiles.ChestFront0:
             return False
 
         frames = Frames.Chest.list
         num_frame: int = len(frames)
-        floor_cell = floor_layer.get_cell(up_coordinate)
+        floor_cell = floor_layer.get_cell(front_coordinate)
 
         def after_animation() -> None:
             character.frozen = True
@@ -359,9 +355,9 @@ def character_open_chest(context: Context) -> bool:
 
         def chest_animation(index: int):
             if index < num_frame:
-                furniture_bottom_layer.wipe_cell(up_coordinate)
-                furniture_bottom_layer.update_cell(up_coordinate, frames[index])
-                floor_layer.update_cell(up_coordinate, floor_cell.surface)
+                furniture_bottom_layer.wipe_cell(front_coordinate)
+                furniture_bottom_layer.update_cell(front_coordinate, frames[index])
+                floor_layer.update_cell(front_coordinate, floor_cell.surface)
             else:
                 # First open the chest
                 if context["flag.first_open_chest"]:

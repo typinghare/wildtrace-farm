@@ -269,6 +269,21 @@ class Character(ContextModule):
             int(current_center[1] // self.cell_size.height),
         )
 
+    def get_front_coordinate(self) -> Tuple[int, int]:
+        """
+        Returns the front coordinate.
+        """
+        coordinate = self.get_coordinate()
+
+        if self.facing == Direction.UP:
+            return coordinate[0], coordinate[1] - 1
+        if self.facing == Direction.RIGHT:
+            return coordinate[0] + 1, coordinate[1]
+        if self.facing == Direction.DOWN:
+            return coordinate[0], coordinate[1] + 1
+        if self.facing == Direction.LEFT:
+            return coordinate[0] - 1, coordinate[1]
+
     def _update_camera(self) -> None:
         """
         Updates camera.

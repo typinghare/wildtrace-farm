@@ -8,7 +8,6 @@ from src.core.context import Context
 from src.core.display import GridLayer
 from src.world.context_getters import get_inventory, get_character, get_hotbar, get_scene_manager
 from src.world.data.frames import Frames
-from src.world.data.tiles import Tiles
 from src.world.item.inventory import Inventory
 from src.world.item.item import GameItem
 
@@ -43,34 +42,7 @@ def inventory_key_down(context: Context) -> None:
     chest_selected_index = chest.get_selected_index()
 
     if key == pygame.K_c:
-        # Close the inventory
-        inventory.close_chest()
-
-        # Close chest animation
-        character = get_character(context)
-        coordinate = character.get_coordinate()
-        up_coordinate = (coordinate[0], coordinate[1] - 1)
-        frames = Frames.Chest.list[::-1]
-        num_frame: int = len(frames)
-
-        scene_manager = get_scene_manager(context)
-        concrete_map = scene_manager.controller.map
-        furniture_bottom_layer: GridLayer = concrete_map.furniture_bottom
-        floor_layer: GridLayer = concrete_map.floor
-        floor_cell = floor_layer.get_cell(up_coordinate)
-
-        def chest_animation(index: int):
-            if index < num_frame:
-                furniture_bottom_layer.wipe_cell(up_coordinate)
-                furniture_bottom_layer.update_cell(up_coordinate, frames[index])
-                floor_layer.update_cell(up_coordinate, floor_cell.surface)
-
-        context.loop_manager.once(6, num_frame + 1, chest_animation)
-
-        # Unfreeze the character
-        character = get_character(context)
-        character.frozen = False
-        character.facing = Direction.UP
+        close_chest(context)
     elif key == pygame.K_w:
         # Up
         chest.select_item(chest_selected_index - chest_num_col)
@@ -103,3 +75,32 @@ def inventory_key_down(context: Context) -> None:
         result = hotbar.chest.append_game_item(inventory_selected_item)
         if result:
             chest.remove_item(inventory_selected_index)
+
+
+def close_chest(context: Context) -> None:
+    inventory = get_inventory(context)
+    inventory.close_chest()
+
+    # Close chest animation
+    character = get_character(context)
+    front_coordinate = character.get_front_coordinate()
+    frames = Frames.Chest.list[::-1]
+    num_frame: int = len(frames)
+
+    scene_manager = get_scene_manager(context)
+    concrete_map = scene_manager.controller.map
+    furniture_bottom_layer: GridLayer = concrete_map.furniture_bottom
+    floor_layer: GridLayer = concrete_map.floor
+    floor_cell = floor_layer.get_cell(front_coordinate)
+
+    def chest_animation(index: int):
+        if index < num_frame:
+            furniture_bottom_layer.wipe_cell(front_coordinate)
+            furniture_bottom_layer.update_cell(front_coordinate, frames[index])
+            floor_layer.update_cell(front_coordinate, floor_cell.surface)
+
+    context.loop_manager.once(6, num_frame + 1, chest_animation)
+
+    # Unfreeze the character
+    character = get_character(context)
+    character.frozen = False
