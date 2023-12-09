@@ -13,6 +13,7 @@ from src.world.data.frames import Frames
 from src.world.data.renderers import Renderers
 from src.world.data.tiles import Tiles
 from src.world.map import Map
+from src.world.util import flip_coin, randomly_pick
 
 
 class FarmMap(Map):
@@ -46,6 +47,8 @@ class FarmMap(Map):
         self._init_tilled_dirt()
         self._init_chest()
         self._init_house()
+        self._init_trees()
+        self._init_ground_decorations()
 
     def get_door_coordinate(self) -> Tuple[int, int]:
         """
@@ -96,14 +99,26 @@ class FarmMap(Map):
                 grass_set.add((col, row))
 
         # Top-left corner
-        grass_set.remove((1, 1))
-        grass_set.remove((1, 2))
-        grass_set.remove((1, 3))
-        grass_set.remove((2, 1))
-        grass_set.remove((2, 2))
-        grass_set.remove((2, 3))
+        for row in range(1, 4):
+            for col in range(1, 3):
+                grass_set.remove((col, row))
 
         Renderers.Grass.render(self.ground, grass_set)
+
+        # Initialize decorative coordinate set
+        decorative_set = self.coordinate_set_map["decorative"] = CoordinateSet()
+        for coordinate in grass_set.all():
+            decorative_set.add(coordinate)
+        for row in range(1, self.size.height - 2):
+            for col in range(10, self.size.width - 1):
+                decorative_set.remove((col, row))
+        for col in range(1, self.size.width):
+            decorative_set.remove((col, self.size.height - 2))
+            decorative_set.remove((col, self.size.height - 3))
+        for row in range(1, self.size.height - 2):
+            decorative_set.remove((1, row))
+        for row in range(1, 3):
+            decorative_set.remove((3, row))
 
     def _init_chest(self) -> None:
         """
@@ -158,12 +173,44 @@ class FarmMap(Map):
         self.floor.update_cell(door_coordinate, None)
         self.ground.update_cell(door_coordinate, Tiles.Door5)
 
+    def _init_trees(self) -> None:
+        """
+        Initializes trees.
+        """
+        tree_tiles: List[Surface] = [Tiles.Tree0, Tiles.Tree1, Tiles.Stump0, Tiles.Stump1]
+        decoration_set = self.coordinate_set_map["decorative"]
+        for coordinate in decoration_set.all():
+            if flip_coin(0.90):
+                continue
+
+            self.floor.update_cell(coordinate, randomly_pick(tree_tiles))
+
+    def _init_ground_decorations(self) -> None:
+        """
+        Initializes ground decorations.
+        """
+        ground_decoration_tiles: List[Surface] = [
+            Tiles.Stone0,
+            Tiles.Stone1,
+            Tiles.Stone2,
+            Tiles.Stone3,
+            Tiles.Bush0,
+            Tiles.Bush1,
+            Tiles.Bush2,
+            Tiles.Bush3,
+        ]
+        decoration_set = self.coordinate_set_map["decorative"]
+        for coordinate in decoration_set.all():
+            if flip_coin(0.80):
+                continue
+
+            self.floor.update_cell(coordinate, randomly_pick(ground_decoration_tiles))
+
     def load(self, context: Context) -> None:
         # Water animation
         frames: List[Surface] = Frames.Water.list
 
         def update_water(index: int):
-            pass
             for coordinate in self.coordinate_set_map["water"].all():
                 self.water.update_cell(coordinate, frames[index])
 

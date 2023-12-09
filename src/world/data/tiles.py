@@ -236,6 +236,22 @@ class Tiles:
     PumpkinSeeds = register("pumpkin/seeds", Tilesets.PlantsItem, (0 * 16, 9 * 16))
     PumpkinProduct = register("pumpkin/product", Tilesets.PlantsItem, (1 * 16, 9 * 16))
 
+    # Trees and Stumps
+    Tree0 = register("tree/0", Tilesets.Tree, (0, 0), (16, 32))
+    Tree1 = register("tree/1", Tilesets.Tree, (16, 0), (32, 32))
+    Stump0 = register("stump/0", Tilesets.Tree, (0, 6 * 16))
+    Stump1 = register("stump/1", Tilesets.Tree, (16, 6 * 16))
+
+    # Ground decorations
+    Stone0 = register("stone/0", Tilesets.GroundDecoration, (16 * 0, 16))
+    Stone1 = register("stone/1", Tilesets.GroundDecoration, (16 * 1, 16))
+    Stone2 = register("stone/2", Tilesets.GroundDecoration, (16 * 2, 16))
+    Stone3 = register("stone/3", Tilesets.GroundDecoration, (16 * 3, 16))
+    Bush0 = register("bush/0", Tilesets.GroundDecoration, (16 * 0, 32))
+    Bush1 = register("bush/1", Tilesets.GroundDecoration, (16 * 1, 32))
+    Bush2 = register("bush/2", Tilesets.GroundDecoration, (16 * 2, 32))
+    Bush3 = register("bush/3", Tilesets.GroundDecoration, (16 * 3, 32))
+
 
 # Collision object tag
 collision_objects = [

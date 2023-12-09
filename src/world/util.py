@@ -2,8 +2,8 @@
 Utility module.
 """
 import os
-from random import random
-from typing import Tuple, Dict
+import random
+from typing import Tuple, Dict, Any, List
 
 import pygame
 import numpy as np
@@ -123,4 +123,8 @@ def flip_coin(true_possibility: float = 0.5) -> bool:
     Returns a bool value.
     """
 
-    return random() < true_possibility
+    return random.random() < true_possibility
+
+
+def randomly_pick(_list: List[Any]) -> Any:
+    return _list[random.randint(0, len(_list) - 1)]

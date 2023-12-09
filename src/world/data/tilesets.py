@@ -41,6 +41,7 @@ class Tilesets:
     TilledDirt = register("tilesets/ground/tilled_dirt.png")
     Water = register("tilesets/ground/water.png")
     Tree = register("tilesets/ground/tree.png")
+    GroundDecoration = register("tilesets/ground/ground_decoration.png")
 
     # Building
     Furniture = register("tilesets/building/furniture.png")

@@ -41,7 +41,8 @@ class CoordinateSet:
         """
         Removes a coordinate
         """
-        self._coordinate_set.remove(coordinate)
+        if coordinate in self._coordinate_set:
+            self._coordinate_set.remove(coordinate)
 
     def all(self) -> Set[Tuple[int, int]]:
         """
