@@ -187,7 +187,7 @@ def character_use_watering_can(context: Context, character: Character) -> bool:
     # Character animation
     character.set_action(Character.Action.Water)
     context.loop_manager.delay(
-        1000 / character_fps * 8,
+        1000 / character_fps * 9,
         lambda: character.set_action(Character.Action.Idle),
     )
 
@@ -199,7 +199,8 @@ def character_use_watering_can(context: Context, character: Character) -> bool:
 
     # Update floor
     farm_map: FarmMap = scene_manager.get_map_controller(Maps.Farm).map
-    farm_map.floor.update_cell(coordinate, Tiles.DarkenTilledDirt15)
+    if farm_map.floor.get_cell(coordinate).surface == Tiles.TilledDirt15:
+        farm_map.floor.update_cell(coordinate, Tiles.DarkenTilledDirt15)
 
     return True
 

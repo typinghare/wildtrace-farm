@@ -45,6 +45,7 @@ class MessageBox(ContextModule):
         # Font
         self.font_size: int = 24
         self.font = get_font(self.font_size, context.settings.message_box_font)
+        self.hint_font = get_font(round(self.font_size * 0.75), context.settings.message_box_font)
 
         # Margin offset
         self.margin = Vector2(0.03 * self.size.width, 0.1 * self.size.height)
@@ -126,6 +127,10 @@ class MessageBox(ContextModule):
                 text = self.font.render(line, True, (0x33,) * 3)
                 line_margin = Vector2(self.margin.x, self.margin.y + self.font_size * 1.3 * i)
                 self.layer.surface.blit(text, line_margin)
+
+        # Write hint ("Press [J] to continue...")
+        text = self.hint_font.render("Press [J] to continue ..", True, (0x33,) * 3)
+        self.layer.blit(text, Vector2(self.size.width - 300, self.size.height - 30))
 
     def clear_layer(self) -> None:
         """
