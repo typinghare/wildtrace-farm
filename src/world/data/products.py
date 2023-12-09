@@ -24,5 +24,18 @@ class Products:
     Product resources.
     """
 
-    Wheat = register("wheat", Items.WheatProduct, 10)
-    Beet = register("beet", Items.BeetProduct, 12)
+    # Products
+    Wheat = register("wheat", Items.WheatProduct, 16)
+    Beet = register("beet", Items.BeetProduct, 22)
+    Carrot = register("carrot", Items.BeetProduct, 18)
+    Cauliflower = register("cauliflower", Items.BeetProduct, 32)
+    Eggplant = register("eggplant", Items.BeetProduct, 28)
+    Pumpkin = register("pumpkin", Items.BeetProduct, 54)
+
+    # Seeds
+    WheatSeeds = register("seeds/wheat", Items.WheatProduct, 4)
+    BeetSeeds = register("seeds/beet", Items.BeetProduct, 5)
+    CarrotSeeds = register("seeds/carrot", Items.BeetProduct, 4)
+    CauliflowerSeeds = register("seeds/cauliflower", Items.BeetProduct, 8)
+    EggplantSeeds = register("seeds/eggplant", Items.BeetProduct, 9)
+    PumpkinSeeds = register("seeds/pumpkin", Items.BeetProduct, 12)

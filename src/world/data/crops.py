@@ -36,6 +36,7 @@ class Crops:
             5,
         ),
     )
+
     Beet = register(
         "beet",
         Crop(
@@ -47,5 +48,61 @@ class Crops:
                 Tiles.BeetRipening,
             ],
             7,
+        ),
+    )
+
+    Carrot = register(
+        "carrot",
+        Crop(
+            Products.Carrot,
+            [
+                Tiles.CarrotSeedling,
+                Tiles.CarrotVegetative,
+                Tiles.CarrotBudding,
+                Tiles.CarrotRipening,
+            ],
+            5,
+        ),
+    )
+
+    Cauliflower = register(
+        "cauliflower",
+        Crop(
+            Products.Cauliflower,
+            [
+                Tiles.CauliflowerSeedling,
+                Tiles.CauliflowerVegetative,
+                Tiles.CauliflowerBudding,
+                Tiles.CauliflowerRipening,
+            ],
+            11,
+        ),
+    )
+
+    Eggplant = register(
+        "eggplant",
+        Crop(
+            Products.Eggplant,
+            [
+                Tiles.EggplantSeedling,
+                Tiles.EggplantVegetative,
+                Tiles.EggplantBudding,
+                Tiles.EggplantRipening,
+            ],
+            8,
+        ),
+    )
+
+    Pumpkin = register(
+        "pumpkin",
+        Crop(
+            Products.Pumpkin,
+            [
+                Tiles.PumpkinSeedling,
+                Tiles.PumpkinVegetative,
+                Tiles.PumpkinBudding,
+                Tiles.PumpkinRipening,
+            ],
+            13,
         ),
     )

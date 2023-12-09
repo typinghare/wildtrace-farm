@@ -47,6 +47,8 @@ class Tilesets:
     WoodenHouse = register("tilesets/building/wooden_house.png")
     Door = register("tilesets/building/door.png")
     Chest = register("tilesets/building/chest.png")
+    Basket = register("tilesets/building/basket.png")
+    WorkStation = register("tilesets/building/work_station.png")
 
     # Item
     ToolMaterial = register("tilesets/item/tool_material.png")

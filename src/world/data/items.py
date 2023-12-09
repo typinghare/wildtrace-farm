@@ -29,10 +29,22 @@ class Items:
     # Seeds
     WheatSeeds = register("seeds/wheat", Item("Wheat Seeds", Tiles.WheatSeeds, 64))
     BeetSeeds = register("seeds/beet", Item("Beet Seeds", Tiles.BeetSeeds, 64))
+    CarrotSeeds = register("seeds/carrot", Item("Carrot Seeds", Tiles.CarrotSeeds, 64))
+    CauliflowerSeeds = register(
+        "seeds/cauliflower", Item("Cauliflower Seeds", Tiles.CauliflowerSeeds, 64)
+    )
+    EggplantSeeds = register("seeds/eggplant", Item("Eggplant Seeds", Tiles.EggplantSeeds, 64))
+    PumpkinSeeds = register("seeds/pumpkin", Item("Pumpkin Seeds", Tiles.PumpkinSeeds, 64))
 
     # Product
     WheatProduct = register("product/wheat", Item("Wheat", Tiles.WheatProduct, 64))
     BeetProduct = register("product/beet", Item("Beet", Tiles.BeetProduct, 64))
+    CarrotProduct = register("product/carrot", Item("Carrot", Tiles.CarrotProduct, 64))
+    CauliflowerProduct = register(
+        "product/cauliflower", Item("Cauliflower", Tiles.CauliflowerProduct, 64)
+    )
+    EggplantProduct = register("product/eggplant", Item("Eggplant", Tiles.EggplantProduct, 64))
+    PumpkinProduct = register("product/pumpkin", Item("Pumpkin", Tiles.PumpkinProduct, 64))
 
 
 class ItemTags:

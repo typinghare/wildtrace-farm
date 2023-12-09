@@ -26,3 +26,7 @@ class CropItems:
 
     Wheat = register("wheat", CropItem(Items.WheatSeeds, Crops.Wheat))
     Beet = register("beet", CropItem(Items.BeetSeeds, Crops.Beet))
+    Carrot = register("carrot", CropItem(Items.CarrotSeeds, Crops.Carrot))
+    Cauliflower = register("cauliflower", CropItem(Items.CauliflowerSeeds, Crops.Cauliflower))
+    Eggplant = register("eggplant", CropItem(Items.EggplantSeeds, Crops.Eggplant))
+    Pumpkin = register("pumpkin", CropItem(Items.PumpkinSeeds, Crops.Pumpkin))

@@ -19,7 +19,7 @@ def register(
     tile_set: Surface,
     pos: Tuple[int, int],
     size: Tuple[int, int] = (16, 16),
-    scale_factor: int = default_scale_factor,
+    scale_factor: float = default_scale_factor,
 ) -> Surface:
     """
     Registers a tile.
@@ -178,25 +178,63 @@ class Tiles:
     ChestFront3 = register("chest/front/3", Tilesets.Chest, (156, 12), (24, 24), 2)
     ChestFront4 = register("chest/front/4", Tilesets.Chest, (204, 12), (24, 24), 2)
 
+    # Work station
+    WorkStation = register("work_station", Tilesets.WorkStation, (0, 0), (32, 32), 3)
+
+    # Basket
+    Basket = register("basket", Tilesets.Basket, (0, 0), (16, 16), 2)
+
     # Tools
     ToolWateringCan = register("tool/watering_can", Tilesets.ToolMaterial, (0, 0))
     ToolHoe = register("tool/hoe", Tilesets.ToolMaterial, (32, 0))
 
     # Wheat
-    WheatSeeds = register("wheat/seeds", Tilesets.BasicPlants, (0, 0))
     WheatSeedling = register("wheat/seedling", Tilesets.BasicPlants, (16, 0))
     WheatVegetative = register("wheat/vegetative", Tilesets.BasicPlants, (32, 0))
     WheatBudding = register("wheat/budding", Tilesets.BasicPlants, (48, 0))
     WheatRipening = register("wheat/ripening", Tilesets.BasicPlants, (64, 0))
+    WheatSeeds = register("wheat/seeds", Tilesets.BasicPlants, (0, 0))
     WheatProduct = register("wheat/product", Tilesets.BasicPlants, (80, 0))
 
     # Beet
-    BeetSeeds = register("beet/seeds", Tilesets.BasicPlants, (0, 16))
     BeetSeedling = register("beat/seedling", Tilesets.BasicPlants, (16, 16))
     BeetVegetative = register("beat/vegetative", Tilesets.BasicPlants, (32, 16))
     BeetBudding = register("beat/budding", Tilesets.BasicPlants, (48, 16))
     BeetRipening = register("beat/ripening", Tilesets.BasicPlants, (64, 16))
+    BeetSeeds = register("beet/seeds", Tilesets.BasicPlants, (0, 16))
     BeetProduct = register("beat/product", Tilesets.BasicPlants, (80, 16))
+
+    # Carrot
+    CarrotSeedling = register("carrot/seedling", Tilesets.Plants, (0 * 16, 1 * 16))
+    CarrotVegetative = register("carrot/vegetative", Tilesets.Plants, (1 * 16, 1 * 16))
+    CarrotBudding = register("carrot/budding", Tilesets.Plants, (2 * 16, 1 * 16))
+    CarrotRipening = register("carrot/ripening", Tilesets.Plants, (3 * 16, 1 * 16))
+    CarrotSeeds = register("carrot/seeds", Tilesets.PlantsItem, (0 * 16, 2 * 16))
+    CarrotProduct = register("carrot/product", Tilesets.PlantsItem, (1 * 16, 2 * 16))
+
+    # Cauliflower
+    CauliflowerSeedling = register("cauliflower/seedling", Tilesets.Plants, (0 * 16, 2 * 16))
+    CauliflowerVegetative = register("cauliflower/vegetative", Tilesets.Plants, (1 * 16, 2 * 16))
+    CauliflowerBudding = register("cauliflower/budding", Tilesets.Plants, (2 * 16, 2 * 16))
+    CauliflowerRipening = register("cauliflower/ripening", Tilesets.Plants, (3 * 16, 2 * 16))
+    CauliflowerSeeds = register("cauliflower/seeds", Tilesets.PlantsItem, (0 * 16, 3 * 16))
+    CauliflowerProduct = register("cauliflower/product", Tilesets.PlantsItem, (1 * 16, 3 * 16))
+
+    # Eggplant
+    EggplantSeedling = register("eggplant/seedling", Tilesets.Plants, (0 * 16, 4 * 16))
+    EggplantVegetative = register("eggplant/vegetative", Tilesets.Plants, (1 * 16, 4 * 16))
+    EggplantBudding = register("eggplant/budding", Tilesets.Plants, (2 * 16, 4 * 16))
+    EggplantRipening = register("eggplant/ripening", Tilesets.Plants, (3 * 16, 4 * 16))
+    EggplantSeeds = register("eggplant/seeds", Tilesets.PlantsItem, (0 * 16, 5 * 16))
+    EggplantProduct = register("eggplant/product", Tilesets.PlantsItem, (1 * 16, 5 * 16))
+
+    # Pumpkin
+    PumpkinSeedling = register("pumpkin/seedling", Tilesets.Plants, (0 * 16, 8 * 16))
+    PumpkinVegetative = register("pumpkin/vegetative", Tilesets.Plants, (1 * 16, 8 * 16))
+    PumpkinBudding = register("pumpkin/budding", Tilesets.Plants, (2 * 16, 8 * 16))
+    PumpkinRipening = register("pumpkin/ripening", Tilesets.Plants, (3 * 16, 8 * 16))
+    PumpkinSeeds = register("pumpkin/seeds", Tilesets.PlantsItem, (0 * 16, 9 * 16))
+    PumpkinProduct = register("pumpkin/product", Tilesets.PlantsItem, (1 * 16, 9 * 16))
 
 
 # Collision object tag
@@ -241,6 +279,7 @@ collision_objects = [
     Tiles.ChestFront2,
     Tiles.ChestFront3,
     Tiles.ChestFront4,
+    Tiles.Basket,
 ]
 
 for collision_object in collision_objects:

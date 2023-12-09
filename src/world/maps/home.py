@@ -54,3 +54,11 @@ class HomeMap(Map):
 
         # Chest
         self.furniture_bottom.update_cell((6, 1), Tiles.ChestFront0)
+
+        # Work station
+        self.furniture_bottom.update_cell((4, 0), Tiles.WorkStation)
+        self.invisible_block_grid.set((4, 1), True)
+        self.invisible_block_grid.set((5, 1), True)
+
+        # Basket
+        self.furniture_bottom.update_cell((6, 4), Tiles.Basket)
