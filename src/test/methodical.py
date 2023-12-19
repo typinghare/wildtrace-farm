@@ -9,7 +9,7 @@ class MessageBox:
         self.callback_node: CallbackNode = CallbackNode()
 
     def play(self, message: str) -> CallbackNode:
-        print(message)
+        print(f"message: {message}")
         return self.callback_node
 
     def hide(self):

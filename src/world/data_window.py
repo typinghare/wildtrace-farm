@@ -66,7 +66,7 @@ class DataWindow(ContextModule):
         self.time: Time = Time(6, 0)
 
         # Money
-        self.money: int = 0
+        self.money: int = 500
 
         # Layer
         self.layer = Layer(Size(170, 130))

@@ -9,6 +9,8 @@ CallbackQueue([fn0, fn1, fn2]).start()
 
 I am not sure if some great people have studied through these long ago, but I feel a great sense of success making this out on my own. Refer to the source code in `src/core/common/methodical.py` for more details.
 
+> **[Breaking]** I just reproduced a game core using TypeScript, in which I implemented a better methodical set. I published it to npm. See [npm homepage](https://www.npmjs.com/package/@typinghare/game-core) and [GitHub](https://github.com/typinghare/game-core).
+
 ## Callback Node
 
 I created a `CallbackNode` class that serves as the callback holder, and it looks like this:
@@ -98,3 +100,76 @@ It looks like a recursion, but what makes it different is that it is put in a ca
 **. There is a situation where the waiting function returns None. In this case, the recursion will no longer be delayed, that is to say, the `invoke_next` method will be called immediately. The recursion ends when the queue is empty.
 
 ## Example
+
+> See `src/test/methodical.py`.
+
+First we create two classes and corresponding instances to simulate game processes.
+
+~~~python
+class MessageBox:
+    def __init__(self):
+        self.callback_node: CallbackNode = CallbackNode()
+
+    def play(self, message: str) -> CallbackNode:
+        print(f"message: {message}")
+        return self.callback_node
+
+    def hide(self):
+        self.callback_node.invoke()
+
+
+class Curtain:
+    def __init__(self):
+        self.callback_node: CallbackNode = CallbackNode()
+
+    def fade_in(self, name: str) -> CallbackNode:
+        print(f"fading in ({name})...")
+        return self.callback_node
+
+    def hide(self):
+        self.callback_node.invoke()
+
+
+message_box = MessageBox()
+curtain = Curtain()
+~~~
+
+Next, we declare four functions which we want to call in a row.
+
+~~~python
+def fn0() -> CallbackNode:
+    return message_box.play("fn0")
+
+
+def fn1() -> CallbackNode:
+    return curtain.fade_in("fn1")
+
+
+def fn2() -> CallbackNode:
+    return message_box.play("fn2")
+
+
+def fn3() -> CallbackNode:
+    return curtain.fade_in("fn3")
+~~~
+
+Finally, we create a `CallbackQueue` instance and start running it. To enable the process, we should create a while loop to simulate the game loop.
+
+~~~python
+CallbackQueue([fn0, fn1, fn2, fn3]).start()
+
+a = 0
+while a < 10:
+    a += 1
+    message_box.hide()
+    curtain.hide()
+~~~
+
+The output of this code snippet is as follows:
+
+~~~text
+message: fn0
+fading in (fn1)...
+message: fn2
+fading in (fn3)...
+~~~
