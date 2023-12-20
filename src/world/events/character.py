@@ -76,6 +76,10 @@ def character_key_down(context: Context):
     if message_box.is_displayed():
         return
 
+    # It does not work if the character is frozen
+    if character.frozen:
+        return
+
     # Direction
     direction = map_key_to_direction(key)
     if direction is not None:
@@ -321,6 +325,7 @@ def character_sleep(context: Context) -> bool:
 
     # Sleep
     context["flag.sleeping"] = True
+    character.set_action(Character.Action.Idle)
     character.frozen = True
     transition_to_next_day(context)
 
@@ -353,8 +358,6 @@ def character_open_chest(context: Context) -> bool:
         floor_cell = floor_layer.get_cell(front_coordinate)
 
         def after_animation() -> None:
-            character.frozen = True
-            character.stop_all()
             inventory.open_chest(chest)
 
         def chest_animation(index: int):
@@ -370,6 +373,8 @@ def character_open_chest(context: Context) -> bool:
                     after_animation()
 
         # Freeze character
+        character.stop_all()
+        character.set_action(Character.Action.Idle)
         character.frozen = True
 
         # Play frames
